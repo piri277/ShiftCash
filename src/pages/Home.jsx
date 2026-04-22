@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import '../styles/dashboard.css'; // Asegúrate de mover tus estilos aquí
+import '../styles/home.css'; 
 
 function Home() {
   return (

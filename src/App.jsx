@@ -1,32 +1,33 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-// Importamos las páginas (tienes que crearlas en la carpeta pages)
-import Home from './pages/Home';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Dashboard from './pages/Dashboard';
+import Home      from "./pages/Home";
+import Login     from "./pages/Login";
+import Register  from "./pages/Register";
+import Dashboard from "./components/dashboard/Dashboard";
+import Navbar    from "./components/Navbar";
+import Footer    from "./components/Footer";
 
-// Importamos componentes globales
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
-
-function App() {
+function PublicLayout({ children }) {
   return (
-    <Router>
-      {/* El Navbar y Footer se quedan fijos en todas las rutas */}
-      <Navbar /> 
-      
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/registro" element={<Register />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-      </Routes>
-
+    <>
+      <Navbar />
+      {children}
       <Footer />
-    </Router>
+    </>
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<PublicLayout><Home /></PublicLayout>} />
+        <Route path="/login" element={<PublicLayout><Login /></PublicLayout>} />
+        <Route path="/registro" element={<PublicLayout><Register /></PublicLayout>} />
+
+        {/* Dashboard va sin Navbar ni Footer — tiene su propio layout */}
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Routes>
+    </Router>
+  );
+}

@@ -1,4 +1,4 @@
-##💸 ShiftCash - Gestión Financiera
+## 💸 ShiftCash - Gestión Financiera
 
 ShiftCash es una aplicación web moderna diseñada para el control de finanzas personales, construida con **React**, **Vite** y visualizaciones dinámicas con **Recharts**.
 

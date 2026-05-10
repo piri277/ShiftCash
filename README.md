@@ -27,3 +27,10 @@ npm run dev
 
 Una vez ejecutado, abre http://localhost:5173 en tu navegador para ver la aplicación.
 
+
+## 🔐 Estado del Proyecto (Acceso Beta)
+Actualmente, el backend de autenticación está en desarrollo. Para explorar la aplicación:
+
+Registro: El módulo de creación de cuentas nuevas aún no está operativo.
+
+Login: Ingresa cualquier usuario y contraseña. El sistema te otorgará acceso automáticamente mediante credenciales predeterminadas de prueba.

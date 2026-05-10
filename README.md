@@ -19,6 +19,7 @@ git clone https://github.com/piri277/ShiftCash
 Asegúrate de tener Node.js instalado. Luego, ejecuta:
 
 npm install
+
 npm install recharts
 
 ### 3. Ejecutar en modo desarrollo

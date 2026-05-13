@@ -1,0 +1,74 @@
+/*categorias.css - Styles for the categories section, including category cards, actions, and emoji picker.*/
+/* ===== CATEGORÍAS ===== */
+.cat-section        { margin-bottom: 36px; }
+.cat-section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+
+.cat-section-title {
+  font-family: 'Sora', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #9ba3c7;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cat-btn-nueva { font-size: 0.85rem; padding: 8px 16px; }
+
+/* ===== GRID ===== */
+.cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
+
+/* ===== TARJETA ===== */
+.cat-card {
+  background: #1a1d2e;
+  border: 1px solid rgba(91,110,245,0.12);
+  border-radius: 14px;
+  padding: 18px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  position: relative;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.cat-card--default { opacity: 0.75; }
+.cat-card--custom  { cursor: pointer; }
+.cat-card--custom:hover  { border-color: rgba(91,110,245,0.4); transform: translateY(-2px); }
+.cat-card--custom.abierta { border-color: rgba(91,110,245,0.5); }
+
+.cat-card-icon { font-size: 1.8rem; line-height: 1; }
+.cat-card-name { font-size: 0.85rem; font-weight: 600; color: #f0f2ff; word-break: break-word; }
+.cat-card-type { font-size: 0.72rem; color: #9ba3c7; }
+
+/* ===== ACCIONES ===== */
+.cat-card-actions { display: flex; gap: 6px; margin-top: 4px; width: 100%; }
+
+.cat-action-btn { flex: 1; padding: 6px 0; border-radius: 8px; border: none; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+.cat-action-btn--edit   { background: rgba(91,110,245,0.15); color: #7c8df7; }
+.cat-action-btn--edit:hover   { opacity: 0.8; }
+.cat-action-btn--delete { background: rgba(248,113,113,0.12); color: #f87171; }
+.cat-action-btn--delete:hover { opacity: 0.8; }
+
+/* ===== EMOJI PICKER ===== */
+.cat-emoji-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px; }
+
+.cat-emoji-btn {
+  background: #21253a;
+  border: 1.5px solid transparent;
+  border-radius: 8px;
+  padding: 8px 4px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  width: 100%;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.cat-emoji-btn:hover    { background: rgba(91,110,245,0.12); }
+.cat-emoji-btn.selected { border-color: #5b6ef5; background: rgba(91,110,245,0.18); }

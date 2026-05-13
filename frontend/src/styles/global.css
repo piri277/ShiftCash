@@ -1,0 +1,140 @@
+body {
+  font-family: verdana, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: sans-serif;
+}
+
+.bi-coin {
+  color: #FFF !important;
+}
+
+/* NAVBAR */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: #5F74C1;
+}
+.navbar .navbar-brand {
+  color: #cfd7fd;
+}
+
+.navbar .nav-item .nav-link {
+  color: #cfd7fd;
+  transition: color 0.2s;
+}
+
+.navbar .nav-item .nav-link:hover {
+  color: #000000;
+}
+
+#cash {
+  font-family: 'Syne', sans-serif;
+}
+
+
+
+/* HERO SECTION */
+.hero-section {
+  background: linear-gradient(135deg, #8A9CD3 0%, #E7EBF6 100%);
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  color: white;
+}
+
+.hero-section h1 {
+  color: #2A2F4A;
+  font-size: clamp(2rem, 10vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 1rem;
+}
+
+.hero-section p {
+  color: #6B7399;
+  font-size: 1.1rem;
+  opacity: 0.85;
+  margin-bottom: 1.5rem;
+}
+
+#logo {
+  border-radius: 50px;
+  width: 1000px;
+  height: auto;
+}
+
+#btn-iniciar-sesion {
+  background-color: #5F74C1;
+  color: white;
+  border: none;
+  transition: background-color 0.3s;
+}
+
+#btn-registrarse {
+  background-color: #5F74C1;
+  color: white;
+  border: none;
+  transition: background-color 0.3s;
+}
+
+
+
+
+/* QUIENES SOMOS */
+.somos-section {
+  background: #FFF;
+  padding: 60px 0;
+}
+
+.somos-section h2 {
+  color: #5F74C1 !important;
+  font-family: sans-serif !important;
+  font-size: clamp(1.5rem, 8vw, 2.5rem);
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+
+
+
+
+/* SERVICES SECTION */
+.services-section {
+  background-color: #8A9CD3;
+}
+
+.icon-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.services-section .card {
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px #5F74C1;
+  transition: transform 0.3s, box-shadow 0.3s;
+  height: 500px;
+  width: auto;
+}
+
+.services-section h2 {
+  color: #2d3861b6 !important;
+  font-family: sans-serif !important;
+  font-size: clamp(1.5rem, 8vw, 2.5rem);
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+/* Card hover effect */
+.card-hover {
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card-hover:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(85, 0, 255, 0.12) !important;
+}

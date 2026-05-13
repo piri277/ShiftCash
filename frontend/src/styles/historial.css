@@ -1,0 +1,16 @@
+/* historial.css - Estilos específicos para la vista de historial de transacciones, incluyendo el diseño de cada fila de transacción, estilos para los íconos, información y botones de eliminación. */
+/* ===== HISTORIAL ===== */
+.hist-fila { display: flex; align-items: center; gap: 14px; padding: 14px 0; border-bottom: 1px solid rgba(91,110,245,0.08); }
+.hist-fila:last-child { border-bottom: none; }
+
+.hist-icono { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+
+.hist-info { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+
+.hist-categoria  { font-size: 0.9rem; font-weight: 600; color: #f0f2ff; }
+.hist-descripcion { font-size: 0.78rem; color: #9ba3c7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hist-fecha      { font-size: 0.78rem; color: #9ba3c7; flex-shrink: 0; }
+.hist-monto      { font-size: 0.95rem; font-weight: 700; flex-shrink: 0; font-family: 'Sora', sans-serif; }
+
+.hist-btn-eliminar { background: none; border: none; cursor: pointer; font-size: 1rem; padding: 6px 8px; border-radius: 8px; opacity: 0.4; transition: opacity 0.2s, background 0.2s; flex-shrink: 0; }
+.hist-btn-eliminar:hover { opacity: 1; background: rgba(248,113,113,0.12); }

@@ -83,7 +83,6 @@ body {
   overflow: hidden;
 }
  
-/* Decorative background orbs */
 .hero-section::before {
   content: '';
   position: absolute;

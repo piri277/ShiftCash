@@ -2,10 +2,9 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/login.css";
 
-// ─────────────────────────────────────────────────────────────────────────────
 // Login — Inputs controlados con useState, validación básica antes de navegar
-// Cuando llegue el backend: reemplazar el bloque "TODO" en handleSubmit
-// ─────────────────────────────────────────────────────────────────────────────
+// Cuando llegue el backend: reemplazar el bloque TO-DO en handleSubmit
+
 
 export default function Login() {
   const navigate = useNavigate();
@@ -28,10 +27,7 @@ export default function Login() {
       return;
     }
 
-    // TODO: reemplazar con llamada a la API de autenticación
-    // Ejemplo futuro:
-    //   const res = await authService.login(form.email, form.password);
-    //   if (!res.ok) { setError(res.message); return; }
+    // TO-DO: reemplazar con llamada a la API de autenticación
     console.log("Iniciando sesión con:", form.email);
     navigate("/dashboard");
   };

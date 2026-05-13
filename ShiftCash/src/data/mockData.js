@@ -1,4 +1,8 @@
+// ─────────────────────────────────────────────────────────────────────────────
 // MOCK DATA — Reemplazar con llamadas a la API cuando el backend esté listo
+// Cada array/objeto refleja la forma exacta que tendrá la respuesta del servidor
+// ─────────────────────────────────────────────────────────────────────────────
+
 export const datosAnuales = [
   { mes: "Ene", gastos: 420000,  ingresos: 1200000, ahorros: 780000  },
   { mes: "Feb", gastos: 510000,  ingresos: 1300000, ahorros: 790000  },

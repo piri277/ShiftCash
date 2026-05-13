@@ -1,4 +1,4 @@
-// Placeholder: implementar cuando el diseño esté definido (No se les olvide que los veo)
+// Placeholder — implementar cuando el diseño esté definido
 export default function VistaGraficas() {
   return (
     <div className="db-empty">

@@ -1,7 +1,4 @@
-// ─────────────────────────────────────────────────────────────────────────────
-// CONSTANTES — Sin magic numbers dispersos por el código
-// ─────────────────────────────────────────────────────────────────────────────
-
+// CONSTANTES — valores fijos usados en toda la app, para evitar "magic numbers" y facilitar cambios futuros
 export const PRESUPUESTO_LIMITE = 900_000; // COP
 
 export const MENU_ITEMS = [

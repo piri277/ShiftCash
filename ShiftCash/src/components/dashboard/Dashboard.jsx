@@ -12,6 +12,7 @@ import "../../styles/dashboard.css";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Dashboard — Solo layout y routing de vistas.
+// Para agregar una nueva vista: añadirla en MENU_ITEMS (constants) y acá abajo.
 // ─────────────────────────────────────────────────────────────────────────────
 
 const VISTAS = {

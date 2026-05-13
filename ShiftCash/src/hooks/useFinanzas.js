@@ -4,6 +4,11 @@ import { PRESUPUESTO_LIMITE } from "../constants";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // useFinanzas — Toda la lógica de cálculo separada de la UI
+//
+// Ventajas:
+//  · Los componentes solo se encargan de renderizar
+//  · Fácil de testear de forma unitaria
+//  · Cuando llegue el backend, solo cambia este hook (no los componentes)
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function useFinanzas() {

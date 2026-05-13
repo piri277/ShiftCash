@@ -1,7 +1,7 @@
 import { MES_ACTIVO } from "../../constants";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Topbar - Header superior, recibe el item activo por props
+// Topbar — Header superior, recibe el item activo por props
 // ─────────────────────────────────────────────────────────────────────────────
 
 export default function Topbar({ itemActivo, onNuevaTransaccion }) {

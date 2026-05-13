@@ -4,7 +4,7 @@ import { MENU_ITEMS } from "../../constants";
 import { usuarioActual } from "../../data/mockData";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Sidebar Navegación + menú de usuario con opción de cerrar sesión
+// Sidebar — Navegación + menú de usuario con opción de cerrar sesión
 // El menú del perfil se abre/cierra al hacer click en el bloque de usuario
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -13,7 +13,8 @@ export default function Sidebar({ vistaActiva, onCambiarVista }) {
   const [menuUsuarioAbierto, setMenuUsuarioAbierto] = useState(false);
 
   const handleCerrarSesion = () => {
-    
+    // TODO: cuando llegue el backend, limpiar token/sesión aquí antes de navegar
+    // Ejemplo futuro: authService.logout();
     setMenuUsuarioAbierto(false);
     navigate("/");
   };
@@ -37,7 +38,7 @@ export default function Sidebar({ vistaActiva, onCambiarVista }) {
         ))}
       </nav>
 
-
+      {/* Bloque de usuario — click abre/cierra el menú */}
       <div className="db-user-wrapper">
 
         {/* Menú flotante — visible solo cuando menuUsuarioAbierto es true */}
@@ -68,6 +69,7 @@ export default function Sidebar({ vistaActiva, onCambiarVista }) {
             <div className="db-user-name">{usuarioActual.nombre}</div>
             <div className="db-user-email">{usuarioActual.email}</div>
           </div>
+          {/* Flecha que indica si el menú está abierto o cerrado */}
           <span className="db-user-chevron">
             {menuUsuarioAbierto ? "▲" : "▼"}
           </span>

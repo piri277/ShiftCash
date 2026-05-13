@@ -25,7 +25,7 @@ export default function App() {
         <Route path="/login" element={<PublicLayout><Login /></PublicLayout>} />
         <Route path="/registro" element={<PublicLayout><Register /></PublicLayout>} />
 
-        {/* Dashboard va sin Navbar ni Footer - tiene su propio layout */}
+        {/* Dashboard va sin Navbar ni Footer — tiene su propio layout */}
         <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </Router>

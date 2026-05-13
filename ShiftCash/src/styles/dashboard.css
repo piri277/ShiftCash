@@ -1,0 +1,410 @@
+/* ===== IMPORTS ===== */
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
+
+/* ===== VARIABLES ===== */
+:root {
+  --primary:      #5b6ef5;
+  --primary-dark: #3d51d4;
+  --accent:       #9b59f5;
+  --success:      #34d399;
+  --danger:       #f87171;
+  --warning:      #fbbf24;
+  --dark:         #0f1117;
+  --surface:      #1a1d2e;
+  --surface-2:    #21253a;
+  --border:       rgba(91, 110, 245, 0.18);
+  --text-primary: #f0f2ff;
+  --text-muted:   #9ba3c7;
+  --gradient-accent: linear-gradient(90deg, #5b6ef5, #9b59f5);
+}
+
+/* ===== RESET ===== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ===== APP LAYOUT ===== */
+.db-app {
+  font-family: 'DM Sans', sans-serif;
+  background-color: var(--dark);
+  color: var(--text-primary);
+  height: 100vh;        /* ← era min-height, ahora fijo */
+  overflow: hidden;     /* ← la app entera nunca hace scroll */
+  display: flex;
+}
+
+/* ===== SIDEBAR ===== */
+.db-sidebar {
+  width: 240px;
+  height: 100vh;        /* ← era min-height, ahora fijo */
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.db-brand {
+  padding: 1.5rem;
+  font-family: 'Sora', sans-serif;
+  font-weight: 800;
+  font-size: 1.25rem;
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
+  border-bottom: 1px solid var(--border);
+}
+
+.db-brand span {
+  color: var(--primary);
+}
+
+.db-nav {
+  padding: 1rem 0;
+  flex: 1;
+}
+
+.db-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0.65rem 1.5rem;
+  cursor: pointer;
+  color: var(--text-muted);
+  border-left: 3px solid transparent;
+  font-size: 0.9rem;
+  font-weight: 400;
+  transition: all 0.2s ease;
+}
+
+.db-nav-item:hover {
+  color: var(--text-primary);
+  background: rgba(91, 110, 245, 0.08);
+}
+
+.db-nav-item.active {
+  color: var(--text-primary);
+  background: rgba(91, 110, 245, 0.15);
+  border-left-color: var(--primary);
+  font-weight: 600;
+}
+
+/* ===== MAIN AREA ===== */
+.db-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;     /* ← evita que el main empuje el layout */
+  min-width: 0;         /* ← fix para flex + overflow en algunos browsers */
+}
+
+/* ===== TOPBAR ===== */
+.db-topbar {
+  background: rgba(15, 17, 23, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-shrink: 0;       /* ← el topbar nunca se encoge */
+  z-index: 100;
+}
+
+.db-topbar-title {
+  font-family: 'Sora', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+.db-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.db-topbar-date {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* ===== CONTENT ===== */
+.db-content {
+  padding: 2rem;
+  flex: 1;
+  overflow-y: auto;     /* ← solo esta zona hace scroll */
+  overflow-x: hidden;
+}
+
+/* Scrollbar personalizada para que combine con el diseño */
+.db-content::-webkit-scrollbar {
+  width: 6px;
+}
+.db-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+.db-content::-webkit-scrollbar-thumb {
+  background: rgba(91, 110, 245, 0.3);
+  border-radius: 99px;
+}
+.db-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(91, 110, 245, 0.55);
+}
+
+/* ===== BUTTONS ===== */
+.btn-primary {
+  background: var(--gradient-accent);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 0.5rem 1.2rem;
+  font-family: 'Sora', sans-serif;
+  font-weight: 600;
+  font-size: 0.88rem;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(91, 110, 245, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(91, 110, 245, 0.5);
+}
+
+/* ===== VIEW TITLE ===== */
+.db-view-title {
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: -0.5px;
+  margin-bottom: 1.5rem;
+}
+
+.db-view-title span {
+  color: var(--primary);
+}
+
+/* ===== ALERT ===== */
+.db-alert {
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  border-radius: 12px;
+  padding: 0.85rem 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  color: var(--warning);
+}
+
+/* ===== STAT CARDS ===== */
+.db-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+
+.db-stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.25rem 1.5rem;
+}
+
+.db-stat-icon {
+  font-size: 1.4rem;
+  margin-bottom: 4px;
+}
+
+.db-stat-label {
+  font-family: 'Sora', sans-serif;
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 4px;
+}
+
+.db-stat-value {
+  font-family: 'Sora', sans-serif;
+  font-weight: 800;
+  font-size: 1.75rem;
+}
+
+/* ===== CARD (contenedor genérico) ===== */
+.db-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1.75rem;
+}
+
+.db-card-title {
+  font-family: 'Sora', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* ===== BUDGET BAR ===== */
+.db-budget-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-family: 'Sora', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.db-budget-track {
+  height: 10px;
+  background: var(--surface-2);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.db-budget-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.6s ease;
+}
+
+.db-budget-fill.ok {
+  background: var(--gradient-accent);
+}
+
+.db-budget-fill.over {
+  background: linear-gradient(90deg, var(--danger), #f43f5e);
+}
+
+/* ===== PLACEHOLDER (vistas vacías) ===== */
+.db-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem 2rem;
+  color: var(--text-muted);
+  text-align: center;
+  gap: 0.75rem;
+}
+
+.db-empty-icon {
+  font-size: 3rem;
+  opacity: 0.4;
+}
+
+.db-empty p {
+  font-size: 0.95rem;
+}
+
+/* ===== MENÚ DE USUARIO ===== */
+
+.db-user-wrapper {
+  position: relative;
+  margin-top: auto;
+}
+
+.db-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  cursor: pointer;
+  border-radius: 10px;
+  border-top: 1px solid var(--border);
+  transition: background 0.2s;
+}
+
+.db-user:hover {
+  background: rgba(91, 110, 245, 0.12);
+}
+
+.db-user-chevron {
+  margin-left: auto;
+  font-size: 0.65rem;
+  color: #9ba3c7;
+}
+
+.db-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--gradient-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.db-user-name {
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.db-user-email {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.db-user-menu {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 12px;
+  right: 12px;
+  background: #21253a;
+  border: 1px solid rgba(91, 110, 245, 0.25);
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.35);
+  z-index: 100;
+  animation: fadeInUp 0.15s ease;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+
+.db-user-menu-info {
+  padding: 0 4px 8px;
+}
+
+.db-user-menu-divider {
+  border: none;
+  border-top: 1px solid rgba(91, 110, 245, 0.18);
+  margin: 0 0 8px;
+}
+
+.db-user-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 12px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background 0.2s;
+  text-align: left;
+}
+
+.db-user-menu-item--danger {
+  color: #f87171;
+}
+
+.db-user-menu-item--danger:hover {
+  background: rgba(248, 113, 113, 0.12);
+}

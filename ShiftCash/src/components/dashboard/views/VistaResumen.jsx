@@ -9,7 +9,7 @@ import { PRESUPUESTO_LIMITE } from "../../../constants";
 import { formatearPesos, formatearMillones } from "../../../utils/formatters";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Sub-componentes internos - pequeños y enfocados
+// Sub-componentes internos — pequeños y enfocados
 // ─────────────────────────────────────────────────────────────────────────────
 
 function AlertaPresupuesto({ totalGastado }) {
@@ -97,8 +97,8 @@ function GraficaTendencia() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// VistaResumen - Componente principal de esta vista
-// Solo orquesta sub-componentes, no tiene lógica de cálculo aun
+// VistaResumen — Componente principal de esta vista
+// Solo orquesta sub-componentes, no tiene lógica de cálculo
 // ─────────────────────────────────────────────────────────────────────────────
 
 export default function VistaResumen() {

@@ -5,7 +5,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid,
   AreaChart, Area,
 } from "recharts";
-import { formatearPesos, crearFormateadorY } from "../../../utils/formatters";
+import { formatearPesos, formatearEjeY } from "../../../utils/formatters";
 
 const COLORES = ["#5b6ef5","#9b59f5","#34d399","#fbbf24","#f87171","#38bdf8","#fb923c"];
 const MESES   = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
@@ -127,7 +127,7 @@ function GraficaCategoriasBase({ transacciones, tipo }) {
 
 function GraficaBarras({ datos }) {
 
-  const tickFormatterY = crearFormateadorY(datos);
+  const tickFormatterY = formatearEjeY;
 
   
   return (
@@ -147,7 +147,7 @@ function GraficaBarras({ datos }) {
 
 function GraficaAhorro({ datos }) {
 
-  const tickFormatterY = crearFormateadorY(datos);
+  const tickFormatterY = formatearEjeY;
 
   return (
     <ResponsiveContainer width="100%" height={220}>

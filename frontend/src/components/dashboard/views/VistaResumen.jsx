@@ -7,7 +7,7 @@ import {
 } from "recharts";
 
 import { PRESUPUESTO_LIMITE } from "../../../constants";
-import { formatearPesos, crearFormateadorY } from "../../../utils/formatters";
+import { formatearPesos, formatearEjeY } from "../../../utils/formatters";
 
 const TOOLTIP_STYLE = {
   background: "#21253a",
@@ -230,7 +230,7 @@ function GraficaCarousel({ transacciones }) {
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(91,110,245,0.18)" />
             <XAxis dataKey="label" stroke="#9ba3c7" tick={{ fontSize: 12 }} />
-            <YAxis stroke="#9ba3c7" tick={{ fontSize: 12 }} tickFormatter={crearFormateadorY(datos)} />
+            <YAxis stroke="#9ba3c7" tick={{ fontSize: 12 }} tickFormatter={formatearEjeY} />
             <Tooltip contentStyle={TOOLTIP_STYLE} formatter={v => formatearPesos(v)} />
             <Legend wrapperStyle={{ fontSize: "0.8rem", color: "#9ba3c7" }} />
             <Area type="monotone" dataKey="ingresos" stroke="#34d399" fill="url(#gradIngresos)" strokeWidth={2} name="Ingresos" />
@@ -245,7 +245,7 @@ function GraficaCarousel({ transacciones }) {
           <BarChart data={datos} margin={{ top: 4, right: 8, bottom: 0, left: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(91,110,245,0.18)" />
             <XAxis dataKey="label" stroke="#9ba3c7" tick={{ fontSize: 12 }} />
-            <YAxis stroke="#9ba3c7" tick={{ fontSize: 12 }} tickFormatter={crearFormateadorY(datos)} />
+            <YAxis stroke="#9ba3c7" tick={{ fontSize: 12 }} tickFormatter={formatearEjeY} />
             <Tooltip contentStyle={TOOLTIP_STYLE} formatter={v => formatearPesos(v)} />
             <Legend wrapperStyle={{ fontSize: "0.8rem", color: "#9ba3c7" }} />
             <Bar dataKey="ingresos" fill="#34d399" radius={[4,4,0,0]} name="Ingresos" />

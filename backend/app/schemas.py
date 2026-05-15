@@ -1,8 +1,8 @@
-from pydantic import BaseModel, EmailStr
-from typing import Optional
-from datetime import datetime
 from pydantic import BaseModel, EmailStr, field_validator
+from typing import Optional
+from datetime import date
 
+# Authentication
 class UserCreate(BaseModel):
     username: str
     email: EmailStr
@@ -37,53 +37,32 @@ class TokenWithUser(BaseModel):
     token_type: str
     user: UserOut
 
-from datetime import date
-from typing import Optional
+# Configuración de usuario
+class UserUpdate(BaseModel):
+    username: str
+    email: EmailStr
 
+class PasswordUpdate(BaseModel):
+    current_password: str
+    new_password: str
+
+    @field_validator("new_password")
+    @classmethod
+    def password_min_length(cls, v):
+        if len(v) < 8:
+            raise ValueError("La contraseña debe tener al menos 8 caracteres")
+        return v
+
+class CurrencyUpdate(BaseModel):
+    currency: str
+
+# Categorías 
 class CategoryOut(BaseModel):
     category_id: int
     name_cat: str
     icon: Optional[str]
     type: str
-
-    class Config:
-        from_attributes = True
-
-class TransactionCreate(BaseModel):
-    category_id: int
-    type: str
-    amount: float
-    description: Optional[str] = None
-    trans_date: Optional[date] = None
-
-    is_recurring: bool = False
-    frequency: Optional[str] = None
-
-    @field_validator("amount")
-    @classmethod
-    def amount_must_be_positive(cls, v):
-        if v <= 0:
-            raise ValueError("El monto debe ser mayor a 0")
-        return v
-
-    @field_validator("type")
-    @classmethod
-    def type_must_be_valid(cls, v):
-        if v not in ("expense", "income"):
-            raise ValueError("El tipo debe ser 'expense' o 'income'")
-        return v
-
-class TransactionOut(BaseModel):
-    trans_id: int
-    category_id: int
-    category_name: Optional[str] = None
-    type: str
-    amount: float
-    description: Optional[str]
-    trans_date: date
-
-    is_recurring: bool = False
-    frequency: Optional[str] = None
+    is_default: int
 
     class Config:
         from_attributes = True
@@ -112,12 +91,40 @@ class CategoryUpdate(BaseModel):
     icon: Optional[str] = "⭐"
     type: str
 
-class CategoryOut(BaseModel):
+# Transacciones
+class TransactionCreate(BaseModel):
     category_id: int
-    name_cat: str
-    icon: Optional[str]
     type: str
-    is_default: int
+    amount: float
+    description: Optional[str] = None
+    trans_date: Optional[date] = None
+    is_recurring: bool = False
+    frequency: Optional[str] = None
+
+    @field_validator("amount")
+    @classmethod
+    def amount_must_be_positive(cls, v):
+        if v <= 0:
+            raise ValueError("El monto debe ser mayor a 0")
+        return v
+
+    @field_validator("type")
+    @classmethod
+    def type_must_be_valid(cls, v):
+        if v not in ("expense", "income"):
+            raise ValueError("El tipo debe ser 'expense' o 'income'")
+        return v
+
+class TransactionOut(BaseModel):
+    trans_id: int
+    category_id: int
+    category_name: Optional[str] = None
+    type: str
+    amount: float
+    description: Optional[str]
+    trans_date: date
+    is_recurring: bool = False
+    frequency: Optional[str] = None
 
     class Config:
         from_attributes = True

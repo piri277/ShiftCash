@@ -1,7 +1,10 @@
 /* ModalTransaccion.jsx - Componente modal para crear una nueva transacción, con campos para tipo (gasto/ingreso), monto, categoría (con dropdown personalizado), descripción y fecha. Maneja validación, errores y estados de carga. */
 import { useState } from 'react';
 import { useCategorias } from '../../hooks/useCategorias';
+<<<<<<< HEAD
 import { createPortal }       from "react-dom";
+=======
+>>>>>>> 3fa000b36689b6ccfcd60856f5a0318f4bfa9617
 import { useTransaccionForm } from '../../hooks/useTransaccionForm';
 
 import "../../styles/modal.css";
@@ -29,7 +32,11 @@ export default function ModalTransaccion({ onClose, onSuccess }) {
     c => c.category_id === parseInt(form.category_id)
   );
 
+<<<<<<< HEAD
   return createPortal(
+=======
+  return (
+>>>>>>> 3fa000b36689b6ccfcd60856f5a0318f4bfa9617
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-card" onClick={e => e.stopPropagation()}>
         <div className="modal-header">
@@ -154,6 +161,7 @@ export default function ModalTransaccion({ onClose, onSuccess }) {
             />
           </div>
 
+<<<<<<< HEAD
 
           {/* Recurrente */}
         <div
@@ -188,12 +196,18 @@ export default function ModalTransaccion({ onClose, onSuccess }) {
           </div>
         )}
         
+=======
+>>>>>>> 3fa000b36689b6ccfcd60856f5a0318f4bfa9617
           <button type="submit" className="modal-submit" disabled={loading}>
             {loading ? 'Guardando...' : 'Guardar transacción'}
           </button>
         </form>
       </div>
+<<<<<<< HEAD
     </div>,
     document.body
+=======
+    </div>
+>>>>>>> 3fa000b36689b6ccfcd60856f5a0318f4bfa9617
   );
 }

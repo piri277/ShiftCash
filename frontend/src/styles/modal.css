@@ -3,15 +3,23 @@
 .modal-overlay {
   position: fixed;
   inset: 0;
+<<<<<<< HEAD
   min-height: 100dvh;
   background: rgba(10, 12, 20, 0.4);
+=======
+  background: rgba(0,0,0,0.6);
+>>>>>>> 3fa000b36689b6ccfcd60856f5a0318f4bfa9617
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 999;
+<<<<<<< HEAD
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   animation: fadeIn 0.3s ease;
+=======
+  backdrop-filter: blur(4px);
+>>>>>>> 3fa000b36689b6ccfcd60856f5a0318f4bfa9617
 }
 
 .modal-card {
@@ -23,11 +31,16 @@
   max-width: 440px;
   max-height: 90vh;
   overflow-y: auto;
+<<<<<<< HEAD
   box-shadow: 
     0 10px 25px rgba(0, 0, 0, 0.3),
     0 20px 48px rgba(0, 0, 0, 0.4);
   position: relative;
   animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+=======
+  box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+  animation: slideUp 0.2s ease;
+>>>>>>> 3fa000b36689b6ccfcd60856f5a0318f4bfa9617
 }
 
 .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
@@ -137,6 +150,7 @@
 
 .detalle-campo { display: flex; justify-content: space-between; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid rgba(91,110,245,0.08); }
 .detalle-label { font-size: 0.82rem; color: #9ba3c7; font-weight: 500; }
+<<<<<<< HEAD
 .detalle-valor { font-size: 0.9rem; color: #f0f2ff; font-weight: 500; text-align: right; max-width: 60%; }
 
 @keyframes fadeIn {
@@ -264,3 +278,6 @@
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
+=======
+.detalle-valor { font-size: 0.9rem; color: #f0f2ff; font-weight: 500; text-align: right; max-width: 60%; }
+>>>>>>> 3fa000b36689b6ccfcd60856f5a0318f4bfa9617

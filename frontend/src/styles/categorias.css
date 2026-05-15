@@ -71,6 +71,7 @@
 }
 
 .cat-emoji-btn:hover    { background: rgba(91,110,245,0.12); }
+<<<<<<< HEAD
 .cat-emoji-btn.selected { border-color: #5b6ef5; background: rgba(91,110,245,0.18); }
 
 /* ===== POPUP DE CATEGORÍA ===== */
@@ -123,3 +124,6 @@
   margin-top: 8px;
   width: 100%;
 }
+=======
+.cat-emoji-btn.selected { border-color: #5b6ef5; background: rgba(91,110,245,0.18); }
+>>>>>>> 3fa000b36689b6ccfcd60856f5a0318f4bfa9617

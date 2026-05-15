@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* VistaGraficas.jsx */
 import { useState, useMemo } from "react";
 import {
@@ -302,6 +303,14 @@ export default function VistaGraficas({ finanzas }) {
         <h3 className="db-card-title">Evolución del ahorro</h3>
         <GraficaAhorro datos={datosPeriodo} />
       </div>
+=======
+// Placeholder — implementar cuando el diseño esté definido
+export default function VistaGraficas() {
+  return (
+    <div className="db-empty">
+      <span className="db-empty-icon">📈</span>
+      <p>Las gráficas detalladas estarán disponibles pronto.</p>
+>>>>>>> 3fa000b36689b6ccfcd60856f5a0318f4bfa9617
     </div>
   );
 }

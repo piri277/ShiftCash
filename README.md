@@ -1,4 +1,4 @@
-💸 ShiftCash - Gestión Financiera
+# 💸 ShiftCash - Gestión Financiera
 
 ShiftCash es una aplicación web moderna diseñada para el control de finanzas personales, construida con **React**, **Vite** y visualizaciones dinámicas con **Recharts**.
 
@@ -19,6 +19,7 @@ git clone https://github.com/piri277/ShiftCash
 Asegúrate de tener Node.js instalado. Luego, ejecuta:
 
 npm install
+
 npm install recharts
 
 ### 3. Ejecutar en modo desarrollo
@@ -26,3 +27,10 @@ npm run dev
 
 Una vez ejecutado, abre http://localhost:5173 en tu navegador para ver la aplicación.
 
+
+## 🔐 Estado del Proyecto (Acceso Beta)
+Actualmente, el backend de autenticación está en desarrollo. Para explorar la aplicación:
+
+Registro: El módulo de creación de cuentas nuevas aún no está operativo.
+
+Login: Ingresa cualquier usuario y contraseña. El sistema te otorgará acceso automáticamente mediante credenciales predeterminadas de prueba.

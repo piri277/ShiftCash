@@ -3,11 +3,18 @@ import { useState }            from "react";
 import { useCategorias }       from "../../hooks/useCategorias";
 import { useTransaccionForm }  from "../../hooks/useTransaccionForm";
 import { formatearPesos }      from "../../utils/formatters";
+<<<<<<< HEAD
 import { createPortal } from "react-dom"; 
 
 import "../../styles/modal.css";
 
 export default function DetalleTransaccion({ transaccion, onClose, onSuccess}) {
+=======
+
+import "../../styles/modal.css";
+
+export default function DetalleTransaccion({ transaccion, onClose, onSuccess }) {
+>>>>>>> 3fa000b36689b6ccfcd60856f5a0318f4bfa9617
   const [editando, setEditando] = useState(false);
   const { categorias, loadingCats } = useCategorias();
   const { form, error, loading, handleChange, handleSubmit } = useTransaccionForm(
@@ -17,9 +24,14 @@ export default function DetalleTransaccion({ transaccion, onClose, onSuccess}) {
 
   const esGasto = transaccion.type === "expense";
 
+<<<<<<< HEAD
   console.log(transaccion);
   return createPortal(
     <div className="modal-overlay-scroll" onClick={onClose} style={{ top: scrollY }}>
+=======
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+>>>>>>> 3fa000b36689b6ccfcd60856f5a0318f4bfa9617
       <div className="modal-card" onClick={e => e.stopPropagation()}>
 
         {/* Header */}
@@ -55,6 +67,7 @@ export default function DetalleTransaccion({ transaccion, onClose, onSuccess}) {
                 <span className="detalle-label">Descripción</span>
                 <span className="detalle-valor">{transaccion.description || "Sin descripción"}</span>
               </div>
+<<<<<<< HEAD
 
               <div className="detalle-campo">
                 <span className="detalle-label">Recurrente</span>
@@ -76,6 +89,8 @@ export default function DetalleTransaccion({ transaccion, onClose, onSuccess}) {
                   </span>
                 </div>
               )}
+=======
+>>>>>>> 3fa000b36689b6ccfcd60856f5a0318f4bfa9617
             </div>
             <button className="modal-submit" onClick={() => setEditando(true)}>
               ✏️ Editar
@@ -138,6 +153,7 @@ export default function DetalleTransaccion({ transaccion, onClose, onSuccess}) {
                 value={form.trans_date} onChange={handleChange} />
             </div>
 
+<<<<<<< HEAD
             {/* Recurrente */}
             <div
               className={`modal-recurrente-toggle ${form.is_recurring ? 'activo' : ''}`}
@@ -170,6 +186,8 @@ export default function DetalleTransaccion({ transaccion, onClose, onSuccess}) {
               </div>
             )}
 
+=======
+>>>>>>> 3fa000b36689b6ccfcd60856f5a0318f4bfa9617
             <div style={{ display: "flex", gap: 10 }}>
               <button type="button" className="modal-submit"
                 style={{ background: "#2e303a", boxShadow: "none" }}
@@ -184,7 +202,11 @@ export default function DetalleTransaccion({ transaccion, onClose, onSuccess}) {
           </form>
         )}
       </div>
+<<<<<<< HEAD
     </div>,
     document.body
+=======
+    </div>
+>>>>>>> 3fa000b36689b6ccfcd60856f5a0318f4bfa9617
   );
 }

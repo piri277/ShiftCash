@@ -29,7 +29,11 @@ export default function Dashboard() {
   const VISTAS = {
     resumen:       <VistaResumen       finanzas={finanzas} />,
     historial:     <VistaHistorial     finanzas={finanzas} />,
+<<<<<<< HEAD
     graficas: <VistaGraficas finanzas={finanzas} />,
+=======
+    graficas:      <VistaGraficas      />,
+>>>>>>> 3fa000b36689b6ccfcd60856f5a0318f4bfa9617
     categorias:    <VistaCategorias    />,
     configuracion: <VistaConfiguracion />,
   };

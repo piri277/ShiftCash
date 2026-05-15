@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
 import { getMe, actualizarPerfil, cambiarPassword, actualizarMoneda, eliminarCuenta } from "../../../api/profile";
 import "../../../styles/config.css";
+import { useTheme } from "../../../hooks/useTheme";
 
 
 const MONEDAS = ["COP", "USD", "EUR", "MXN", "ARS", "BRL"];
 
+
 export default function VistaConfiguracion() {
+  const { theme, toggleTheme } = useTheme();
   const [usuario, setUsuario] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -158,10 +161,57 @@ export default function VistaConfiguracion() {
 
         {seccion === "preferencias" && (
           <div className="config-card">
-            <h2 className="config-titulo">Preferencias</h2>
-            <p className="config-subtitulo">Configura tu moneda predeterminada</p>
-
-            <label className="config-label">Moneda</label>
+            <h3 className="config-titulo">Preferencias</h3>
+           <p className="config-subtitulo">Apariencia y moneda predeterminada</p>
+ 
+           {/* — Toggle de tema — */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+              <div>
+               <div className="config-label" style={{ marginBottom: 2 }}>
+                 {theme === 'dark' ? '🌙 Tema oscuro' : '☀️ Tema claro'}
+                </div>
+               <div style={{ fontSize: '0.78rem', color: 'var(--text-faint, #555e82)' }}>
+                 {theme === 'dark' ? 'Cambia al tema claro' : 'Cambia al tema oscuro'}
+               </div>
+             </div>
+ 
+             <button
+               onClick={toggleTheme}
+               aria-label="Cambiar tema"
+                style={{
+                  width: 48,
+                 height: 26,
+                borderRadius: 99,
+                border: 'none',
+                cursor: 'pointer',
+                position: 'relative',
+                background: theme === 'dark'
+                  ? 'rgba(91,110,245,0.25)'
+                  : 'rgba(91,110,245,0.55)',
+                transition: 'background 0.25s',
+                flexShrink: 0,
+              }}
+            >
+              <span style={{
+                position: 'absolute',
+                top: 4,
+                left: theme === 'dark' ? 4 : 22,
+                width: 18,
+                height: 18,
+                borderRadius: '50%',
+                background: theme === 'dark' ? '#8b93bc' : '#fff',
+                transition: 'left 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.25s',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: 10,
+              }}>
+                {theme === 'dark' ? '🌙' : '☀️'}
+              </span>
+            </button>
+          </div>
+ 
+          <label className="config-label">Moneda</label>
             <select className="config-input" value={moneda} onChange={e => setMoneda(e.target.value)}>
               {MONEDAS.map(m => (
                 <option key={m} value={m}>{m}</option>
@@ -170,7 +220,12 @@ export default function VistaConfiguracion() {
 
             {msgMoneda && <p className={`config-msg ${msgMoneda.tipo}`}>{msgMoneda.texto}</p>}
             <button className="config-btn" onClick={guardarMoneda}>Guardar preferencias</button>
-          </div>
+        </div>
+
+          
+
+
+
         )}
 
         {seccion === "cuenta" && (

@@ -1,0 +1,58 @@
+[data-theme="light"] {
+  --primary:          #4a5ce0;
+  --primary-dark:     #3448c4;
+  --accent:           #7c44e0;
+  --success:          #16a96e;
+  --danger:           #e05555;
+  --warning:          #d4900f;
+ 
+  --dark:             #f0f2fa;
+  --surface:          #ffffff;
+  --surface-2:        #f4f5fb;
+  --surface-3:        #eaecf7;
+ 
+  --border:           rgba(74, 92, 224, 0.14);
+  --border-hover:     rgba(74, 92, 224, 0.38);
+ 
+  --text-primary:     #1a1d35;
+  --text-muted:       #5a6080;
+  --text-faint:       #8f96b8;
+ 
+  --glow-primary:     rgba(74, 92, 224, 0.1);
+  --glow-accent:      rgba(124, 68, 224, 0.08);
+ 
+  --gradient-accent:  linear-gradient(135deg, #4a5ce0 0%, #7c44e0 100%);
+  --gradient-success: linear-gradient(135deg, #16a96e 0%, #0d7a50 100%);
+  --gradient-danger:  linear-gradient(135deg, #e05555 0%, #c73c3c 100%);
+ 
+  --shadow-card:      0 2px 16px rgba(74, 92, 224, 0.08), 0 1px 0 rgba(255,255,255,0.8) inset;
+  --shadow-glow:      0 0 40px rgba(74, 92, 224, 0.1);
+}
+ 
+/* Topbar en tema claro: fondo blanco translúcido */
+[data-theme="light"] .db-topbar {
+  background: rgba(255, 255, 255, 0.85);
+}
+ 
+/* App shell: quitar noise texture oscura en tema claro */
+[data-theme="light"] .db-app {
+  background-image: none;
+}
+ 
+/* Sidebar glow line: más sutil en claro */
+[data-theme="light"] .db-sidebar::after {
+  background: linear-gradient(to bottom, transparent, rgba(74, 92, 224, 0.25), transparent);
+}
+ 
+/* Nav item activo: borde izquierdo más visible */
+[data-theme="light"] .db-nav-item.active::before {
+  box-shadow: 0 0 8px rgba(74, 92, 224, 0.35);
+}
+ 
+/* Scrollbar en tema claro */
+[data-theme="light"] .db-content::-webkit-scrollbar-thumb {
+  background: rgba(74, 92, 224, 0.18);
+}
+[data-theme="light"] .db-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(74, 92, 224, 0.35);
+}

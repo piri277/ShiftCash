@@ -12,9 +12,11 @@ import ModalTransaccion   from "./ModalTransaccion";
 import { useFinanzas }    from "../../hooks/useFinanzas";
 import { MENU_ITEMS }     from "../../constants";
 
-import "../../styles/dashboard.css";
 
-// Dashboard — Solo layout y routing de vistas.
+import "../../styles/dashboard.css";
+import "../../styles/TemaClaro.css";
+
+// Dashboard 
 
 export default function Dashboard() {
   const [vistaActiva, setVistaActiva] = useState("resumen");

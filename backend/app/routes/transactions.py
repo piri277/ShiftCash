@@ -47,11 +47,8 @@ def create_transaction(
         amount=transaction.amount,
         description=transaction.description,
         trans_date=transaction.trans_date or date.today(),  # fecha actual si no se ingresa
-<<<<<<< HEAD
         is_recurring=transaction.is_recurring,
         frequency=transaction.frequency,
-=======
->>>>>>> 3fa000b36689b6ccfcd60856f5a0318f4bfa9617
     )
     db.add(new_transaction)
     db.commit()
@@ -84,11 +81,8 @@ def get_transactions(
             amount=float(t.amount),
             description=t.description,
             trans_date=t.trans_date,
-<<<<<<< HEAD
             is_recurring=t.is_recurring,
             frequency=t.frequency,
-=======
->>>>>>> 3fa000b36689b6ccfcd60856f5a0318f4bfa9617
         ))
     return result
 
@@ -129,11 +123,8 @@ def update_transaction(
         amount=float(transaction.amount),
         description=transaction.description,
         trans_date=transaction.trans_date,
-<<<<<<< HEAD
         is_recurring=transaction.is_recurring,
         frequency=transaction.frequency
-=======
->>>>>>> 3fa000b36689b6ccfcd60856f5a0318f4bfa9617
     )
 
 

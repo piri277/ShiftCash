@@ -2,10 +2,7 @@
 import { useState }             from 'react';
 import { eliminarCategoria }    from '../../../api/categories';
 import { useCategoriasCRUD }    from '../../../hooks/useCategoriasCRUD';
-<<<<<<< HEAD
 import { createPortal } from 'react-dom';
-=======
->>>>>>> 3fa000b36689b6ccfcd60856f5a0318f4bfa9617
 import VistaCategoriasForm      from './VistaCategoriasForm';
 
 import "../../../styles/categorias.css";
@@ -26,7 +23,6 @@ function TarjetaDefault({ categoria }) {
 function TarjetaPersonalizada({ categoria, onEditar, onEliminar }) {
   const [abierta, setAbierta] = useState(false);
 
-<<<<<<< HEAD
   // Extraemos el emoji del nombre si es que viene pegado, 
   // o usamos el campo icon si ya lo tienes separado en la DB.
   const nombreLimpio = categoria.name_cat.replace(/[\u{1F300}-\u{1F9FF}]/gu, '').trim();
@@ -93,40 +89,12 @@ function TarjetaPersonalizada({ categoria, onEditar, onEliminar }) {
       {abierta && createPortal(modalDetalle, document.body)}
     </>
   );
-=======
-  return (
-    <div className={`cat-card cat-card--custom ${abierta ? 'abierta' : ''}`}
-      onClick={() => setAbierta(p => !p)}>
-      <div className="cat-card-icon">{categoria.icon}</div>
-      <div className="cat-card-name">{categoria.name_cat}</div>
-      <div className="cat-card-type">
-        {categoria.type === 'expense' ? 'Gasto' : categoria.type === 'income' ? 'Ingreso' : 'Ambos'}
-      </div>
-      {abierta && (
-        <div className="cat-card-actions" onClick={e => e.stopPropagation()}>
-          <button className="cat-action-btn cat-action-btn--edit"
-            onClick={() => { setAbierta(false); onEditar(categoria); }}>
-            ✏️ Editar
-          </button>
-          <button className="cat-action-btn cat-action-btn--delete"
-            onClick={() => { setAbierta(false); onEliminar(categoria); }}>
-            🗑️ Eliminar
-          </button>
-        </div>
-      )}
-    </div>
-  );
->>>>>>> 3fa000b36689b6ccfcd60856f5a0318f4bfa9617
 }
 
 // ── Modal confirmación eliminar ──
 function ConfirmarEliminarCategoria({ categoria, onClose, onSuccess }) {
   const [loading, setLoading] = useState(false);
-<<<<<<< HEAD
   const [error, setError] = useState('');
-=======
-  const [error,   setError]   = useState('');
->>>>>>> 3fa000b36689b6ccfcd60856f5a0318f4bfa9617
 
   const handleEliminar = async () => {
     setLoading(true);
@@ -141,11 +109,7 @@ function ConfirmarEliminarCategoria({ categoria, onClose, onSuccess }) {
     }
   };
 
-<<<<<<< HEAD
   return createPortal(
-=======
-  return (
->>>>>>> 3fa000b36689b6ccfcd60856f5a0318f4bfa9617
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-card" style={{ maxWidth: 380 }} onClick={e => e.stopPropagation()}>
         <div className="modal-header">
@@ -168,12 +132,8 @@ function ConfirmarEliminarCategoria({ categoria, onClose, onSuccess }) {
           </button>
         </div>
       </div>
-<<<<<<< HEAD
     </div>,
     document.body
-=======
-    </div>
->>>>>>> 3fa000b36689b6ccfcd60856f5a0318f4bfa9617
   );
 }
 

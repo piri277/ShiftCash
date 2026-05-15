@@ -1,15 +1,8 @@
-<<<<<<< HEAD
 import { useState, useMemo } from "react";
 import { formatearPesos }    from "../../../utils/formatters";
 import DetalleTransaccion    from "../DetalleTransaccion";
 import ConfirmarEliminar     from "../ConfirmarEliminar";
-=======
-/* VistaHistorial.jsx - Componente para mostrar el historial de transacciones del usuario, con opciones para ver detalles y eliminar transacciones. Maneja estados de carga, error y muestra un mensaje cuando no hay transacciones. */
-import { useState }              from "react";
-import { formatearPesos }        from "../../../utils/formatters";
-import DetalleTransaccion        from "../DetalleTransaccion";
-import ConfirmarEliminar         from "../ConfirmarEliminar";
->>>>>>> 3fa000b36689b6ccfcd60856f5a0318f4bfa9617
+
 
 import "../../../styles/historial.css";
 import "../../../styles/modal.css";
@@ -17,37 +10,22 @@ import "../../../styles/modal.css";
 function FilaTransaccion({ transaccion, onVerDetalle, onEliminar }) {
   const esGasto = transaccion.type === "expense";
   return (
-<<<<<<< HEAD
     <div className="hist-fila" onClick={() => onVerDetalle(transaccion)}>
-=======
-    <div className="hist-fila" onClick={() => onVerDetalle(transaccion)}
-      style={{ cursor: "pointer" }}>
->>>>>>> 3fa000b36689b6ccfcd60856f5a0318f4bfa9617
       <div className="hist-icono"
         style={{ background: esGasto ? "rgba(248,113,113,0.1)" : "rgba(52,211,153,0.1)" }}>
         {esGasto ? "💸" : "💰"}
       </div>
       <div className="hist-info">
-<<<<<<< HEAD
         <span className="hist-categoria">
           {transaccion.category_name}
           {transaccion.is_recurring && (
             <span className="hist-recurrente-badge" title="Recurrente">🔁</span>
           )}
         </span>
-=======
-        <span className="hist-categoria">{transaccion.category_name}</span>
->>>>>>> 3fa000b36689b6ccfcd60856f5a0318f4bfa9617
         {transaccion.description && (
           <span className="hist-descripcion">{transaccion.description}</span>
         )}
       </div>
-<<<<<<< HEAD
-=======
-      <div className="hist-fecha">
-        {new Date(transaccion.trans_date).toLocaleDateString("es-CO")}
-      </div>
->>>>>>> 3fa000b36689b6ccfcd60856f5a0318f4bfa9617
       <div className="hist-monto" style={{ color: esGasto ? "#f87171" : "#34d399" }}>
         {esGasto ? "−" : "+"}{formatearPesos(transaccion.amount)}
       </div>
@@ -62,7 +40,6 @@ function FilaTransaccion({ transaccion, onVerDetalle, onEliminar }) {
   );
 }
 
-<<<<<<< HEAD
 function etiquetaDia(fechaStr) {
   const [year, month, day] = fechaStr.slice(0, 10).split("-").map(Number);
   const fecha = new Date(year, month - 1, day);
@@ -152,12 +129,6 @@ export default function VistaHistorial({ finanzas }) {
     }
     return Object.entries(mapa).sort(([a], [b]) => b.localeCompare(a));
   }, [transaccionesFiltradas]);
-=======
-export default function VistaHistorial({ finanzas }) {
-  const { transacciones, loading, error, recargar } = finanzas;
-  const [detalle,  setDetalle]  = useState(null);
-  const [eliminar, setEliminar] = useState(null);
->>>>>>> 3fa000b36689b6ccfcd60856f5a0318f4bfa9617
 
   if (loading) return <div className="db-empty"><span>Cargando...</span></div>;
   if (error)   return <div className="db-empty"><span>⚠️ {error}</span></div>;
@@ -166,18 +137,13 @@ export default function VistaHistorial({ finanzas }) {
     return (
       <div className="db-empty">
         <span className="db-empty-icon">📋</span>
-<<<<<<< HEAD
         <p>Aún no tienes transacciones este mes.</p>
-=======
-        <p>Aún no tienes gastos este mes.</p>
->>>>>>> 3fa000b36689b6ccfcd60856f5a0318f4bfa9617
       </div>
     );
   }
 
   return (
     <div>
-<<<<<<< HEAD
       <div className="hist-topbar">
         <h2 className="db-view-title" style={{ margin: 0 }}>Historial</h2>
 
@@ -338,34 +304,7 @@ export default function VistaHistorial({ finanzas }) {
         <ConfirmarEliminar transaccion={eliminar}
           onClose={() => setEliminar(null)}
           onSuccess={() => { recargar(); setEliminar(null); }} />
-=======
-      <h2 className="db-view-title">Historial de transacciones</h2>
-      <div className="db-card">
-        {transacciones.map(t => (
-          <FilaTransaccion
-            key={t.trans_id}
-            transaccion={t}
-            onVerDetalle={setDetalle}
-            onEliminar={setEliminar}
-          />
-        ))}
-      </div>
 
-      {detalle && (
-        <DetalleTransaccion
-          transaccion={detalle}
-          onClose={() => setDetalle(null)}
-          onSuccess={recargar}
-        />
-      )}
-
-      {eliminar && (
-        <ConfirmarEliminar
-          transaccion={eliminar}
-          onClose={() => setEliminar(null)}
-          onSuccess={() => { recargar(); setEliminar(null); }}
-        />
->>>>>>> 3fa000b36689b6ccfcd60856f5a0318f4bfa9617
       )}
     </div>
   );

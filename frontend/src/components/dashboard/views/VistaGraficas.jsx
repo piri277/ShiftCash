@@ -93,10 +93,10 @@ function construirDatosPeriodo(transacciones, periodo) {
 }
 
 // Gráficas 
-function GraficaCategorias({ transacciones }) {
+function GraficaCategoriasBase({ transacciones, tipo }) {
   const datos = Object.values(
     transacciones
-      .filter(t => t.type === "expense")
+      .filter(t => t.type === tipo)
       .reduce((acc, t) => {
         acc[t.category_name] = acc[t.category_name] ?? { name: t.category_name, value: 0 };
         acc[t.category_name].value += t.amount;
@@ -105,21 +105,21 @@ function GraficaCategorias({ transacciones }) {
   );
 
   if (!datos.length) return (
-    <div className="db-empty" style={{ padding: "2rem" }}>
-      <span className="db-empty-icon">🍩</span>
-      <p>Sin gastos en este período.</p>
+    <div className="db-empty" style={{ padding: "1.5rem" }}>
+      <span className="db-empty-icon" style={{ fontSize: "1.5rem" }}>🍩</span>
+      <p>Sin datos.</p>
     </div>
   );
 
   return (
-    <ResponsiveContainer width="100%" height={260}>
+    <ResponsiveContainer width="100%" height={220}>
       <PieChart>
         <Pie data={datos} dataKey="value" nameKey="name"
-          cx="50%" cy="50%" innerRadius={60} outerRadius={100} paddingAngle={3}>
+          cx="50%" cy="50%" innerRadius={50} outerRadius={85} paddingAngle={3}>
           {datos.map((_, i) => <Cell key={i} fill={COLORES[i % COLORES.length]} />)}
         </Pie>
         <Tooltip contentStyle={TOOLTIP_STYLE} formatter={v => formatearPesos(v)} />
-        <Legend wrapperStyle={{ fontSize: "0.8rem", color: "#9ba3c7" }} />
+        <Legend wrapperStyle={{ fontSize: "0.75rem", color: "#9ba3c7" }} />
       </PieChart>
     </ResponsiveContainer>
   );
@@ -288,9 +288,19 @@ export default function VistaGraficas({ finanzas }) {
       )}
 
       {/* Gráficas */}
-      <div className="db-card">
-        <h3 className="db-card-title">Gastos por categoría</h3>
-        <GraficaCategorias transacciones={txFiltradas} />
+      <div className={`graf-doble${filtroTipo !== "" ? " solo" : ""}`}>
+        {filtroTipo !== "income" && (
+         <div className="graf-doble-item">
+           <h3 className="db-card-title">Gastos por categoría</h3>
+           <GraficaCategoriasBase transacciones={txFiltradas} tipo="expense" />
+         </div>
+       )}
+        {filtroTipo !== "expense" && (
+         <div className="graf-doble-item">
+           <h3 className="db-card-title">Ingresos por categoría</h3>
+            <GraficaCategoriasBase transacciones={txFiltradas} tipo="income" />
+         </div>
+        )}
       </div>
 
       <div className="db-card">

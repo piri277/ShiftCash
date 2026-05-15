@@ -226,3 +226,36 @@
 
 .hist-btn-eliminar:hover { opacity: 1; background: rgba(248,113,113,0.12); }
 
+/* Graficas*/
+.graf-doble {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.graf-doble-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.35rem 1.5rem;
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  transition: border-color 0.2s;
+  /* Animación de expansión */
+  animation: grafExpand 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.graf-doble-item:hover {
+  border-color: var(--border-hover);
+}
+
+/* Cuando solo hay una gráfica, ocupa todo el ancho */
+.graf-doble.solo .graf-doble-item {
+  grid-column: 1 / -1;
+}
+
+@keyframes grafExpand {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}

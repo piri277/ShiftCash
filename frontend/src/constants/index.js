@@ -1,11 +1,9 @@
-
-export const PRESUPUESTO_LIMITE = 900_000; // COP
-
 export const MENU_ITEMS = [
   { key: "resumen",       etiqueta: "Resumen",       icono: "📊" },
   { key: "historial",     etiqueta: "Historial",     icono: "📋" },
   { key: "graficas",      etiqueta: "Gráficas",      icono: "📈" },
   { key: 'categorias',    etiqueta: 'Categorías',    icono: '🗂️' },
+  { key: 'presupuestos',  etiqueta: 'Presupuestos',  icono: '💸' },
   { key: "configuracion", etiqueta: "Configuración", icono: "⚙️" }
 ];
 

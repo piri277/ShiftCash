@@ -35,12 +35,17 @@ class Category(Base):
 class Budget(Base):
     __tablename__ = "budget"
 
-    budget_id   = Column(Integer, primary_key=True, index=True)
-    user_id     = Column(Integer, ForeignKey("users.user_id", ondelete="CASCADE"), nullable=False)
-    category_id = Column(Integer, ForeignKey("category.category_id", ondelete="CASCADE"), nullable=False)
-    amount      = Column(Numeric(15, 2), nullable=False)
-    month       = Column(SmallInteger, nullable=False)
-    year        = Column(SmallInteger, nullable=False)
+    budget_id    = Column(Integer, primary_key=True, index=True)
+    user_id      = Column(Integer, ForeignKey("users.user_id", ondelete="CASCADE"), nullable=False)
+    category_id  = Column(Integer, ForeignKey("category.category_id", ondelete="CASCADE"), nullable=False)
+    name         = Column(String(100), nullable=False)
+    amount       = Column(Numeric(15, 2), nullable=False)
+    period_type  = Column(String(10), nullable=False)  # 'daily', 'weekly', 'monthly', 'unique'
+    month        = Column(SmallInteger, nullable=True)
+    year         = Column(SmallInteger, nullable=True)
+    start_date   = Column(Date, nullable=True)
+    end_date     = Column(Date, nullable=True)
+    is_permanent = Column(Boolean, default=False)  # True = presupuesto para siempre
 
     user     = relationship("User", back_populates="budgets")
     category = relationship("Category", back_populates="budgets")

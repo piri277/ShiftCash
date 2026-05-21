@@ -128,3 +128,67 @@ class TransactionOut(BaseModel):
 
     class Config:
         from_attributes = True
+
+# Presupuestos
+class BudgetBase(BaseModel):
+    category_id: int
+    name: str
+    amount: float
+    period_type: str  # 'daily', 'weekly', 'monthly', 'unique'
+    month: Optional[int] = None
+    year: Optional[int] = None
+    start_date: Optional[date] = None
+    end_date: Optional[date] = None
+    is_permanent: bool = False
+
+    @field_validator("amount")
+    @classmethod
+    def amount_must_be_positive(cls, v):
+        if v <= 0:
+            raise ValueError("El monto debe ser mayor a 0")
+        return v
+
+    @field_validator("period_type")
+    @classmethod
+    def period_type_must_be_valid(cls, v):
+        if v not in ("daily", "weekly", "monthly", "unique"):
+            raise ValueError("El tipo de período debe ser 'daily', 'weekly', 'monthly' o 'unique'")
+        return v
+
+class BudgetCreate(BudgetBase):
+    pass
+
+class BudgetUpdate(BaseModel):
+    category_id: Optional[int] = None
+    name: Optional[str] = None
+    amount: Optional[float] = None
+    period_type: Optional[str] = None
+    month: Optional[int] = None
+    year: Optional[int] = None
+    start_date: Optional[date] = None
+    end_date: Optional[date] = None
+    is_permanent: Optional[bool] = None
+
+    @field_validator("amount")
+    @classmethod
+    def amount_must_be_positive(cls, v):
+        if v is not None and v <= 0:
+            raise ValueError("El monto debe ser mayor a 0")
+        return v
+
+    @field_validator("period_type")
+    @classmethod
+    def period_type_must_be_valid(cls, v):
+        if v is not None and v not in ("daily", "weekly", "monthly", "unique"):
+            raise ValueError("El tipo de período debe ser 'daily', 'weekly', 'monthly' o 'unique'")
+        return v
+
+class BudgetOut(BudgetBase):
+    budget_id: int
+    category_name: str
+    category_icon: Optional[str]
+    spent: float
+    percentage: float
+
+    class Config:
+        from_attributes = True

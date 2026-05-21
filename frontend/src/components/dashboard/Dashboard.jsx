@@ -7,9 +7,11 @@ import VistaResumen       from "./views/VistaResumen";
 import VistaHistorial     from "./views/VistaHistorial";
 import VistaGraficas      from "./views/VistaGraficas";
 import VistaConfiguracion from "./views/VistaConfiguracion";
-import VistaCategorias        from "./views/VistaCategorias"; 
+import VistaCategorias    from "./views/VistaCategorias";
+import VistaPresupuestos  from "./views/VistaPresupuestos";
 import ModalTransaccion   from "./ModalTransaccion";
 import { useFinanzas }    from "../../hooks/useFinanzas";
+import { useBudgets }     from "../../hooks/useBudgets";
 import { MENU_ITEMS }     from "../../constants";
 
 
@@ -22,14 +24,16 @@ export default function Dashboard() {
   const [vistaActiva, setVistaActiva] = useState("resumen");
   const [modalAbierto, setModalAbierto] = useState(false);
   const finanzas = useFinanzas();
+  const budgets = useBudgets();
 
   const itemActivo = MENU_ITEMS.find(item => item.key === vistaActiva);
 
   const VISTAS = {
-    resumen:       <VistaResumen       finanzas={finanzas} />,
+    resumen:       <VistaResumen       finanzas={finanzas} budgets={budgets} />,
     historial:     <VistaHistorial     finanzas={finanzas} />,
-    graficas: <VistaGraficas finanzas={finanzas} />,
+    graficas:      <VistaGraficas      finanzas={finanzas} />,
     categorias:    <VistaCategorias    />,
+    presupuestos:  <VistaPresupuestos  budgets={budgets} />,
     configuracion: <VistaConfiguracion />,
   };
 
@@ -51,7 +55,8 @@ export default function Dashboard() {
         <ModalTransaccion
           onClose={() => setModalAbierto(false)}
           onSuccess={() => {
-            finanzas.recargar()
+            finanzas.recargar();
+            budgets.recargar();
           }}
         />
       )}

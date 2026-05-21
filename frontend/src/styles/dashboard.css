@@ -320,6 +320,13 @@
   font-size: 1.6rem;
   letter-spacing: -0.5px;
   line-height: 1;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+  -moz-font-feature-settings: 'tnum';
+  -webkit-font-feature-settings: 'tnum';
+  min-width: 120px;
+  display: inline-block;
+  text-align: right;
 }
 
 /* ===== GENERIC CARD ===== */
@@ -351,6 +358,10 @@
   font-family: 'Sora', sans-serif;
   font-weight: 600;
   font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+  -moz-font-feature-settings: 'tnum';
+  -webkit-font-feature-settings: 'tnum';
 }
 
 .db-budget-track {

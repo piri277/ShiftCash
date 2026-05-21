@@ -6,7 +6,7 @@ import {
   BarChart, Bar,
 } from "recharts";
 
-import { PRESUPUESTO_LIMITE } from "../../../constants";
+import { useBudgets } from "../../../hooks/useBudgets";
 import { formatearPesos, formatearEjeY } from "../../../utils/formatters";
 
 const TOOLTIP_STYLE = {
@@ -23,21 +23,28 @@ const DIAS  = ["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"];
 function filtrarPorPeriodo(transacciones, periodo) {
   const hoy = new Date();
 
-  if (periodo === "semana") {
+  if (periodo === "semanalmente") {
     const lunes = new Date(hoy);
     lunes.setDate(hoy.getDate() - ((hoy.getDay() + 6) % 7));
     lunes.setHours(0, 0, 0, 0);
     return transacciones.filter(t => new Date(t.trans_date) >= lunes);
   }
 
-  if (periodo === "mes") {
+  if (periodo === "mensualmente") {
     return transacciones.filter(t => {
       const d = new Date(t.trans_date);
       return d.getMonth() === hoy.getMonth() && d.getFullYear() === hoy.getFullYear();
     });
   }
 
-  return transacciones; // anual
+  if (periodo === "diariamente") {
+    return transacciones.filter(t => {
+      const d = new Date(t.trans_date);
+      return d.toDateString() === hoy.toDateString();
+    });
+  }
+
+  return transacciones; // único o por defecto
 }
 
 
@@ -45,7 +52,17 @@ function construirDatos(transacciones, periodo) {
 
  const txFiltradas = filtrarPorPeriodo(transacciones, periodo);
 
-  if (periodo === "semana") {
+  if (periodo === "diariamente") {
+    const hoy   = new Date();
+    return [{
+      label: "Hoy",
+      ingresos: txFiltradas.filter(t => t.type === "income").reduce((s, t) => s + t.amount, 0),
+      gastos: txFiltradas.filter(t => t.type === "expense").reduce((s, t) => s + t.amount, 0),
+      ahorros: 0
+    }].map(d => ({ ...d, ahorros: d.ingresos - d.gastos }));
+  }
+
+  if (periodo === "semanalmente") {
      const hoy   = new Date();
      const lunes = new Date(hoy);
      lunes.setDate(hoy.getDate() - ((hoy.getDay() + 6) % 7));
@@ -60,7 +77,7 @@ function construirDatos(transacciones, periodo) {
     });
   }
 
-  if (periodo === "mes") {
+  if (periodo === "mensualmente") {
     const hoy      = new Date();
     const diasMes  = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0).getDate();
     return Array.from({ length: diasMes }, (_, i) => {
@@ -73,7 +90,7 @@ function construirDatos(transacciones, periodo) {
     });
   }
 
-  // anual
+  // único o por defecto - anual
   return MESES.map((mes, i) => {
     const delMes   = transacciones.filter(t => new Date(t.trans_date).getMonth() === i);
     const ingresos = delMes.filter(t => t.type === "income").reduce((s, t) => s + t.amount, 0);
@@ -83,14 +100,14 @@ function construirDatos(transacciones, periodo) {
 }
 
 // ── Sub-componentes ───────────────────────────────────────────────────────────
-function AlertaPresupuesto({ totalGastado }) {
+function AlertaPresupuesto({ totalGastado, totalAsignado }) {
   return (
     <div className="db-alert">
       <span>⚠️</span>
       <span>
-        ¡Has superado tu presupuesto mensual! Gastaste{" "}
-        <strong>{formatearPesos(totalGastado)}</strong> de un límite de{" "}
-        <strong>{formatearPesos(PRESUPUESTO_LIMITE)}</strong>.
+        ¡Has superado tu presupuesto! Gastaste{" "}
+        <strong>{formatearPesos(totalGastado)}</strong> de{" "}
+        <strong>{formatearPesos(totalAsignado)}</strong>.
       </span>
     </div>
   );
@@ -106,18 +123,54 @@ function TarjetaStat({ etiqueta, valor, color, icono }) {
   );
 }
 
-function BarraPresupuesto({ porcentaje, totalGastado, superado }) {
+function BarraPresupuesto({ presupuestosDelPeriodo, periodo, setPeriodo }) {
+  // Calcular totales dinámicamente
+  const totalAsignado = presupuestosDelPeriodo.reduce((sum, b) => sum + b.amount, 0);
+  const totalGastado = presupuestosDelPeriodo.reduce((sum, b) => sum + b.spent, 0);
+  const porcentaje = totalAsignado > 0 ? (totalGastado / totalAsignado) * 100 : 0;
+  const superado = porcentaje > 100;
+
+  const PERIODOS = [
+    { value: "diariamente", label: "Diariamente" },
+    { value: "semanalmente", label: "Semanalmente" },
+    { value: "mensualmente", label: "Mensualmente" },
+  ];
+
   return (
     <div className="db-card">
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem", gap: 8, flexWrap: "wrap" }}>
+        <span>Presupuesto Total</span>
+        <div style={{ display: "flex", gap: 6 }}>
+          {PERIODOS.map(p => (
+            <button key={p.value} onClick={() => setPeriodo(p.value)}
+              style={{
+                padding: "3px 12px",
+                borderRadius: 99,
+                border: "1px solid",
+                fontSize: "0.75rem",
+                fontWeight: 600,
+                cursor: "pointer",
+                transition: "all 0.15s",
+                borderColor: periodo === p.value ? "#5b6ef5" : "rgba(91,110,245,0.2)",
+                background: periodo === p.value ? "rgba(91,110,245,0.15)" : "transparent",
+                color: periodo === p.value ? "#a0aaff" : "#555e82",
+              }}
+            >
+              {p.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <div className="db-budget-header">
-        <span>Presupuesto mensual</span>
+        <span>{porcentaje.toFixed(0)}% — {formatearPesos(totalGastado)} / {formatearPesos(totalAsignado)}</span>
         <span style={{ color: superado ? "#f87171" : "#9ba3c7" }}>
-          {porcentaje}% — {formatearPesos(totalGastado)} / {formatearPesos(PRESUPUESTO_LIMITE)}
+          {presupuestosDelPeriodo.length} presupuestos
         </span>
       </div>
       <div className="db-budget-track">
         <div className={`db-budget-fill ${superado ? "over" : "ok"}`}
-          style={{ width: `${porcentaje}%` }} />
+          style={{ width: `${Math.min(porcentaje, 100)}%` }} />
       </div>
     </div>
   );
@@ -127,20 +180,22 @@ function BarraPresupuesto({ porcentaje, totalGastado, superado }) {
 const GRAFICAS = ["tendencia", "barras"];
 const LABELS   = { tendencia: "Tendencia", barras: "Ingresos vs Gastos" };
 const PERIODOS = [
-  { value: "semana", label: "Semana" },
-  { value: "mes",    label: "Mes"    },
-  { value: "anual",  label: "Año"    },
+  { value: "diariamente", label: "Diariamente" },
+  { value: "semanalmente", label: "Semanalmente" },
+  { value: "mensualmente", label: "Mensualmente" },
+  { value: "único", label: "Único" },
 ];
 
 function GraficaCarousel({ transacciones }) {
   const [indice,  setIndice]  = useState(0);
-  const [periodo, setPeriodo] = useState("anual");
+  const [periodo, setPeriodo] = useState("mensualmente");
 
   const grafica  = GRAFICAS[indice];
   const datos    = construirDatos(transacciones, periodo);
-  const etiqueta = periodo === "semana" ? "esta semana"
-                 : periodo === "mes"    ? MESES[new Date().getMonth()]
-                 : String(new Date().getFullYear());
+  const etiqueta = periodo === "semanalmente" ? "esta semana"
+                 : periodo === "mensualmente"    ? MESES[new Date().getMonth()]
+                 : periodo === "diariamente" ? "hoy"
+                 : "período único";
 
   return (
     <div className="db-card">
@@ -258,20 +313,81 @@ function GraficaCarousel({ transacciones }) {
 }
 
 // Vista principal 
-export default function VistaResumen({ finanzas }) {
+export default function VistaResumen({ finanzas, budgets: budgetsFromProps }) {
   const { resumen, transacciones, loading, error } = finanzas;
+  const budgetsHook = useBudgets();
+  // Usa el prop si viene del padre (Dashboard), sino usa el hook local
+  const { budgets, loading: loadingBudgets } = budgetsFromProps || budgetsHook;
+  const [periodoBudget, setPeriodoBudget] = useState("anual");
 
-  if (loading) return <div className="db-empty"><span>Cargando...</span></div>;
-  if (error)   return <div className="db-empty"><span>⚠️ {error}</span></div>;
+  if (loading || loadingBudgets) return <div className="db-empty"><span>Cargando...</span></div>;
+  if (error) return <div className="db-empty"><span>⚠️ {error}</span></div>;
 
-  const { totalGastado, totalGanado, totalAhorrado,
-          porcentajePresupuesto, presupuestoSuperado, cantidadTransacciones } = resumen;
+  const { totalGastado, totalGanado, totalAhorrado, cantidadTransacciones } = resumen;
+
+  // Filtrar presupuestos por período
+  function presupuestoPerteneceAlPeriodo(budget, periodo) {
+    const hoy = new Date();
+    const hoyString = new Date().toISOString().split("T")[0]; // "2026-05-21"
+
+    // DIARIAMENTE: solo mostrar presupuestos de tipo "daily"
+    if (periodo === "diariamente") {
+      if (budget.period_type !== "daily") return false;
+      // Si es permanente, siempre se muestra (es para hoy)
+      // Si no es permanente, verifica que start_date sea hoy
+      if (budget.is_permanent) return true;
+      // Comparar como strings para evitar problemas de zona horaria
+      return budget.start_date === hoyString;
+    }
+
+    // SEMANALMENTE: solo mostrar presupuestos de tipo "weekly"
+    if (periodo === "semanalmente") {
+      if (budget.period_type !== "weekly") return false;
+      const lunes = new Date(hoy);
+      lunes.setDate(hoy.getDate() - ((hoy.getDay() + 6) % 7));
+      const domingo = new Date(lunes);
+      domingo.setDate(lunes.getDate() + 6);
+      // Si es permanente, siempre se muestra (es para esta semana)
+      // Si no es permanente, verifica que start_date esté en esta semana
+      if (budget.is_permanent) return true;
+      // Comparar como strings para evitar problemas de zona horaria
+      const budgetDateStr = budget.start_date;
+      const lunesStr = lunes.toISOString().split("T")[0];
+      const domingoStr = domingo.toISOString().split("T")[0];
+      return budgetDateStr >= lunesStr && budgetDateStr <= domingoStr;
+    }
+
+    // MENSUALMENTE: solo mostrar presupuestos de tipo "monthly"
+    if (periodo === "mensualmente") {
+      if (budget.period_type !== "monthly") return false;
+      const hoyMonth = hoy.getMonth() + 1;
+      const hoyYear = hoy.getFullYear();
+      // Si es permanente, siempre se muestra (es para este mes)
+      // Si no es permanente, verifica que month/year coincidan con el mes actual
+      if (budget.is_permanent) return true;
+      const budgetMonth = budget.month || hoyMonth;
+      const budgetYear = budget.year || hoyYear;
+      return budgetMonth === hoyMonth && budgetYear === hoyYear;
+    }
+
+    // ÚNICO: solo mostrar presupuestos de tipo "unique"
+    if (periodo === "único") {
+      return budget.period_type === "unique";
+    }
+
+    return false;
+  }
+
+  const presupuestosFiltrados = budgets.filter(b => presupuestoPerteneceAlPeriodo(b, periodoBudget));
+  const totalAsignado = presupuestosFiltrados.reduce((sum, b) => sum + b.amount, 0);
+  const totalGastadoBudgets = presupuestosFiltrados.reduce((sum, b) => sum + b.spent, 0);
+  const presupuestoSuperado = totalAsignado > 0 && (totalGastadoBudgets / totalAsignado) > 1;
 
   const tarjetas = [
-    { etiqueta: "Total Gastado", valor: formatearPesos(totalGastado),  color: "#f87171", icono: "💸" },
-    { etiqueta: "Total Ganado",  valor: formatearPesos(totalGanado),   color: "#34d399", icono: "💰" },
-    { etiqueta: "Ahorrado",      valor: formatearPesos(totalAhorrado), color: "#5b6ef5", icono: "🏦" },
-    { etiqueta: "Transacciones", valor: cantidadTransacciones,         color: "#9b59f5", icono: "🔄" },
+    { etiqueta: "Total Gastado", valor: formatearPesos(totalGastado), color: "#f87171", icono: "💸" },
+    { etiqueta: "Total Ganado", valor: formatearPesos(totalGanado), color: "#34d399", icono: "💰" },
+    { etiqueta: "Ahorrado", valor: formatearPesos(totalAhorrado), color: "#5b6ef5", icono: "🏦" },
+    { etiqueta: "Transacciones", valor: cantidadTransacciones, color: "#9b59f5", icono: "🔄" },
   ];
 
   return (
@@ -280,14 +396,13 @@ export default function VistaResumen({ finanzas }) {
         Resumen del mes — <span>{new Date().toLocaleString("es-CO", { month: "long", year: "numeric" })}</span>
       </h2>
 
-      {presupuestoSuperado && <AlertaPresupuesto totalGastado={totalGastado} />}
+      {presupuestoSuperado && <AlertaPresupuesto totalGastado={totalGastadoBudgets} totalAsignado={totalAsignado} />}
 
       <div className="db-stat-grid">
         {tarjetas.map(t => <TarjetaStat key={t.etiqueta} {...t} />)}
       </div>
 
-      <BarraPresupuesto porcentaje={porcentajePresupuesto}
-        totalGastado={totalGastado} superado={presupuestoSuperado} />
+      <BarraPresupuesto presupuestosDelPeriodo={presupuestosFiltrados} periodo={periodoBudget} setPeriodo={setPeriodoBudget} />
 
       <GraficaCarousel transacciones={transacciones} />
     </div>

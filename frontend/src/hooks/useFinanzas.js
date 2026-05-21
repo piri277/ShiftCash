@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
 import { getTransacciones } from "../api/transactions";
-import { PRESUPUESTO_LIMITE } from "../constants";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // useFinanzas — Lógica de cálculo desacoplada de la UI
@@ -18,17 +17,10 @@ function calcularResumen(transacciones) {
 
   const totalAhorrado = totalGanado - totalGastado;
 
-  const porcentajePresupuesto = Math.min(
-    100,
-    Math.round((totalGastado / PRESUPUESTO_LIMITE) * 100)
-  );
-
   return {
     totalGastado,
     totalGanado,
     totalAhorrado,
-    porcentajePresupuesto,
-    presupuestoSuperado: totalGastado > PRESUPUESTO_LIMITE,
     cantidadTransacciones: transacciones.length,
   };
 }

@@ -1,5 +1,6 @@
 /* ConfirmarEliminar.jsx - Componente modal para confirmar la eliminación de una transacción, mostrando un mensaje de advertencia y manejando la lógica de eliminación con estados de carga y error. */
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { eliminarTransaccion } from "../../api/transactions";
 
 export default function ConfirmarEliminar({ transaccion, onClose, onSuccess }) {
@@ -19,7 +20,7 @@ export default function ConfirmarEliminar({ transaccion, onClose, onSuccess }) {
     }
   };
 
-  return (
+  return createPortal(
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-card" style={{ maxWidth: 380 }} onClick={e => e.stopPropagation()}>
         <div className="modal-header">
@@ -46,6 +47,7 @@ export default function ConfirmarEliminar({ transaccion, onClose, onSuccess }) {
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

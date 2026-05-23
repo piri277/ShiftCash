@@ -1,7 +1,8 @@
 import axios from 'axios';
 
+// Usa la variable de entorno de Vite en producción, o cae en localhost para desarrollo local
 const api = axios.create({
-  baseURL: 'http://localhost:8000',
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8000',
   headers: {
     'Content-Type': 'application/json',
   },

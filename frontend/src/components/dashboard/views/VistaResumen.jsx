@@ -1,5 +1,5 @@
 /* VistaResumen.jsx */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   AreaChart, Area, XAxis, YAxis,
   CartesianGrid, Tooltip, ResponsiveContainer, Legend,
@@ -18,6 +18,15 @@ const TOOLTIP_STYLE = {
 
 const MESES = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
 const DIAS  = ["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"];
+
+// Función auxiliar para obtener el color de la barra según el progreso
+const getBarColor = (pct) => {
+  if (pct >= 100) return "linear-gradient(90deg, #f87171, #ef4444)"; // Rojo (Superado)
+  if (pct >= 85)  return "linear-gradient(90deg, #fb923c, #f87171)"; // Naranja Rojizo (Crítico)
+  if (pct >= 60)  return "linear-gradient(90deg, #9b59f5, #fb923c)"; // Violeta Naranja (Advertencia)
+  if (pct >= 35)  return "linear-gradient(90deg, #7c8df7, #9b59f5)"; // Azul Violáceo (Moderado)
+  return "linear-gradient(90deg, #5b6ef5, #7c8df7)";                // Azul (Saludable)
+};
 
 // Helpers de filtrado 
 function filtrarPorPeriodo(transacciones, periodo) {
@@ -53,7 +62,6 @@ function construirDatos(transacciones, periodo) {
  const txFiltradas = filtrarPorPeriodo(transacciones, periodo);
 
   if (periodo === "diariamente") {
-    const hoy   = new Date();
     return [{
       label: "Hoy",
       ingresos: txFiltradas.filter(t => t.type === "income").reduce((s, t) => s + t.amount, 0),
@@ -130,7 +138,7 @@ function BarraPresupuesto({ presupuestosDelPeriodo, periodo, setPeriodo }) {
   const porcentaje = totalAsignado > 0 ? (totalGastado / totalAsignado) * 100 : 0;
   const superado = porcentaje > 100;
 
-  const PERIODOS = [
+  const OPCIONES_PERIODOS = [
     { value: "diariamente", label: "Diariamente" },
     { value: "semanalmente", label: "Semanalmente" },
     { value: "mensualmente", label: "Mensualmente" },
@@ -141,7 +149,7 @@ function BarraPresupuesto({ presupuestosDelPeriodo, periodo, setPeriodo }) {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem", gap: 8, flexWrap: "wrap" }}>
         <span>Presupuesto Total</span>
         <div style={{ display: "flex", gap: 6 }}>
-          {PERIODOS.map(p => (
+          {OPCIONES_PERIODOS.map(p => (
             <button key={p.value} onClick={() => setPeriodo(p.value)}
               style={{
                 padding: "3px 12px",
@@ -169,8 +177,14 @@ function BarraPresupuesto({ presupuestosDelPeriodo, periodo, setPeriodo }) {
         </span>
       </div>
       <div className="db-budget-track">
-        <div className={`db-budget-fill ${superado ? "over" : "ok"}`}
-          style={{ width: `${Math.min(porcentaje, 100)}%` }} />
+        <div 
+          className="db-budget-fill"
+          style={{ 
+            width: `${Math.min(porcentaje, 100)}%`,
+            background: getBarColor(porcentaje),
+            transition: "width 0.4s ease, background 0.4s ease"
+          }} 
+        />
       </div>
     </div>
   );
@@ -179,7 +193,7 @@ function BarraPresupuesto({ presupuestosDelPeriodo, periodo, setPeriodo }) {
 // ── Carousel header ───────────────────────────────────────────────────────────
 const GRAFICAS = ["tendencia", "barras"];
 const LABELS   = { tendencia: "Tendencia", barras: "Ingresos vs Gastos" };
-const PERIODOS = [
+const OPCIONES_GRAFICAS = [
   { value: "diariamente", label: "Diariamente" },
   { value: "semanalmente", label: "Semanalmente" },
   { value: "mensualmente", label: "Mensualmente" },
@@ -210,7 +224,7 @@ function GraficaCarousel({ transacciones }) {
 
         {/* Chips de periodo */}
         <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
-          {PERIODOS.map(p => (
+          {OPCIONES_GRAFICAS.map(p => (
             <button key={p.value} onClick={() => setPeriodo(p.value)}
               style={{
                 padding: "3px 12px",
@@ -317,8 +331,14 @@ export default function VistaResumen({ finanzas, budgets: budgetsFromProps }) {
   const { resumen, transacciones, loading, error } = finanzas;
   const budgetsHook = useBudgets();
   // Usa el prop si viene del padre (Dashboard), sino usa el hook local
-  const { budgets, loading: loadingBudgets } = budgetsFromProps || budgetsHook;
+  const { budgets, loading: loadingBudgets, recargar: recargarBudgets } = budgetsFromProps || budgetsHook;
   const [periodoBudget, setPeriodoBudget] = useState("anual");
+
+  // Recargar presupuestos al entrar al resumen para que la barra de progreso sea exacta
+  useEffect(() => {
+    if (recargarBudgets) recargarBudgets();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (loading || loadingBudgets) return <div className="db-empty"><span>Cargando...</span></div>;
   if (error) return <div className="db-empty"><span>⚠️ {error}</span></div>;
@@ -328,7 +348,8 @@ export default function VistaResumen({ finanzas, budgets: budgetsFromProps }) {
   // Filtrar presupuestos por período
   function presupuestoPerteneceAlPeriodo(budget, periodo) {
     const hoy = new Date();
-    const hoyString = new Date().toISOString().split("T")[0]; // "2026-05-21"
+    // Usar fecha local para evitar desfases de zona horaria (UTC vs Local)
+    const hoyString = new Date().toLocaleDateString('en-CA'); 
 
     // DIARIAMENTE: solo mostrar presupuestos de tipo "daily"
     if (periodo === "diariamente") {

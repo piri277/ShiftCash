@@ -17,6 +17,16 @@ export default function DetalleTransaccion({ transaccion, onClose, onSuccess}) {
 
   const esGasto = transaccion.type === "expense";
 
+  const formatDisplay = (val) => {
+    if (!val) return "";
+    return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
+
+  const handleAmountChange = (e) => {
+    const rawValue = e.target.value.replace(/\D/g, "");
+    handleChange({ target: { name: 'amount', value: rawValue } });
+  };
+
   console.log(transaccion);
   return createPortal(
     <div className="modal-overlay-scroll" onClick={onClose} style={{ top: scrollY }}>
@@ -104,8 +114,12 @@ export default function DetalleTransaccion({ transaccion, onClose, onSuccess}) {
 
             <div className="modal-field">
               <label>Monto *</label>
-              <input name="amount" type="number" min="1"
-                value={form.amount} onChange={handleChange} required />
+              <input 
+                name="amount" 
+                type="text" 
+                inputMode="numeric"
+                value={formatDisplay(form.amount)} 
+                onChange={handleAmountChange} required />
             </div>
 
             <div className="modal-field">

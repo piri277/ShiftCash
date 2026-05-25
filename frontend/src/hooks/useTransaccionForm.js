@@ -30,6 +30,7 @@ export function useTransaccionForm(onSuccess, transaccionExistente = null) {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+    setError(''); // Limpia el error cuando el usuario interactúa
     setForm(prev => ({
       ...prev,
       // los checkbox usan checked, el resto usan value
@@ -43,8 +44,17 @@ export function useTransaccionForm(onSuccess, transaccionExistente = null) {
     e.preventDefault();
     setError('');
 
-    if (!form.amount || !form.category_id) {
+    // Validaciones más específicas
+    if (!form.amount && !form.category_id) {
       setError('El monto y la categoría son obligatorios');
+      return;
+    }
+    if (!form.amount) {
+      setError('El monto es obligatorio');
+      return;
+    }
+    if (!form.category_id) {
+      setError('Debes seleccionar una categoría');
       return;
     }
 

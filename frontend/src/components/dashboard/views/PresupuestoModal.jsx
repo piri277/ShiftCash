@@ -100,6 +100,17 @@ export default function PresupuestoModal({ presupuesto, onClose, onSuccess, onGu
     }));
   };
 
+  // Formatea el valor para mostrar puntos de miles (ej: 100000 -> 100.000)
+  const formatDisplay = (val) => {
+    if (!val) return "";
+    return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
+
+  const handleAmountChange = (e) => {
+    const rawValue = e.target.value.replace(/\D/g, ""); // Mantiene solo dígitos
+    handleChange({ target: { name: 'amount', value: rawValue } });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -216,14 +227,13 @@ export default function PresupuestoModal({ presupuesto, onClose, onSuccess, onGu
           <div className="presupuestos-form-field">
             <label className="presupuestos-form-label">Monto *</label>
             <input
-              type="number"
+              type="text"
+              inputMode="numeric"
               name="amount"
               className="presupuestos-form-input"
               placeholder="Ej: 500000"
-              value={form.amount}
-              onChange={handleChange}
-              step="0.01"
-              min="0"
+              value={formatDisplay(form.amount)}
+              onChange={handleAmountChange}
               required
             />
           </div>
@@ -244,24 +254,25 @@ export default function PresupuestoModal({ presupuesto, onClose, onSuccess, onGu
           </div>
 
           {/* CHECKBOX: ¿Permanente? */}
+          {/* Toggle Permanente - Estilo igual al de Transacciones */}
           {form.period_type !== "unique" && (
-            <div className="presupuestos-form-field" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <input
-                type="checkbox"
-                id="is_permanent"
-                name="is_permanent"
-                checked={form.is_permanent}
-                onChange={e => { setForm(p => ({ ...p, is_permanent: e.target.checked })); setError(""); }}
-                style={{ width: "20px", height: "20px", cursor: "pointer" }}
-              />
-              <label htmlFor="is_permanent" style={{ cursor: "pointer", margin: "0" }}>
-                ¿Permanente? (Se repite indefinidamente)
-              </label>
+            <div
+              className={`modal-recurrente-toggle ${form.is_permanent ? 'activo' : ''}`}
+              onClick={() => {
+                setForm(prev => ({ ...prev, is_permanent: !prev.is_permanent }));
+                setError("");
+              }}
+            >
+              <div className="modal-recurrente-label">
+                <span>🔄</span>
+                ¿Permanente? (Se repite automáticamente)
+              </div>
+              <div className="modal-switch" />
             </div>
           )}
 
           {/* MONTHLY: Mes y Año */}
-          {form.period_type === "monthly" && (
+      {form.period_type === "monthly" && !form.is_permanent && (
             <div className="presupuestos-form-row">
               <div className="presupuestos-form-field">
                 <label className="presupuestos-form-label">Mes *</label>

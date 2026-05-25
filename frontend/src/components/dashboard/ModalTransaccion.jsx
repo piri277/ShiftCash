@@ -27,9 +27,27 @@ export default function ModalTransaccion({ onClose, onSuccess }) {
     setDropdownAbierto(false);
   };
 
+  // Formatea el valor para mostrar puntos de miles (ej: 100000 -> 100.000)
+  const formatDisplay = (val) => {
+    if (!val) return "";
+    return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
+
+  // Limpia los puntos antes de actualizar el estado del formulario
+  const handleAmountChange = (e) => {
+    const rawValue = e.target.value.replace(/\D/g, ""); // Mantiene solo dígitos
+    handleChange({ target: { name: 'amount', value: rawValue } });
+  };
+
   const categoriaSeleccionada = categoriasFiltradas.find(
     c => c.category_id === parseInt(form.category_id)
   );
+
+  // Detectar si hay un error específico de categoría
+  const hasCategoryError = 
+    !!error && 
+    !form.category_id && 
+    error.toLowerCase().includes('categoría');
 
   return createPortal(
     <div className="modal-overlay" onClick={onClose}>
@@ -70,11 +88,11 @@ export default function ModalTransaccion({ onClose, onSuccess }) {
             <input
               id="amount"
               name="amount"
-              type="number"
-              min="1"
+              type="text"
+              inputMode="numeric"
               placeholder="0"
-              value={form.amount}
-              onChange={handleChange}
+              value={formatDisplay(form.amount)}
+              onChange={handleAmountChange}
               required
             />
           </div>
@@ -84,7 +102,7 @@ export default function ModalTransaccion({ onClose, onSuccess }) {
             <label>Categoría *</label>
             <div className="custom-select-wrapper">
               <div
-                className="custom-select-trigger"
+                className={`custom-select-trigger ${hasCategoryError ? 'error' : ''}`}
                 onClick={() => setDropdownAbierto(p => !p)}
               >
                 <span>
@@ -126,7 +144,6 @@ export default function ModalTransaccion({ onClose, onSuccess }) {
               name="category_id"
               value={form.category_id}
               onChange={() => {}}
-              required
               style={{ display: 'none' }}
             />
           </div>

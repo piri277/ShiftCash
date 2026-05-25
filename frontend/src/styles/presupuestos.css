@@ -321,14 +321,9 @@
 
 .presupuestos-progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #5b6ef5, #7c8df7);
-  transition: width 0.3s ease;
+  transition: width 0.4s ease, background 0.4s ease;
   max-width: 100%;
   display: block;
-}
-
-.presupuestos-progress-fill.alert {
-  background: linear-gradient(90deg, #f87171, #ef4444);
 }
 
 /* ===== SELECTORES ===== */
@@ -413,8 +408,11 @@
   margin-top: 4px;
 }
 
-.presupuestos-card-progress-fill { height: 100%; background: linear-gradient(90deg, #5b6ef5, #7c8df7); border-radius: 99px; transition: width 0.3s ease; }
-.presupuestos-card-progress-fill.alert { background: linear-gradient(90deg, #f87171, #ef4444); }
+.presupuestos-card-progress-fill { 
+  height: 100%; 
+  border-radius: 99px; 
+  transition: width 0.4s ease, background 0.4s ease; 
+}
 
 /* ===== ESTADO VACÍO ===== */
 .presupuestos-empty {

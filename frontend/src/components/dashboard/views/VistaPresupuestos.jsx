@@ -1,5 +1,5 @@
 /* VistaPresupuestos.jsx */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useBudgets } from '../../../hooks/useBudgets';
 import { formatearPesos } from '../../../utils/formatters';
@@ -14,6 +14,15 @@ const PERIODOS = [
   { value: "mensualmente", label: "Mensualmente" },
   { value: "único",        label: "Único"        },
 ];
+
+// Función auxiliar para obtener el color de la barra según el progreso
+const getBarColor = (pct) => {
+  if (pct >= 100) return "linear-gradient(90deg, #f87171, #ef4444)"; // Rojo (Superado)
+  if (pct >= 85)  return "linear-gradient(90deg, #fb923c, #f87171)"; // Naranja Rojizo (Crítico)
+  if (pct >= 60)  return "linear-gradient(90deg, #9b59f5, #fb923c)"; // Violeta Naranja (Advertencia)
+  if (pct >= 35)  return "linear-gradient(90deg, #7c8df7, #9b59f5)"; // Azul Violáceo (Moderado)
+  return "linear-gradient(90deg, #5b6ef5, #7c8df7)";                // Azul (Saludable)
+};
 
 // ─── Agrupa todos los presupuestos del tipo seleccionado por su fecha ───
 function agruparPresupuestos(budgets, periodo) {
@@ -147,8 +156,11 @@ function TarjetaPresupuesto({ budget, onEditar, onEliminar }) {
         </div>
         <div className="presupuestos-card-progress">
           <div
-            className={`presupuestos-card-progress-fill ${superado ? "alert" : ""}`}
-            style={{ width: `${Math.min(budget.percentage, 100)}%` }}
+            className="presupuestos-card-progress-fill"
+            style={{ 
+              width: `${Math.min(budget.percentage, 100)}%`,
+              background: getBarColor(budget.percentage)
+            }}
           />
         </div>
       </div>
@@ -181,6 +193,12 @@ export default function VistaPresupuestos({ budgets: budgetsFromProps }) {
   const budgetsHook = useBudgets();
   const { budgets, loading, error, recargar, guardar, actualizar, eliminar } =
     budgetsFromProps || budgetsHook;
+
+  // Forzar recarga al montar la vista para asegurar datos frescos tras cambios en transacciones
+  useEffect(() => {
+    recargar();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const [periodo,             setPeriodo]             = useState("mensualmente");
   const [modalAbierto,        setModalAbierto]        = useState(false);
@@ -273,10 +291,9 @@ export default function VistaPresupuestos({ budgets: budgetsFromProps }) {
                 height: "100%",
                 width: `${Math.min(porcentajeTotal, 100)}%`,
                 maxWidth: "100%",
-                background: superado
-                  ? "linear-gradient(90deg, #f87171, #ef4444)"
-                  : "linear-gradient(90deg, #5b6ef5, #7c8df7)",
+                background: getBarColor(porcentajeTotal),
                 borderRadius: 99,
+                transition: "width 0.4s ease, background 0.4s ease"
               }} />
             </div>
           </div>

@@ -1,4 +1,4 @@
-import { MES_ACTIVO } from "../../constants";
+import { MES_ACTIVO } from "../../../constants";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Topbar — Header superior, recibe el item activo por props

@@ -1,15 +1,15 @@
 /* Dashboard.jsx - Componente principal del dashboard, manejando el layout general, navegación entre vistas y la apertura del modal de nueva transacción. Utiliza un sistema de routing interno basado en estado para mostrar la vista activa. */
 import { useState } from "react";
 
-import Sidebar            from "./Sidebar";
-import Topbar             from "./Topbar";
+import Sidebar            from "./layout/Sidebar";
+import Topbar             from "./layout/Topbar";
 import VistaResumen       from "./views/VistaResumen";
 import VistaHistorial     from "./views/VistaHistorial";
 import VistaGraficas      from "./views/VistaGraficas";
 import VistaConfiguracion from "./views/VistaConfiguracion";
 import VistaCategorias    from "./views/VistaCategorias";
 import VistaPresupuestos  from "./views/VistaPresupuestos";
-import ModalTransaccion   from "./ModalTransaccion";
+import ModalTransaccion   from "./modals/ModalTransaccion";
 import { useFinanzas }    from "../../hooks/useFinanzas";
 import { useBudgets }     from "../../hooks/useBudgets";
 import { MENU_ITEMS }     from "../../constants";

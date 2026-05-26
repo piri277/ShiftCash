@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useBudgets } from '../../../hooks/useBudgets';
 import { formatearPesos } from '../../../utils/formatters';
-import PresupuestoModal from './PresupuestoModal';
+import PresupuestoModal from '../modals/PresupuestoModal';
 
 import "../../../styles/presupuestos.css";
 import "../../../styles/modal.css";
@@ -191,7 +191,7 @@ function TarjetaPresupuesto({ budget, onEditar, onEliminar }) {
 // ─── Vista principal ───
 export default function VistaPresupuestos({ budgets: budgetsFromProps }) {
   const budgetsHook = useBudgets();
-  const { budgets, loading, error, recargar, guardar, actualizar, eliminar } =
+  const { budgets, categorias, loading, error, recargar, guardar, actualizar, eliminar } =
     budgetsFromProps || budgetsHook;
 
   // Forzar recarga al montar la vista para asegurar datos frescos tras cambios en transacciones
@@ -363,6 +363,7 @@ export default function VistaPresupuestos({ budgets: budgetsFromProps }) {
       {modalAbierto && createPortal(
         <PresupuestoModal
           presupuesto={presupuestoEditar}
+          categorias={categorias}
           onClose={() => { setModalAbierto(false); setPresupuestoEditar(null); }}
           onSuccess={() => { setModalAbierto(false); setPresupuestoEditar(null); recargar(); }}
           onGuardar={presupuestoEditar ? actualizar : guardar}

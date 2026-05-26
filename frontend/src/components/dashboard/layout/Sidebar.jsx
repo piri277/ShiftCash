@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { MENU_ITEMS } from "../../constants";
-import { useAuth } from "../../hooks/useAuth";
+import { MENU_ITEMS } from "../../../constants";
+import { useAuth } from "../../../hooks/useAuth";
 
 export default function Sidebar({ vistaActiva, onCambiarVista }) {
   const navigate = useNavigate();

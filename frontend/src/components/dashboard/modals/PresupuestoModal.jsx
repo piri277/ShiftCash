@@ -1,5 +1,5 @@
 /* PresupuestoModal.jsx - Modal dinámico para crear/editar presupuestos */
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useBudgets } from '../../../hooks/useBudgets';
 
@@ -28,8 +28,16 @@ const MESES = [
   { value: 12, label: "Diciembre"  },
 ];
 
-export default function PresupuestoModal({ presupuesto, onClose, onSuccess, onGuardar }) {
-  const { categorias } = useBudgets();
+export default function PresupuestoModal({ presupuesto, onClose, onSuccess, onGuardar, categorias: propCategorias }) {
+  const budgetsHook = useBudgets();
+
+  const [activeDropdown, setActiveDropdown] = useState(null); // 'category', 'period', 'month'
+
+  const categoriasGastos = useMemo(() => {
+    const currentCats = propCategorias || budgetsHook.categorias || [];
+    return currentCats.filter(cat => cat.type === 'expense' || cat.type === 'both');
+  }, [propCategorias, budgetsHook.categorias]);
+
   const hoy = new Date().toISOString().split("T")[0];
 
   const [form, setForm] = useState(
@@ -61,12 +69,22 @@ export default function PresupuestoModal({ presupuesto, onClose, onSuccess, onGu
   const [error,   setError]   = useState("");
   const [loading, setLoading] = useState(false);
 
+  const handleClose = useCallback(() => { setError(""); onClose?.(); }, [onClose]);
+
   useEffect(() => {
     if (error) {
       const timer = setTimeout(() => setError(""), 5000);
       return () => clearTimeout(timer);
     }
   }, [error]);
+
+  useEffect(() => {
+    const handleEsc = (e) => {
+      if (e.key === 'Escape') handleClose();
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [handleClose]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -110,6 +128,18 @@ export default function PresupuestoModal({ presupuesto, onClose, onSuccess, onGu
     const rawValue = e.target.value.replace(/\D/g, ""); // Mantiene solo dígitos
     handleChange({ target: { name: 'amount', value: rawValue } });
   };
+
+  const categoriaSeleccionada = categoriasGastos.find(
+    c => c.category_id === parseInt(form.category_id)
+  );
+
+  const periodoSeleccionado = PERIODOS_OPTIONS.find(
+    opt => opt.value === form.period_type
+  );
+
+  const mesSeleccionado = MESES.find(
+    m => m.value === parseInt(form.month)
+  );
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -169,8 +199,6 @@ export default function PresupuestoModal({ presupuesto, onClose, onSuccess, onGu
     }
   };
 
-  const handleClose = () => { setError(""); onClose?.(); };
-
   return createPortal(
     <div className="presupuestos-modal-overlay" onClick={handleClose}>
       <div className="presupuestos-modal" onClick={e => e.stopPropagation()}>
@@ -190,23 +218,40 @@ export default function PresupuestoModal({ presupuesto, onClose, onSuccess, onGu
           {/* CATEGORÍA */}
           <div className="presupuestos-form-field">
             <label className="presupuestos-form-label">Categoría *</label>
-            <select
-            name="category_id"
-            className="presupuestos-form-select"
-            value={form.category_id}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Selecciona una categoría</option>
-            {categorias
-              .filter(cat => cat.type === 'expense' || cat.type === 'both')
-              .map(cat => (
-                <option key={cat.category_id} value={cat.category_id}>
-                  {cat.icon} {cat.name_cat}
-                </option>
-              ))
-            }
-          </select>
+            <div className="custom-select-wrapper">
+              <div
+                className="custom-select-trigger"
+                onClick={() => setActiveDropdown(activeDropdown === 'category' ? null : 'category')}
+              >
+                <span>
+                  {categoriaSeleccionada
+                    ? `${categoriaSeleccionada.icon} ${categoriaSeleccionada.name_cat}`
+                    : 'Seleccionar categoría'
+                  }
+                </span>
+                <span className="custom-select-arrow">
+                  {activeDropdown === 'category' ? '▲' : '▼'}
+                </span>
+              </div>
+
+              {activeDropdown === 'category' && (
+                <div className="custom-select-dropdown">
+                  {categoriasGastos.map(cat => (
+                    <div
+                      key={cat.category_id}
+                      className={`custom-select-option ${categoriaSeleccionada?.category_id === cat.category_id ? 'selected' : ''}`}
+                      onClick={() => {
+                        setForm(prev => ({ ...prev, category_id: cat.category_id }));
+                        setActiveDropdown(null);
+                        setError("");
+                      }}
+                    >
+                      {cat.icon} {cat.name_cat}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* NOMBRE */}
@@ -241,16 +286,40 @@ export default function PresupuestoModal({ presupuesto, onClose, onSuccess, onGu
           {/* PERÍODO */}
           <div className="presupuestos-form-field">
             <label className="presupuestos-form-label">Período *</label>
-            <select
-              name="period_type"
-              className="presupuestos-form-select"
-              value={form.period_type}
-              onChange={e => { setForm(p => ({ ...p, period_type: e.target.value })); setError(""); }}
-            >
-              {PERIODOS_OPTIONS.map(opt => (
-                <option key={opt.value} value={opt.value}>{opt.label}</option>
-              ))}
-            </select>
+            <div className="custom-select-wrapper">
+              <div
+                className="custom-select-trigger"
+                onClick={() => setActiveDropdown(activeDropdown === 'period' ? null : 'period')}
+              >
+                <span>{periodoSeleccionado?.label || 'Seleccionar período'}</span>
+                <span className="custom-select-arrow">
+                  {activeDropdown === 'period' ? '▲' : '▼'}
+                </span>
+              </div>
+
+              {activeDropdown === 'period' && (
+                <div className="custom-select-dropdown">
+                  {PERIODOS_OPTIONS.map(opt => (
+                    <div
+                      key={opt.value}
+                      className={`custom-select-option ${form.period_type === opt.value ? 'selected' : ''}`}
+                      onClick={() => {
+                        setForm(p => ({ 
+                          ...p, 
+                          period_type: opt.value,
+                          // Si cambia a 'unique', desactivamos permanente por lógica
+                          is_permanent: opt.value === 'unique' ? false : p.is_permanent 
+                        }));
+                        setActiveDropdown(null);
+                        setError("");
+                      }}
+                    >
+                      {opt.label}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* CHECKBOX: ¿Permanente? */}
@@ -276,14 +345,42 @@ export default function PresupuestoModal({ presupuesto, onClose, onSuccess, onGu
             <div className="presupuestos-form-row">
               <div className="presupuestos-form-field">
                 <label className="presupuestos-form-label">Mes *</label>
-                <select name="month" className="presupuestos-form-select" value={form.month} onChange={handleChange} disabled={form.is_permanent}>
-                  {MESES.map(m => {
-                    const currentMonth = new Date().getMonth() + 1;
-                    const currentYear = new Date().getFullYear();
-                    const isDisabled = form.year === currentYear && m.value < currentMonth && !form.is_permanent;
-                    return <option key={m.value} value={m.value} disabled={isDisabled}>{m.label}</option>;
-                  })}
-                </select>
+                <div className="custom-select-wrapper">
+                  <div
+                    className={`custom-select-trigger ${form.is_permanent ? 'disabled' : ''}`}
+                    onClick={() => !form.is_permanent && setActiveDropdown(activeDropdown === 'month' ? null : 'month')}
+                  >
+                    <span>{mesSeleccionado?.label || 'Seleccionar mes'}</span>
+                    <span className="custom-select-arrow">
+                      {activeDropdown === 'month' ? '▲' : '▼'}
+                    </span>
+                  </div>
+
+                  {activeDropdown === 'month' && (
+                    <div className="custom-select-dropdown up">
+                      {MESES.map(m => {
+                        const currentMonth = new Date().getMonth() + 1;
+                        const currentYear = new Date().getFullYear();
+                        const isDisabled = form.year === currentYear && m.value < currentMonth && !form.is_permanent;
+                        
+                        return (
+                          <div
+                            key={m.value}
+                            className={`custom-select-option ${form.month === m.value ? 'selected' : ''} ${isDisabled ? 'disabled' : ''}`}
+                            onClick={() => {
+                              if (isDisabled) return;
+                              setForm(p => ({ ...p, month: m.value }));
+                              setActiveDropdown(null);
+                              setError("");
+                            }}
+                          >
+                            {m.label}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
               </div>
               <div className="presupuestos-form-field">
                 <label className="presupuestos-form-label">Año *</label>

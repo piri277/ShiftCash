@@ -1,12 +1,12 @@
 /* ModalTransaccion.jsx - Componente modal para crear una nueva transacción, con campos para tipo (gasto/ingreso), monto, categoría (con dropdown personalizado), descripción y fecha. Maneja validación, errores y estados de carga. */
-import { useState } from 'react';
-import { useCategorias } from '../../hooks/useCategorias';
+import { useState, useEffect } from 'react';
+import { useCategorias } from '../../../hooks/useCategorias';
 import { createPortal }       from "react-dom";
 
 
-import { useTransaccionForm } from '../../hooks/useTransaccionForm';
+import { useTransaccionForm } from '../../../hooks/useTransaccionForm';
 
-import "../../styles/modal.css";
+import "../../../styles/modal.css";
 
 export default function ModalTransaccion({ onClose, onSuccess }) {
   const { categorias, loadingCats } = useCategorias();
@@ -16,6 +16,14 @@ export default function ModalTransaccion({ onClose, onSuccess }) {
   });
 
   const [dropdownAbierto, setDropdownAbierto] = useState(false);
+
+  useEffect(() => {
+    const handleEsc = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [onClose]);
 
   const categoriasFiltradas = categorias.filter(
     c => c.type === form.type || c.type === 'both'

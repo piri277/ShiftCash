@@ -2,11 +2,11 @@
   --primary:          #4a5ce0;
   --primary-dark:     #3448c4;
   --accent:           #7c44e0;
-  --success:          #16a96e;
+  --success:          #059669;
   --danger:           #e05555;
   --warning:          #d4900f;
  
-  --dark:             #f0f2fa;
+  --dark:             #f8fafc;
   --surface:          #ffffff;
   --surface-2:        #f4f5fb;
   --surface-3:        #eaecf7;
@@ -28,12 +28,93 @@
   --shadow-card:      0 2px 16px rgba(74, 92, 224, 0.08), 0 1px 0 rgba(255,255,255,0.8) inset;
   --shadow-glow:      0 0 40px rgba(74, 92, 224, 0.1);
 }
- 
+
+/* Aplicación global de fondo y texto principal */
+[data-theme="light"] .db-app {
+  background-color: var(--dark);
+  color: var(--text-primary);
+  background-image: none;
+}
+
+/* Tarjetas, Modales y Paneles */
+[data-theme="light"] .db-card,
+[data-theme="light"] .modal-card,
+[data-theme="light"] .presupuestos-card,
+[data-theme="light"] .presupuestos-summary,
+[data-theme="light"] .cat-card,
+[data-theme="light"] .hist-panel,
+[data-theme="light"] .config-card,
+[data-theme="light"] .detalle-body,
+[data-theme="light"] .custom-select-dropdown,
+[data-theme="light"] .presupuestos-modal,
+[data-theme="light"] .presupuestos-empty {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+  color: var(--text-primary) !important;
+  box-shadow: var(--shadow-card) !important;
+}
+
+/* Títulos y etiquetas */
+[data-theme="light"] .db-view-title,
+[data-theme="light"] .db-card-title,
+[data-theme="light"] .modal-header h3,
+[data-theme="light"] .presupuestos-modal-title,
+[data-theme="light"] .cat-card-name,
+[data-theme="light"] .detalle-valor,
+[data-theme="light"] .config-titulo {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="light"] .db-stat-label,
+[data-theme="light"] .modal-field label,
+[data-theme="light"] .presupuestos-form-label,
+[data-theme="light"] .detalle-label,
+[data-theme="light"] .config-subtitulo,
+[data-theme="light"] .cat-card-type {
+  color: var(--text-muted) !important;
+}
+
 /* Topbar en tema claro: fondo blanco translúcido */
 [data-theme="light"] .db-topbar {
   background: rgba(255, 255, 255, 0.85);
+  border-bottom: 1px solid var(--border);
+  color: var(--text-primary);
 }
  
+/* Vista Historial: Corregir textos invisibles */
+[data-theme="light"] .hist-categoria,
+[data-theme="light"] .hist-grupo-total {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="light"] .hist-descripcion,
+[data-theme="light"] .hist-fecha,
+[data-theme="light"] .hist-grupo-fecha {
+  color: var(--text-muted) !important;
+}
+
+/* Vista Presupuestos: Resumen General y Cards */
+[data-theme="light"] .presupuestos-summary-title,
+[data-theme="light"] .presupuestos-stat-value,
+[data-theme="light"] .presupuestos-card-name,
+[data-theme="light"] .presupuestos-card-stat-value,
+[data-theme="light"] .presupuestos-progress-label span {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="light"] .presupuestos-stat-label,
+[data-theme="light"] .presupuestos-card-category,
+[data-theme="light"] .presupuestos-card-stat-label,
+[data-theme="light"] .presupuestos-progress-label,
+[data-theme="light"] .presupuestos-empty-text,
+[data-theme="light"] .presupuestos-empty-title {
+  color: var(--text-muted) !important;
+}
+
+[data-theme="light"] .presupuestos-stat {
+  background: var(--surface-2) !important;
+}
+
 /* App shell: quitar noise texture oscura en tema claro */
 [data-theme="light"] .db-app {
   background-image: none;
@@ -56,3 +137,118 @@
 [data-theme="light"] .db-content::-webkit-scrollbar-thumb:hover {
   background: rgba(74, 92, 224, 0.35);
 }
+
+/* Inputs y selectores */
+[data-theme="light"] .modal-field input,
+[data-theme="light"] .modal-field select,
+[data-theme="light"] .presupuestos-form-input,
+[data-theme="light"] .presupuestos-form-select,
+[data-theme="light"] .custom-select-trigger,
+[data-theme="light"] .hist-search,
+[data-theme="light"] .config-input {
+  background: var(--surface-2) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border) !important;
+}
+
+[data-theme="light"] .presupuestos-form-select option {
+  background: var(--surface) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Corrección de dropdowns personalizados (Transacciones y Categorías) */
+[data-theme="light"] .custom-select-option {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="light"] .custom-select-option:hover {
+  background: var(--surface-2) !important;
+}
+
+[data-theme="light"] .custom-select-option.selected {
+  background: rgba(74, 92, 224, 0.1) !important;
+  color: var(--primary) !important;
+}
+
+/* Switches (Checkboxes modernos) */
+[data-theme="light"] .modal-recurrente-toggle {
+  background: var(--surface-2) !important;
+  border-color: var(--border) !important;
+}
+
+[data-theme="light"] .modal-recurrente-label {
+  color: var(--text-muted) !important;
+}
+
+[data-theme="light"] .modal-recurrente-toggle.activo {
+  background: rgba(74, 92, 224, 0.08) !important;
+  border-color: var(--primary) !important;
+}
+
+[data-theme="light"] .modal-recurrente-toggle.activo .modal-recurrente-label {
+  color: var(--primary) !important;
+}
+
+[data-theme="light"] .modal-switch {
+  background: rgba(74, 92, 224, 0.15) !important;
+}
+
+[data-theme="light"] .modal-switch::after {
+  background: #fff !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+[data-theme="light"] .modal-recurrente-toggle.activo .modal-switch {
+  background: var(--primary) !important;
+}
+
+/* Modal Nueva Categoría: Emojis */
+[data-theme="light"] .cat-emoji-btn {
+  background: var(--surface-2) !important;
+  color: var(--text-primary) !important;
+  border-color: transparent !important;
+}
+
+[data-theme="light"] .cat-emoji-btn:hover {
+  background: var(--surface-3) !important;
+}
+
+[data-theme="light"] .cat-emoji-btn.selected {
+  border-color: var(--primary) !important;
+  background: rgba(74, 92, 224, 0.1) !important;
+}
+
+/* Filtros (Historial y Gráficas) */
+[data-theme="light"] .hist-filtrar-btn,
+[data-theme="light"] .hist-chip {
+  background: var(--surface-2) !important;
+  border-color: var(--border) !important;
+  color: var(--text-muted) !important;
+}
+
+[data-theme="light"] .hist-chip.activo,
+[data-theme="light"] .hist-filtrar-btn.activo {
+  background: rgba(74, 92, 224, 0.1) !important;
+  border-color: var(--primary) !important;
+  color: var(--primary) !important;
+}
+
+[data-theme="light"] .hist-search::placeholder {
+  color: var(--text-faint) !important;
+}
+
+/* Caja de información en Presupuesto Permanente */
+[data-theme="light"] .presupuestos-form-field[style*="background-color: rgb(33, 37, 58)"],
+[data-theme="light"] .presupuestos-form-field[style*="background-color: #21253a"] {
+  background: var(--surface-2) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text-muted) !important;
+}
+
+[data-theme="light"] .presupuestos-modal-btn-cancel {
+  background: var(--surface-2) !important;
+  color: var(--text-muted) !important;
+  border: 1px solid var(--border) !important;
+}
+
+[data-theme="light"] .modal-submit { box-shadow: 0 4px 12px rgba(74, 92, 224, 0.2); }

@@ -11,10 +11,10 @@ const COLORES = ["#5b6ef5","#9b59f5","#34d399","#fbbf24","#f87171","#38bdf8","#f
 const MESES   = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
 
 const TOOLTIP_STYLE = {
-  background: "#21253a",
-  border: "1px solid rgba(91,110,245,0.18)",
+  background: "var(--surface, #21253a)",
+  border: "1px solid var(--border, rgba(91,110,245,0.18))",
   borderRadius: 10,
-  color: "#f0f2ff",
+  color: "var(--text-primary, #f0f2ff)",
 };
 
 const PERIODOS = [
@@ -133,9 +133,9 @@ function GraficaBarras({ datos }) {
   return (
     <ResponsiveContainer width="100%" height={240}>
       <BarChart data={datos} margin={{ top: 4, right: 8, bottom: 0, left: 0 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="rgba(91,110,245,0.18)" />
-        <XAxis dataKey="label" stroke="#9ba3c7" tick={{ fontSize: 12 }} />
-        <YAxis stroke="#9ba3c7" tick={{ fontSize: 12 }} tickFormatter={tickFormatterY} />
+        <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" opacity={0.5} />
+        <XAxis dataKey="label" stroke="var(--text-faint)" tick={{ fontSize: 12 }} />
+        <YAxis stroke="var(--text-faint)" tick={{ fontSize: 12 }} tickFormatter={tickFormatterY} />
         <Tooltip contentStyle={TOOLTIP_STYLE} formatter={v => formatearPesos(v)} />
         <Legend wrapperStyle={{ fontSize: "0.8rem", color: "#9ba3c7" }} />
         <Bar dataKey="ingresos" fill="#34d399" radius={[4,4,0,0]} name="Ingresos" />
@@ -158,9 +158,9 @@ function GraficaAhorro({ datos }) {
             <stop offset="95%" stopColor="#5b6ef5" stopOpacity={0}    />
           </linearGradient>
         </defs>
-        <CartesianGrid strokeDasharray="3 3" stroke="rgba(91,110,245,0.18)" />
-        <XAxis dataKey="label" stroke="#9ba3c7" tick={{ fontSize: 12 }} />
-        <YAxis stroke="#9ba3c7" tick={{ fontSize: 12 }} tickFormatter={tickFormatterY} />
+        <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" opacity={0.5} />
+        <XAxis dataKey="label" stroke="var(--text-faint)" tick={{ fontSize: 12 }} />
+        <YAxis stroke="var(--text-faint)" tick={{ fontSize: 12 }} tickFormatter={tickFormatterY} />
         <Tooltip contentStyle={TOOLTIP_STYLE} formatter={v => formatearPesos(v)} />
         <Area type="monotone" dataKey="ahorros" stroke="#5b6ef5"
           fill="url(#gradAhorroVista)" strokeWidth={2} name="Ahorros" />

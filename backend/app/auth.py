@@ -40,6 +40,15 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     except JWTError:
         raise HTTPException(status_code=401, detail="Token inválido")
 
+    # Soporte para el Admin Temporal (Hardcoded para pruebas)
+    if user_id == "999":
+        return models.User(
+            user_id=999,
+            username="Admin Temporal",
+            email="admin@test.com",
+            currency="USD"
+        )
+
     user = db.query(models.User).filter(models.User.user_id == int(user_id)).first()
     if user is None:
         raise HTTPException(status_code=401, detail="Usuario no encontrado")

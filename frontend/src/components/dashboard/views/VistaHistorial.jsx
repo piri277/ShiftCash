@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { formatearPesos }    from "../../../utils/formatters";
-import DetalleTransaccion    from "../DetalleTransaccion";
-import ConfirmarEliminar     from "../ConfirmarEliminar";
+import DetalleTransaccion    from "../modals/DetalleTransaccion";
+import ConfirmarEliminar     from "../modals/ConfirmarEliminar";
 
 
 import "../../../styles/historial.css";

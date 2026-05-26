@@ -1,11 +1,11 @@
 /* DetalleTransaccion.jsx - Componente modal para mostrar los detalles de una transacción específica, con opciones para editar la transacción. Maneja estados de edición, carga y error, y utiliza hooks personalizados para gestionar el formulario de transacción. */
-import { useState }            from "react";
-import { useCategorias }       from "../../hooks/useCategorias";
-import { useTransaccionForm }  from "../../hooks/useTransaccionForm";
-import { formatearPesos }      from "../../utils/formatters";
+import { useState, useEffect } from "react";
+import { useCategorias }       from "../../../hooks/useCategorias";
+import { useTransaccionForm }  from "../../../hooks/useTransaccionForm";
+import { formatearPesos }      from "../../../utils/formatters";
 import { createPortal } from "react-dom"; 
 
-import "../../styles/modal.css";
+import "../../../styles/modal.css";
 
 export default function DetalleTransaccion({ transaccion, onClose, onSuccess}) {
   const [editando, setEditando] = useState(false);
@@ -16,6 +16,14 @@ export default function DetalleTransaccion({ transaccion, onClose, onSuccess}) {
   );
 
   const esGasto = transaccion.type === "expense";
+
+  useEffect(() => {
+    const handleEsc = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [onClose]);
 
   const formatDisplay = (val) => {
     if (!val) return "";

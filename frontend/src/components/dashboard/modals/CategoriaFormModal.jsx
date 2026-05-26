@@ -1,5 +1,6 @@
-/* VistaCategoriasForm.jsx - Componente de formulario para crear o editar categorías, con campos para nombre, tipo (gasto/ingreso/ambos) y selección de emoji. Maneja validación, errores y estados de carga. */
-import { useState } from 'react';
+/* modal para crear o editar categorías. Se reutiliza para ambos casos, si recibe categoriaEditar, es edición, sino creación */
+import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { crearCategoria, actualizarCategoria } from '../../../api/categories';
 
 import "../../../styles/categorias.css";
@@ -22,6 +23,14 @@ export default function VistaCategoriasForm({ categoriaEditar, onSuccess, onCanc
   const [error,   setError]   = useState('');
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    const handleEsc = (e) => {
+      if (e.key === 'Escape') onCancel();
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [onCancel]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.name_cat.trim()) { setError('El nombre es obligatorio'); return; }
@@ -41,7 +50,7 @@ export default function VistaCategoriasForm({ categoriaEditar, onSuccess, onCanc
     }
   };
 
-  return (
+  return createPortal(
     <div className="modal-overlay" onClick={onCancel}>
       <div className="modal-card" onClick={e => e.stopPropagation()}>
         <div className="modal-header">
@@ -96,6 +105,7 @@ export default function VistaCategoriasForm({ categoriaEditar, onSuccess, onCanc
           </button>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

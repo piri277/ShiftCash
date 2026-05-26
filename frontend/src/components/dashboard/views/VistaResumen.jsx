@@ -10,10 +10,10 @@ import { useBudgets } from "../../../hooks/useBudgets";
 import { formatearPesos, formatearEjeY } from "../../../utils/formatters";
 
 const TOOLTIP_STYLE = {
-  background: "#21253a",
-  border: "1px solid rgba(91,110,245,0.18)",
+  background: "var(--surface, #21253a)",
+  border: "1px solid var(--border, rgba(91,110,245,0.18))",
   borderRadius: 10,
-  color: "#f0f2ff",
+  color: "var(--text-primary, #f0f2ff)",
 };
 
 const MESES = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
@@ -297,9 +297,9 @@ function GraficaCarousel({ transacciones }) {
                 </linearGradient>
               ))}
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(91,110,245,0.18)" />
-            <XAxis dataKey="label" stroke="#9ba3c7" tick={{ fontSize: 12 }} />
-            <YAxis stroke="#9ba3c7" tick={{ fontSize: 12 }} tickFormatter={formatearEjeY} />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" opacity={0.5} />
+            <XAxis dataKey="label" stroke="var(--text-faint)" tick={{ fontSize: 12 }} />
+            <YAxis stroke="var(--text-faint)" tick={{ fontSize: 12 }} tickFormatter={formatearEjeY} />
             <Tooltip contentStyle={TOOLTIP_STYLE} formatter={v => formatearPesos(v)} />
             <Legend wrapperStyle={{ fontSize: "0.8rem", color: "#9ba3c7" }} />
             <Area type="monotone" dataKey="ingresos" stroke="#34d399" fill="url(#gradIngresos)" strokeWidth={2} name="Ingresos" />
@@ -312,9 +312,9 @@ function GraficaCarousel({ transacciones }) {
       {grafica === "barras" && (
         <ResponsiveContainer width="100%" height={240}>
           <BarChart data={datos} margin={{ top: 4, right: 8, bottom: 0, left: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(91,110,245,0.18)" />
-            <XAxis dataKey="label" stroke="#9ba3c7" tick={{ fontSize: 12 }} />
-            <YAxis stroke="#9ba3c7" tick={{ fontSize: 12 }} tickFormatter={formatearEjeY} />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" opacity={0.5} />
+            <XAxis dataKey="label" stroke="var(--text-faint)" tick={{ fontSize: 12 }} />
+            <YAxis stroke="var(--text-faint)" tick={{ fontSize: 12 }} tickFormatter={formatearEjeY} />
             <Tooltip contentStyle={TOOLTIP_STYLE} formatter={v => formatearPesos(v)} />
             <Legend wrapperStyle={{ fontSize: "0.8rem", color: "#9ba3c7" }} />
             <Bar dataKey="ingresos" fill="#34d399" radius={[4,4,0,0]} name="Ingresos" />

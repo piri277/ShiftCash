@@ -1,11 +1,19 @@
 /* ConfirmarEliminar.jsx - Componente modal para confirmar la eliminación de una transacción, mostrando un mensaje de advertencia y manejando la lógica de eliminación con estados de carga y error. */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { eliminarTransaccion } from "../../api/transactions";
+import { eliminarTransaccion } from "../../../api/transactions";
 
 export default function ConfirmarEliminar({ transaccion, onClose, onSuccess }) {
   const [loading, setLoading] = useState(false);
   const [error,   setError]   = useState('');
+
+  useEffect(() => {
+    const handleEsc = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [onClose]);
 
   const handleEliminar = async () => {
     setLoading(true);

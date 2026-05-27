@@ -1,8 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Home      from "./pages/Home";
-import Login     from "./pages/Login";
-import Register  from "./pages/Register";
+import AuthPage  from "./pages/AuthPage";
 import Dashboard from "./components/dashboard/Dashboard";
 import Navbar    from "./components/Navbar";
 import Footer    from "./components/Footer";
@@ -19,14 +18,24 @@ function PublicLayout({ children }) {
   );
 }
 
+function AuthLayout({ children }) {
+  return (
+    <>
+      <Navbar />
+      {children}
+    </>
+  );
+}
+
 export default function App() {
   return (
     <AuthProvider>
       <Router>
         <Routes>
           <Route path="/" element={<PublicLayout><Home /></PublicLayout>} />
-          <Route path="/login" element={<PublicLayout><Login /></PublicLayout>} />
-          <Route path="/registro" element={<PublicLayout><Register /></PublicLayout>} />
+          <Route path="/auth" element={<AuthLayout><AuthPage /></AuthLayout>} />
+          <Route path="/login" element={<AuthLayout><AuthPage /></AuthLayout>} />
+          <Route path="/registro" element={<AuthLayout><AuthPage /></AuthLayout>} />
 
           <Route
             path="/dashboard"

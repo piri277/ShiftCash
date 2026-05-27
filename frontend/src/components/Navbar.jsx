@@ -15,8 +15,7 @@ function Navbar() {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
             <li className="nav-item"><Link className="nav-link" to="/">Inicio</Link></li>
-            <li className="nav-item"><Link className="nav-link" to="/login">Iniciar Sesión</Link></li>
-            <li className="nav-item"><Link className="nav-link" to="/registro">Regístrate</Link></li>
+            <li className="nav-item"><Link className="nav-link btn-navbar-enter" to="/auth">Entrar</Link></li>
           </ul>
         </div>
       </div>

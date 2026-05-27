@@ -72,6 +72,21 @@ body {
   color: var(--text-primary) !important;
   background: rgba(91, 110, 245, 0.12);
 }
+
+.btn-navbar-enter {
+  background: var(--gradient-accent) !important;
+  color: #fff !important;
+  padding: 0.5rem 1.4rem !important;
+  border-radius: 8px;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 12px rgba(91, 110, 245, 0.3);
+}
+
+.btn-navbar-enter:hover {
+  background: var(--gradient-accent) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(91, 110, 245, 0.4) !important;
+}
  
 /* ===== HERO SECTION ===== */
 .hero-section {
@@ -150,56 +165,32 @@ body {
   50% { transform: translateY(-14px); }
 }
  
-/* HERO BUTTONS */
-/* Estilos base comunes para ambos botones */
-#btn-iniciar-sesion, 
-#btn-registrarse {
+/* ===== HERO BUTTON (SINGLE) ===== */
+.btn-hero-enter {
   font-family: 'Sora', sans-serif;
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 1.1rem;
   letter-spacing: 0.3px;
-  border-radius: 12px;
+  border-radius: 14px;
   text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center; /* Asegura el texto centrado */
-  height: 50px; /* Altura fija para alineación perfecta */
-  padding: 0 1.8rem; /* Quitamos el padding vertical para que la altura la mande el height */
-  box-sizing: border-box; 
-  transition: all 0.3s ease; /* Transición suave para todos los estados */
-  cursor: pointer;
-}
-
-/* Botón Iniciar Sesión */
-#btn-iniciar-sesion {
+  display: inline-block;       /* cambia de inline-flex a inline-block */
+  height: 56px;
+  line-height: 56px;           /* centra el texto verticalmente */
+  padding: 0 4rem;             /* padding horizontal generoso */
+  min-width: 200px;            /* ancho mínimo garantizado */
+  text-align: center;
   background: var(--gradient-accent);
   color: #fff;
   border: none;
-  box-shadow: 0 6px 24px rgba(91, 110, 245, 0.4);
+  box-shadow: 0 8px 24px rgba(91, 110, 245, 0.35);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
 }
 
-/* Botón Registrarse */
-#btn-registrarse {
-  background: transparent;
-  color: var(--text-primary);
-  border: 1.5px solid rgba(91, 110, 245, 0.5);
-  transform: translateY(+9px);
-}
-
-/* Animación Hover Unificada */
-#btn-iniciar-sesion:hover,
-#btn-registrarse:hover {
-  transform: translateY(-4px); /* Ambos suben la misma distancia */
+.btn-hero-enter:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 32px rgba(91, 110, 245, 0.5);
   color: #fff;
-}
-
-#btn-iniciar-sesion:hover {
-  box-shadow: 0 10px 32px rgba(91, 110, 245, 0.55);
-}
-
-#btn-registrarse:hover {
-  background: rgba(91, 110, 245, 0.12);
-  border-color: var(--primary);
 }
  
 /* ===== QUIENES SOMOS ===== */

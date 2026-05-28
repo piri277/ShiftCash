@@ -73,6 +73,70 @@ function Home() {
           </div>
         </div>
       </section>
+
+      {/* SECCIÓN CONTACTANOS */}
+      <section className="contact-section">
+        <div className="container">
+          <div className="contact-card">
+            <div className="row g-0">
+              
+              {/* Columna Izquierda: Info */}
+              <div className="col-lg-6 info-col">
+                <div className="info-content">
+                  <h2>Contáctanos</h2>
+                  <p>¿Tienes preguntas sobre ShiftCash? Nuestro equipo de expertos financieros está listo para ayudarte a escalar tus ahorros.</p>
+                  
+                  <div className="contact-data">
+                    <div className="contact-item">
+                      <i className="bi bi-envelope-fill"></i>
+                      <span>soporte@shiftcash.com</span>
+                    </div>
+                    <div className="contact-item">
+                      <i className="bi bi-telephone-fill"></i>
+                      <span>+1 (800) SHIFT-HELP</span>
+                    </div>
+                  </div>
+                </div>
+      
+                {/* Social Badge Vertical */}
+                <div className="social-badge">
+                  <a href="#"><i className="bi bi-twitter-x"></i></a>
+                  <a href="#"><i className="bi bi-facebook"></i></a>
+                  <a href="#"><i className="bi bi-instagram"></i></a>
+                  <a href="#"><i className="bi bi-youtube"></i></a>
+                </div>
+              </div>
+      
+              {/* Columna Derecha: Formulario */}
+              <div className="col-lg-6 form-col">
+                <form>
+                  <div className="row">
+                    <div className="col-md-6 form-group">
+                      <label className="form-label">Nombre</label>
+                      <input type="text" className="form-input" placeholder="Tu nombre" required />
+                    </div>
+                    <div className="col-md-6 form-group">
+                      <label className="form-label">Email</label>
+                      <input type="email" className="form-input" placeholder="correo@ejemplo.com" required />
+                    </div>
+                  </div>
+                  
+                  <div className="form-group">
+                    <label className="form-label">Mensaje</label>
+                    <textarea className="form-input" rows="4" placeholder="¿Cómo podemos ayudarte hoy?" required></textarea>
+                  </div>
+      
+                  <button type="submit" className="btn-submit">
+                    Enviar Mensaje <i className="bi bi-send-fill ms-2"></i>
+                  </button>
+                </form>
+              </div>
+      
+            </div>
+          </div>
+        </div>
+      </section>
+      
     </main>
   );
 }

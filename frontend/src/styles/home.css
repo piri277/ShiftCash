@@ -385,3 +385,165 @@ body {
     margin: 0 auto;
   }
 }
+
+
+/* ===== CONTACT SECTION (ENCAPSULATED) ===== */
+.contact-section {
+  padding: 100px 0;
+  background-color: var(--dark);
+}
+
+.contact-section .contact-card {
+  background: var(--surface);
+  border: 1px solid rgba(91, 110, 245, 0.15);
+  border-radius: 30px;
+  overflow: hidden;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.4);
+}
+
+/* Columna Izquierda */
+.contact-section .info-col {
+  padding: 60px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.contact-section .info-col h2 {
+  font-family: 'Inter', sans-serif;
+  font-weight: 900;
+  font-size: 3.5rem;
+  letter-spacing: -0.05em;
+  line-height: 0.95;
+  margin-bottom: 1.5rem;
+  color: var(--text-primary);
+}
+
+.contact-section .info-col p {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  margin-bottom: 2.5rem;
+}
+
+.contact-section .contact-data {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.contact-section .contact-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.contact-section .contact-item i {
+  color: var(--primary);
+  font-size: 1.4rem;
+}
+
+/* Social Badge Vertical */
+.social-badge { /* Selector más general ya que ahora está fuera del .contact-card */
+  position: fixed; /* Pegado a la pantalla */
+  left: 0;         /* Pegado a la izquierda */
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--gradient-accent);
+  display: flex;
+  flex-direction: column;
+  padding: 25px 15px;
+  gap: 20px;
+  border-radius: 0 25px 25px 0; /* Redondeado solo a la derecha */
+  box-shadow: 5px 0 20px rgba(91, 110, 245, 0.2); /* Sombra hacia la derecha */
+  z-index: 1050; /* Para asegurar que esté por encima de otros elementos */
+}
+
+.contact-section .social-badge a {
+  color: white;
+  font-size: 1.3rem;
+  transition: transform 0.2s ease;
+}
+
+.contact-section .social-badge a:hover {
+  transform: scale(1.2);
+}
+
+/* Columna Derecha (Formulario) */
+.contact-section .form-col {
+  padding: 60px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.contact-section .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.contact-section .form-label {
+  display: block;
+  font-family: 'Sora', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.contact-section .form-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1.5px solid rgba(91, 110, 245, 0.2);
+  border-radius: 12px;
+  padding: 14px 18px;
+  color: var(--text-primary);
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.contact-section .form-input:focus {
+  border-color: var(--primary);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 4px rgba(91, 110, 245, 0.15);
+}
+
+.contact-section .btn-submit {
+  width: 100%;
+  height: 56px;
+  background: var(--gradient-accent);
+  border: none;
+  border-radius: 14px;
+  color: white;
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(91, 110, 245, 0.3);
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+}
+
+.contact-section .btn-submit:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(91, 110, 245, 0.45);
+}
+
+/* Responsividad */
+@media (max-width: 991px) {
+  .contact-section .info-col, .contact-section .form-col {
+    padding: 40px;
+  }
+  .contact-section .social-badge {
+    display: none; /* Se oculta en tablets/móvil para mejorar el flujo */
+  }
+}
+
+@media (max-width: 767px) {
+  .contact-section .info-col h2 {
+    font-size: 2.8rem;
+  }
+}
+
+ /* ===== RESPONSIVE ===== */

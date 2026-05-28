@@ -5,9 +5,17 @@ function Navbar() {
   return (
     <nav className="navbar navbar-expand-lg">
       <div className="container">
-        <Link className="navbar-brand" to="/">
-          Shift<span id="cash">Cash </span> 
-          <i className="bi bi-coin fs-4 text-primary"></i>
+        <Link className="navbar-brand brand-bounce" to="/">
+          <span className="bounce-letter">S</span>
+          <span className="bounce-letter">h</span>
+          <span className="bounce-letter">i</span>
+          <span className="bounce-letter">f</span>
+          <span className="bounce-letter">t</span>
+          <span className="bounce-letter text-cash">C</span>
+          <span className="bounce-letter text-cash">a</span>
+          <span className="bounce-letter text-cash">s</span>
+          <span className="bounce-letter text-cash">h</span>
+          <i className="bi bi-coin fs-4 text-primary bounce-letter ms-2"></i>
         </Link>
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
           <span className="navbar-toggler-icon"></span>

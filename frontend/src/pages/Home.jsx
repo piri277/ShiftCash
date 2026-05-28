@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import logoImg from '../assets/Logo-sinFondo.png';
+import logoImg from '../assets/Logo-sinFondo1.png';
 import graficaImg from '../assets/Grafica.png';
 import '../styles/home.css';
 

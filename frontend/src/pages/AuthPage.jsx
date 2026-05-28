@@ -9,6 +9,10 @@ function AuthPage() {
   const { login } = useAuth();
   const [isActive, setIsActive] = useState(false);
 
+  // Password visibility states
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [showRegisterPassword, setShowRegisterPassword] = useState(false);
+
   // Login states
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
@@ -120,7 +124,7 @@ function AuthPage() {
 
             <div className="input-box">
               <input
-                type="password"
+                type={showLoginPassword ? "text" : "password"}
                 placeholder="Contraseña"
                 value={loginPassword}
                 onChange={(e) => setLoginPassword(e.target.value)}
@@ -128,7 +132,10 @@ function AuthPage() {
                 autoComplete="current-password"
                 required
               />
-              <i className="bi bi-lock"></i>
+              <i 
+                className={`bi ${showLoginPassword ? 'bi-eye-slash' : 'bi-eye'} toggle-password`}
+                onClick={() => setShowLoginPassword(!showLoginPassword)}
+              ></i>
             </div>
 
             <div className="forgot-link">
@@ -181,7 +188,7 @@ function AuthPage() {
 
             <div className="input-box">
               <input
-                type="password"
+                type={showRegisterPassword ? "text" : "password"}
                 placeholder="Contraseña"
                 className={passwordError ? 'input-error' : ''}
                 value={registerPassword}
@@ -193,7 +200,10 @@ function AuthPage() {
                 autoComplete="new-password"
                 required
               />
-              <i className="bi bi-lock"></i>
+              <i 
+                className={`bi ${showRegisterPassword ? 'bi-eye-slash' : 'bi-eye'} toggle-password`}
+                onClick={() => setShowRegisterPassword(!showRegisterPassword)}
+              ></i>
               {passwordError && <span className="error-text">{passwordError}</span>}
             </div>
 

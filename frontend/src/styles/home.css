@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800;900&family=Sora:wght@300;400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
  
 /* ===== VARIABLES ===== */
 :root {
@@ -35,9 +35,7 @@ body {
  
 /* ===== NAVBAR ===== */
 .navbar {
-  background: rgba(15, 17, 23, 0.85) !important;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: var(--dark) !important;
   border-bottom: 1px solid rgba(91, 110, 245, 0.15);
   padding: 0.7rem 0;
   position: sticky;
@@ -47,15 +45,19 @@ body {
 }
  
 .navbar-brand {
-  font-family: 'Sora', sans-serif;
-  font-weight: 800;
-  font-size: 1.4rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 1.8rem;
   color: var(--text-primary) !important;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.04em;
+  text-transform: none;
 }
  
 .text-cash {
-  color: var(--primary);
+  background: linear-gradient(135deg, #5b6ef5 0%, #9b59f5 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
  
 .nav-link {
@@ -124,10 +126,6 @@ body {
     }
 }
 
-.brand-bounce:hover .bounce-letter {
-    color: var(--primary-light);
-}
-
  
 /* ===== HERO SECTION ===== */
 .hero-section {
@@ -193,6 +191,7 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  font-weight: 500;
 }
  
 .hero-section p {

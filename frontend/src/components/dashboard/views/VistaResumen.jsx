@@ -412,8 +412,6 @@ export default function VistaResumen({ finanzas, budgets: budgetsFromProps }) {
   }
 
   const presupuestosFiltrados = budgets.filter(b => presupuestoPerteneceAlPeriodo(b, periodoBudget));
-  const totalAsignado = presupuestosFiltrados.reduce((sum, b) => sum + b.amount, 0);
-  const totalGastadoBudgets = presupuestosFiltrados.reduce((sum, b) => sum + b.spent, 0);
 
   // Lógica para detectar múltiples alertas (Mes y Semana)
   const alertasVisibles = ["mensualmente", "semanalmente", "diariamente"].map(p => {

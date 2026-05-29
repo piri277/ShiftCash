@@ -16,6 +16,7 @@
   flex-direction: column;
   gap: 0.5rem;
   padding: 2.5rem 1.25rem;
+  position: relative; /* Para que el logout pueda usar margin-top: auto */
   background: rgba(0, 0, 0, 0.12);
   border-right: 1px solid var(--border);
 }
@@ -37,6 +38,19 @@
 
 .config-nav-item:hover { background: var(--glow-primary); color: var(--text-primary); }
 .config-nav-item.activo { background: var(--primary); color: #fff !important; font-weight: 600; }
+
+.config-nav-item-logout {
+  margin-top: auto; /* Empuja el botón al final del flex container */
+  color: var(--danger);
+  background: rgba(248,113,113,0.1);
+  border: 1px solid rgba(248,113,113,0.3);
+}
+
+.config-nav-item-logout:hover {
+  background: rgba(248,113,113,0.2);
+  color: var(--danger);
+  border-color: var(--danger);
+}
 
 .config-card {
   display: flex;

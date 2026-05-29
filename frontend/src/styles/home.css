@@ -406,25 +406,42 @@ body {
 .hero-section .d-flex { animation: fadeUp 0.6s 0.2s ease both; }
  
 /* ===== RESPONSIVE ===== */
+@media (max-width: 991px) {
+  .contact-section .info-col, .contact-section .form-col {
+    padding: 40px;
+  }
+  .social-badge {
+    display: none !important;
+  }
+}
+
 @media (max-width: 768px) {
+  /* Forzamos el stack vertical para evitar el "modo PC" */
+  .hero-section .row,
+  .somos-section .row {
+    flex-direction: column !important;
+  }
+
   .hero-section {
     text-align: center;
   }
   .hero-section .container {
-    margin-top: -20px; /* En móvil no necesitamos subirlo tanto */
+    margin-top: -20px; 
   }
   .hero-section p {
     margin: 0 auto 2rem;
   }
   #logo {
     max-width: 350px;
-    margin-top: 2rem;
+    margin-top: 1rem;
   }
   .somos-section p {
     margin: 0 auto;
   }
+  .contact-section .info-col h2 {
+    font-size: 2.8rem;
+  }
 }
-
 
 /* ===== CONTACT SECTION (ENCAPSULATED) ===== */
 .contact-section {

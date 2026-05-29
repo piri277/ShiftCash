@@ -760,7 +760,9 @@
     white-space: nowrap;
   }
 
-  .btn-primary {
+  .btn-primary,
+  .presupuestos-btn-add,
+  .btn-nueva-meta {
     padding: 0.35rem 0.8rem;
     font-size: 0.7rem;
     border-radius: 8px;

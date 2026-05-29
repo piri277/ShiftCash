@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { getMe, actualizarPerfil, cambiarPassword, actualizarMoneda, eliminarCuenta } from "../../../api/profile";
 import "../../../styles/config.css";
 import { useTheme } from "../../../hooks/useTheme";
-import { User, Lock, Palette, AlertTriangle } from "lucide-react";
+import { User, Lock, Palette, AlertTriangle, LogOut } from "lucide-react";
 
 
 const MONEDAS = ["COP", "USD", "EUR", "MXN", "ARS", "BRL"];
@@ -98,6 +98,11 @@ export default function VistaConfiguracion() {
     }
   }
 
+  function handleLogout() {
+    localStorage.removeItem("token");
+    window.location.href = "/"; // Redirige a la página de inicio
+  }
+
   if (loading) return <div className="db-empty"><span className="db-empty-icon">⚙️</span><p>Cargando...</p></div>;
 
   const SECCIONES = [
@@ -105,6 +110,7 @@ export default function VistaConfiguracion() {
     { key: "seguridad",    label: "Seguridad",      icon: Lock },
     { key: "preferencias", label: "Preferencias",   icon: Palette },
     { key: "cuenta",       label: "Cuenta",         icon: AlertTriangle },
+    { key: "logout",       label: "Cerrar sesión",  icon: LogOut },
   ];
 
   return (
@@ -113,11 +119,12 @@ export default function VistaConfiguracion() {
       <nav className="config-nav">
         {SECCIONES.map(s => {
           const Icon = s.icon;
+          const isLogout = s.key === "logout";
           return (
             <button
               key={s.key}
-              className={`config-nav-item ${seccion === s.key ? "activo" : ""}`}
-              onClick={() => setSeccion(s.key)}
+              className={`config-nav-item ${seccion === s.key ? "activo" : ""} ${isLogout ? "config-nav-item-logout" : ""}`}
+              onClick={isLogout ? handleLogout : () => setSeccion(s.key)}
               title={s.label}
             >
               <Icon size={20} strokeWidth={seccion === s.key ? 2.5 : 1.8} />

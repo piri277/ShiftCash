@@ -6,7 +6,7 @@ function Navbar() {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <nav className="navbar navbar-expand-lg">
+    <nav className="navbar navbar-expand-md">
       <div className="container">
         <Link className="navbar-brand brand-bounce" to="/">
           <span className="bounce-letter">S</span>

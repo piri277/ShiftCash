@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../hooks/useTheme';
 import logoImg from '../assets/Logo-sinFondo1.png';
@@ -7,6 +7,18 @@ import '../styles/home.css';
 
 function Home() {
   useTheme();
+
+  useEffect(() => {
+    // Forzamos la recalculación de inmediato
+    window.dispatchEvent(new Event('resize'));
+    
+    // Y un pequeño refuerzo tras el primer renderizado
+    const timer = setTimeout(() => {
+      window.dispatchEvent(new Event('resize'));
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <main>

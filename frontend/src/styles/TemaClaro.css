@@ -566,6 +566,18 @@
   background: var(--primary) !important;
 }
 
+/* Config Nav Logout Button en Modo Claro */
+[data-theme="light"] .config-nav-item-logout {
+  color: var(--danger) !important;
+  background: rgba(248,113,113,0.1) !important;
+  border-color: rgba(248,113,113,0.3) !important;
+}
+
+[data-theme="light"] .config-nav-item-logout:hover {
+  background: rgba(248,113,113,0.2) !important;
+  border-color: var(--danger) !important;
+}
+
 /* Auth Page: Ajustes para el tema tierra */
 [data-theme="light"] .auth-form-box .btn {
   background: var(--gradient-accent) !important;

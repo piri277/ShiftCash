@@ -1,102 +1,115 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { MENU_ITEMS } from "../../../constants";
 import { useAuth } from "../../../hooks/useAuth";
+import { 
+  LayoutDashboard, 
+  History, 
+  PieChart, 
+  Layers, 
+  Wallet2, 
+  Target, 
+  Settings, 
+  LogOut, 
+  ChevronUp, 
+  User,
+  PanelLeftClose,
+  PanelLeftOpen
+} from "lucide-react";
 
 export default function Sidebar({ vistaActiva, onCambiarVista }) {
   const navigate = useNavigate();
   const { logout, user } = useAuth(); 
-  const [menuUsuarioAbierto, setMenuUsuarioAbierto] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true); // Inicia colapsado por defecto
 
-  const [mostrarConfirmacion, setMostrarConfirmacion] = useState(false);
+  // Definimos los items aquí para mapear los iconos de Lucide
+  const menuItems = useMemo(() => [
+    { key: "resumen",       etiqueta: "Resumen",         icon: LayoutDashboard },
+    { key: "historial",     etiqueta: "Historial",       icon: History },
+    { key: "graficas",      etiqueta: "Gráficas",        icon: PieChart },
+    { key: "categorias",    etiqueta: "Categorías",      icon: Layers },
+    { key: "presupuestos",  etiqueta: "Presupuestos",    icon: Wallet2 },
+    { key: "metas",         etiqueta: "Metas de Ahorro", icon: Target },
+  ], []);
 
-  const handleToggleMenu = () => {
-    setMenuUsuarioAbierto(prev => {
-      if (prev) setMostrarConfirmacion(false); // resetea al cerrar
-      return !prev;
-    });
-  };
-
-  const ejecutarLogout = () => {
+  const handleLogout = () => {
     logout();
     navigate("/");
   };
 
-  const iniciales = user?.username
-    ? user.username.slice(0, 2).toUpperCase()
-    : "??";
-
   return (
-    <aside className="db-sidebar">
+    <aside className={`db-sidebar ${isCollapsed ? "collapsed" : ""}`}>
+      {/* Brand sin borde inferior, más limpio */}
       <div className="db-brand">
-        Shift<span>Cash</span>
+        <div className="brand-logo brand-bounce">
+          {"Shift".split("").map((l, i) => (
+            <span key={i} className="bounce-letter logo-text" style={{ animationDelay: `${i * 0.1}s` }}>{l}</span>
+          ))}
+          {"Cash".split("").map((l, i) => (
+            <span key={i} className="bounce-letter logo-accent" style={{ animationDelay: `${(i + 5) * 0.1}s` }}>{l}</span>
+          ))}
+        </div>
+        <button 
+          className="btn-sidebar-toggle" 
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          title={isCollapsed ? "Expandir" : "Contraer"}
+        >
+          {isCollapsed ? <PanelLeftOpen size={20} /> : <PanelLeftClose size={20} />}
+        </button>
       </div>
 
+      {/* Navegación Principal */}
       <nav className="db-nav">
-        {MENU_ITEMS.map(item => (
-          <div
-            key={item.key}
-            className={`db-nav-item ${vistaActiva === item.key ? "active" : ""}`}
-            onClick={() => onCambiarVista(item.key)}
-          >
-            <span>{item.icono}</span>
-            <span>{item.etiqueta}</span>
-          </div>
-        ))}
+        {menuItems.map((item) => {
+          const Icon = item.icon;
+          const isActive = vistaActiva === item.key;
+          return (
+            <div
+              key={item.key}
+              className={`db-nav-item ${isActive ? "active" : ""}`}
+              onClick={() => onCambiarVista(item.key)}
+            >
+              {isActive && <div className="active-indicator" />}
+              <Icon size={20} strokeWidth={isActive ? 2.5 : 1.8} className="nav-icon" />
+              <span className="nav-label">{item.etiqueta}</span>
+            </div>
+          );
+        })}
       </nav>
 
-      {/* Bloque de usuario — click abre/cierra el menú */}
-      <div className="db-user-wrapper">
-
-        {/* Menú flotante — visible solo cuando menuUsuarioAbierto es true */}
-        {menuUsuarioAbierto && (
-        <div className="db-user-menu">
-          {!mostrarConfirmacion ? (
-            <>
-              <div className="db-user-menu-info">
-                <div className="db-user-name">{user?.username}</div>
-                <div className="db-user-email">{user?.email}</div>
-              </div>
-              <hr className="db-user-menu-divider" />
-              <button
-                className="db-user-menu-item db-user-menu-item--danger"
-                onClick={() => setMostrarConfirmacion(true)} // Cambia a modo confirmación
-              >
-                <span>🚪</span>
-                <span>Cerrar sesión</span>
-              </button>
-            </>
-          ) : (
-            // Vista de confirmación dentro del mismo menú
-            <div className="db-user-menu-confirmacion">
-              <p>¿Cerrar sesión?</p>
-              <div className="db-user-menu-confirmacion-btns">
-                <button className="btn-confirm-si" onClick={ejecutarLogout}>
-                  Sí, salir
-                </button>
-                <button className="btn-confirm-no" onClick={() => setMostrarConfirmacion(false)}>
-                  Cancelar
-                </button>
-              </div>
+      {/* Perfil Inferior con Dropdown Moderno */}
+      <div className="db-user-section">
+        {dropdownOpen && (
+          <div className="db-profile-dropdown glass-effect">
+            <div className="dropdown-user-info">
+              <p className="user-name">{user?.username}</p>
+              <p className="user-email">{user?.email}</p>
             </div>
-          )}
-        </div>
-      )}
-
-        <div
-          className="db-user"
-          onClick={handleToggleMenu}
-          title="Opciones de cuenta"
-        >
-          <div className="db-avatar">{iniciales}</div>
-          <div style={{ minWidth: 0 }}>
-            <div className="db-user-name">{user?.username}</div>
-            <div className="db-user-email">{user?.email}</div>
+            <button className="dropdown-item" onClick={() => { onCambiarVista('configuracion'); setDropdownOpen(false); }}>
+              <Settings size={16} />
+              <span>Configuración</span>
+            </button>
+            <button className="dropdown-item logout" onClick={handleLogout}>
+              <LogOut size={16} />
+              <span>Cerrar sesión</span>
+            </button>
           </div>
-          {/* Flecha que indica si el menú está abierto o cerrado */}
-          <span className="db-user-chevron">
-            {menuUsuarioAbierto ? "▲" : "▼"}
-          </span>
+        )}
+
+        <div 
+          className={`db-compact-profile ${dropdownOpen ? 'active' : ''}`}
+          onClick={() => setDropdownOpen(!dropdownOpen)}
+        >
+          <div className="profile-avatar">
+            <User size={18} />
+          </div>
+          <div className="profile-details">
+            <span className="profile-name">{user?.username}</span>
+          </div>
+          <ChevronUp 
+            size={16} 
+            className={`chevron-icon ${dropdownOpen ? 'rotated' : ''}`} 
+          />
         </div>
       </div>
     </aside>

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, SmallInteger, String, Numeric, Date, TIMESTAMP, ForeignKey, text, Boolean  # añade Boolean
+from sqlalchemy import Column, Integer, SmallInteger, String, Numeric, Date, TIMESTAMP, ForeignKey, text, Boolean, JSON, Text
 from sqlalchemy.orm import relationship
 from .database import Base
 
@@ -13,9 +13,10 @@ class User(Base):
     currency    = Column(String(10), default="COP")
     created_at  = Column(TIMESTAMP, server_default=text("CURRENT_TIMESTAMP"))
 
-    categories   = relationship("Category", back_populates="user", foreign_keys="Category.user_id")
-    budgets      = relationship("Budget", back_populates="user")
-    transactions = relationship("Transaction", back_populates="user")
+    categories    = relationship("Category", back_populates="user", foreign_keys="Category.user_id")
+    budgets       = relationship("Budget", back_populates="user")
+    transactions  = relationship("Transaction", back_populates="user")
+    saving_goals  = relationship("SavingGoal", back_populates="user")
 
 
 class Category(Base):
@@ -66,3 +67,20 @@ class Transaction(Base):
 
     user     = relationship("User", back_populates="transactions")
     category = relationship("Category")
+
+
+class SavingGoal(Base):
+    __tablename__ = "saving_goal"
+
+    goal_id         = Column(Integer, primary_key=True, index=True)
+    user_id         = Column(Integer, ForeignKey("users.user_id", ondelete="CASCADE"), nullable=False)
+    name            = Column(String(100), nullable=False)
+    target_amount   = Column(Numeric(15, 2), nullable=False)
+    start_date      = Column(Date, server_default=text("CURRENT_DATE"))
+    end_date        = Column(Date, nullable=True)
+    image_url       = Column(Text, nullable=True)
+    completed_days  = Column(JSON, default=list)  # Lista de días completados: [1, 2, 5, ...]
+    daily_amounts   = Column(JSON, default=dict)  # Mapeo de días a montos: {"1": 100.00, "2": 150.00, ...}
+    created_at      = Column(TIMESTAMP, server_default=text("CURRENT_TIMESTAMP"))
+
+    user = relationship("User", back_populates="saving_goals")

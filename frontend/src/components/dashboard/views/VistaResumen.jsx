@@ -7,6 +7,7 @@ import {
 } from "recharts";
 
 import { useBudgets } from "../../../hooks/useBudgets";
+import { useMetas } from "../../../hooks/useMetas";
 import { formatearPesos, formatearEjeY } from "../../../utils/formatters";
 
 const TOOLTIP_STYLE = {
@@ -330,6 +331,9 @@ function GraficaCarousel({ transacciones }) {
 export default function VistaResumen({ finanzas, budgets: budgetsFromProps }) {
   const { resumen, transacciones, loading, error } = finanzas;
   const budgetsHook = useBudgets();
+  const { metas, cargarMetas, loading: loadingMetas } = useMetas();
+  const [indiceMeta, setIndiceMeta] = useState(0);
+
   // Usa el prop si viene del padre (Dashboard), sino usa el hook local
   const { budgets, loading: loadingBudgets, recargar: recargarBudgets } = budgetsFromProps || budgetsHook;
   const [periodoBudget, setPeriodoBudget] = useState("anual");
@@ -337,10 +341,11 @@ export default function VistaResumen({ finanzas, budgets: budgetsFromProps }) {
   // Recargar presupuestos al entrar al resumen para que la barra de progreso sea exacta
   useEffect(() => {
     if (recargarBudgets) recargarBudgets();
+    cargarMetas();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (loading || loadingBudgets) return <div className="db-empty"><span>Cargando...</span></div>;
+  if (loading || loadingBudgets || loadingMetas) return <div className="db-empty"><span>Cargando...</span></div>;
   if (error) return <div className="db-empty"><span>⚠️ {error}</span></div>;
 
   const { totalGastado, totalGanado, totalAhorrado, cantidadTransacciones } = resumen;
@@ -404,6 +409,10 @@ export default function VistaResumen({ finanzas, budgets: budgetsFromProps }) {
   const totalGastadoBudgets = presupuestosFiltrados.reduce((sum, b) => sum + b.spent, 0);
   const presupuestoSuperado = totalAsignado > 0 && (totalGastadoBudgets / totalAsignado) > 1;
 
+  // Meta activa para el resumen
+  const metaActiva = metas && metas.length > 0 ? metas[indiceMeta % metas.length] : null;
+  const handleCambiarMeta = () => setIndiceMeta(prev => prev + 1);
+
   const tarjetas = [
     { etiqueta: "Total Gastado", valor: formatearPesos(totalGastado), color: "#f87171", icono: "💸" },
     { etiqueta: "Total Ganado", valor: formatearPesos(totalGanado), color: "#34d399", icono: "💰" },
@@ -424,6 +433,75 @@ export default function VistaResumen({ finanzas, budgets: budgetsFromProps }) {
       </div>
 
       <BarraPresupuesto presupuestosDelPeriodo={presupuestosFiltrados} periodo={periodoBudget} setPeriodo={setPeriodoBudget} />
+
+      {metaActiva && (
+        <div className="db-card" style={{ marginBottom: "1.5rem" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
+            <h3 className="db-card-title" style={{ margin: 0 }}>Seguimiento de Meta: {metaActiva.name}</h3>
+            {metas.length > 1 && (
+              <button 
+                onClick={handleCambiarMeta}
+                style={{
+                  padding: "4px 12px",
+                  borderRadius: 99,
+                  border: "1px solid rgba(91,110,245,0.2)",
+                  background: "rgba(91,110,245,0.15)",
+                  color: "#a0aaff",
+                  fontSize: "0.75rem",
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  transition: "all 0.15s",
+                }}
+              >
+                Cambiar Meta 🔄
+              </button>
+            )}
+          </div>
+
+          <div className="db-budget-header" style={{ marginBottom: "12px" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+              <span style={{ fontSize: "0.95rem", fontWeight: "700", color: "#f0f2ff" }}>
+                {(() => {
+                  const hoy = new Date();
+                  hoy.setHours(0, 0, 0, 0);
+                  const inicio = new Date(metaActiva.start_date);
+                  inicio.setHours(0, 0, 0, 0);
+                  const diffTime = hoy - inicio;
+                  const numDiaActual = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+                  const totalDiasReto = Object.keys(metaActiva.daily_amounts || {}).length;
+                  const estaCompletadoHoy = metaActiva.completed_days?.includes(numDiaActual);
+                  const montoHoy = metaActiva.daily_amounts?.[numDiaActual.toString()] || 0;
+
+                  if (numDiaActual < 1) return `⏳ El reto inicia en ${Math.abs(numDiaActual) + 1} días`;
+                  if (numDiaActual > totalDiasReto) return `🎉 ¡Reto de ahorro finalizado!`;
+                  return estaCompletadoHoy 
+                    ? "✅ ¡Ahorro de hoy completado!" 
+                    : `🎯 Pendiente para hoy: ${formatearPesos(montoHoy)}`;
+                })()}
+              </span>
+              <span style={{ color: "#9ba3c7", fontSize: "0.8rem", fontWeight: 500 }}>
+                Progreso: {metaActiva.completed_days?.length || 0} de {Object.keys(metaActiva.daily_amounts || {}).length} días listos
+              </span>
+            </div>
+            <div style={{ textAlign: "right" }}>
+              <span style={{ fontSize: "1.2rem", fontWeight: "800", color: "#9b59f5" }}>
+                {Math.round(metaActiva.progress?.percentage || 0)}%
+              </span>
+            </div>
+          </div>
+
+          <div className="db-budget-track">
+            <div 
+              className="db-budget-fill"
+              style={{ 
+                width: `${Math.min(metaActiva.progress?.percentage || 0, 100)}%`,
+                background: "var(--gradient-accent)",
+                transition: "width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)"
+              }} 
+            />
+          </div>
+        </div>
+      )}
 
       <GraficaCarousel transacciones={transacciones} />
     </div>

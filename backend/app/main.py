@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .database import engine, Base
-from .routes import users, transactions, categories, profile, budgets
+from .routes import users, transactions, categories, profile, budgets, savings
 from . import models
 from . import scheduler
 
@@ -29,6 +29,7 @@ app.include_router(transactions.router)
 app.include_router(categories.router)
 app.include_router(budgets.router)
 app.include_router(profile.router)
+app.include_router(savings.router)
 
 @app.get("/")
 def root():

@@ -1,6 +1,6 @@
 from pydantic import BaseModel, EmailStr, field_validator
-from typing import Optional
-from datetime import date
+from typing import Optional, List, Dict
+from datetime import date, datetime
 
 # Authentication
 class UserCreate(BaseModel):
@@ -192,3 +192,76 @@ class BudgetOut(BudgetBase):
 
     class Config:
         from_attributes = True
+
+
+# Metas de Ahorro
+class SavingGoalCreate(BaseModel):
+    name: str
+    target_amount: float
+    start_date: Optional[date] = None
+    end_date: Optional[date] = None
+    image_url: Optional[str] = None
+
+    @field_validator("target_amount")
+    @classmethod
+    def amount_must_be_positive(cls, v):
+        if v <= 0:
+            raise ValueError("El monto objetivo debe ser mayor a 0")
+        return v
+
+    @field_validator("name")
+    @classmethod
+    def name_not_empty(cls, v):
+        if not v.strip():
+            raise ValueError("El nombre no puede estar vacío")
+        return v.strip()
+
+    @field_validator("end_date")
+    @classmethod
+    def end_date_must_be_future(cls, v):
+        if v and v < date.today():
+            raise ValueError("La fecha de fin debe ser hoy o en el futuro")
+        return v
+
+
+class SavingGoalUpdate(BaseModel):
+    name: Optional[str] = None
+    target_amount: Optional[float] = None
+    end_date: Optional[date] = None
+    image_url: Optional[str] = None
+
+    @field_validator("target_amount")
+    @classmethod
+    def amount_must_be_positive(cls, v):
+        if v is not None and v <= 0:
+            raise ValueError("El monto objetivo debe ser mayor a 0")
+        return v
+
+    @field_validator("name")
+    @classmethod
+    def name_not_empty(cls, v):
+        if v is not None and not v.strip():
+            raise ValueError("El nombre no puede estar vacío")
+        return v.strip() if v else None
+
+
+class SavingGoalOut(BaseModel):
+    goal_id: int
+    user_id: int
+    name: str
+    target_amount: float
+    start_date: date
+    end_date: date
+    image_url: Optional[str]
+    completed_days: List[int]
+    daily_amounts: Dict[str, float]
+    created_at: Optional[datetime] = None
+    progress: Optional[Dict[str, float]] = None # Añadido para incluir el progreso calculado
+
+    class Config:
+        from_attributes = True
+
+
+class ToggleDayRequest(BaseModel):
+    """Solicitud para alternar un día como completado/no completado"""
+    pass

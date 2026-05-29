@@ -4,6 +4,7 @@ export const MENU_ITEMS = [
   { key: "graficas",      etiqueta: "Gráficas",      icono: "📈" },
   { key: 'categorias',    etiqueta: 'Categorías',    icono: '🗂️' },
   { key: 'presupuestos',  etiqueta: 'Presupuestos',  icono: '💸' },
+  { key: 'metas',         etiqueta: 'Metas de Ahorro', icono: '🎯' },
   { key: "configuracion", etiqueta: "Configuración", icono: "⚙️" }
 ];
 

@@ -39,8 +39,15 @@
 /* Tarjetas, Modales y Paneles */
 [data-theme="light"] .db-card,
 [data-theme="light"] .modal-card,
+[data-theme="light"] .db-sidebar,
+[data-theme="light"] .db-profile-dropdown,
 [data-theme="light"] .presupuestos-card,
 [data-theme="light"] .presupuestos-summary,
+[data-theme="light"] .auth-form-box,
+[data-theme="light"] .form-box,
+[data-theme="light"] .meta-card,
+[data-theme="light"] .plantilla-container,
+[data-theme="light"] .plantilla-header,
 [data-theme="light"] .cat-card,
 [data-theme="light"] .hist-panel,
 [data-theme="light"] .config-card,
@@ -59,26 +66,42 @@
 [data-theme="light"] .db-card-title,
 [data-theme="light"] .modal-header h3,
 [data-theme="light"] .presupuestos-modal-title,
+[data-theme="light"] .form-box h1,
 [data-theme="light"] .cat-card-name,
 [data-theme="light"] .detalle-valor,
-[data-theme="light"] .config-titulo {
+[data-theme="light"] .config-titulo,
+[data-theme="light"] .logo-text,
+[data-theme="light"] .profile-name,
+[data-theme="light"] .meta-card-content h3,
+[data-theme="light"] .info-value,
+[data-theme="light"] .day-number,
+[data-theme="light"] .plantilla-header h2,
+[data-theme="light"] .user-name {
   color: var(--text-primary) !important;
 }
 
 [data-theme="light"] .db-stat-label,
 [data-theme="light"] .modal-field label,
 [data-theme="light"] .presupuestos-form-label,
+[data-theme="light"] .form-box p,
+[data-theme="light"] .forgot-link a,
 [data-theme="light"] .detalle-label,
 [data-theme="light"] .config-subtitulo,
-[data-theme="light"] .cat-card-type {
+[data-theme="light"] .cat-card-type,
+[data-theme="light"] .user-email {
   color: var(--text-muted) !important;
 }
 
-/* Topbar en tema claro: fondo blanco translúcido */
+/* Topbar y Navbar en tema claro: fondo blanco translúcido */
 [data-theme="light"] .db-topbar {
   background: rgba(255, 255, 255, 0.85);
   border-bottom: 1px solid var(--border);
   color: var(--text-primary);
+}
+
+[data-theme="light"] .navbar {
+  background: var(--surface) !important;
+  border-bottom: 1px solid var(--border);
 }
  
 /* Vista Historial: Corregir textos invisibles */
@@ -119,15 +142,95 @@
 [data-theme="light"] .db-app {
   background-image: none;
 }
- 
-/* Sidebar glow line: más sutil en claro */
-[data-theme="light"] .db-sidebar::after {
-  background: linear-gradient(to bottom, transparent, rgba(74, 92, 224, 0.25), transparent);
-}
- 
+
 /* Nav item activo: borde izquierdo más visible */
 [data-theme="light"] .db-nav-item.active::before {
   box-shadow: 0 0 8px rgba(74, 92, 224, 0.35);
+}
+
+[data-theme="light"] .db-nav-item {
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .db-nav-item:hover {
+  background: var(--surface-2);
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .db-nav-item.active {
+  background: rgba(74, 92, 224, 0.08);
+  color: var(--primary);
+}
+
+/* Hero Section y Auth Container en modo claro */
+[data-theme="light"] .hero-section {
+[data-theme="light"] .hero-section,
+[data-theme="light"] .auth-container {
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(74, 92, 224, 0.05) 1px, transparent 1px),
+    radial-gradient(circle at 70% 60%, rgba(74, 92, 224, 0.04) 1.5px, transparent 1.5px),
+    radial-gradient(circle at 40% 80%, rgba(74, 92, 224, 0.06) 1px, transparent 1px),
+    linear-gradient(135deg, #f8fafc 0%, #eff6ff 40%, #e0e7ff 100%) !important;
+}
+
+[data-theme="light"] .hero-section::before {
+  background: radial-gradient(circle, rgba(74, 92, 224, 0.08) 0%, transparent 70%) !important;
+}
+
+[data-theme="light"] .hero-section::after {
+  background: radial-gradient(circle, rgba(124, 68, 224, 0.06) 0%, transparent 70%) !important;
+}
+
+[data-theme="light"] .hero-section p {
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .services-section {
+  background: var(--dark) !important;
+}
+
+/* Ajustes específicos para Metas en Modo Claro */
+[data-theme="light"] .modal-btn-cancel,
+[data-theme="light"] .btn-cancelar-plantilla {
+  background: var(--surface-2) !important;
+  color: var(--text-muted) !important;
+  border: 1px solid var(--border) !important;
+}
+
+[data-theme="light"] .plantilla-day {
+  background: var(--surface-2) !important;
+  border-color: var(--border) !important;
+}
+
+[data-theme="light"] .plantilla-info {
+  background: var(--surface-2) !important;
+  border-left-color: var(--primary) !important;
+}
+
+[data-theme="light"] .plantilla-container::-webkit-scrollbar-thumb {
+  background: rgba(74, 92, 224, 0.18);
+}
+
+[data-theme="light"] .db-compact-profile {
+  background: var(--surface-2);
+  border-color: var(--border);
+}
+
+[data-theme="light"] .dropdown-user-info {
+  border-bottom-color: var(--border);
+}
+
+[data-theme="light"] .dropdown-item {
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .dropdown-item:hover {
+  background: var(--surface-2);
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .btn-sidebar-toggle {
+  color: var(--text-muted);
 }
  
 /* Scrollbar en tema claro */
@@ -143,12 +246,17 @@
 [data-theme="light"] .modal-field select,
 [data-theme="light"] .presupuestos-form-input,
 [data-theme="light"] .presupuestos-form-select,
+[data-theme="light"] .input-box input,
 [data-theme="light"] .custom-select-trigger,
 [data-theme="light"] .hist-search,
 [data-theme="light"] .config-input {
   background: var(--surface-2) !important;
   color: var(--text-primary) !important;
   border-color: var(--border) !important;
+}
+
+[data-theme="light"] .input-box input::placeholder {
+  color: var(--text-faint) !important;
 }
 
 [data-theme="light"] .presupuestos-form-select option {
@@ -251,4 +359,4 @@
   border: 1px solid var(--border) !important;
 }
 
-[data-theme="light"] .modal-submit { box-shadow: 0 4px 12px rgba(74, 92, 224, 0.2); }
+[data-theme="light"] .modal-submit { box-shadow: 0 4px 12px rgba(74, 92, 224, 0.2); }}

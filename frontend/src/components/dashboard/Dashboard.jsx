@@ -9,6 +9,7 @@ import VistaGraficas      from "./views/VistaGraficas";
 import VistaConfiguracion from "./views/VistaConfiguracion";
 import VistaCategorias    from "./views/VistaCategorias";
 import VistaPresupuestos  from "./views/VistaPresupuestos";
+import VistaMetas         from "./views/VistaMetas";
 import ModalTransaccion   from "./modals/ModalTransaccion";
 import { useFinanzas }    from "../../hooks/useFinanzas";
 import { useBudgets }     from "../../hooks/useBudgets";
@@ -34,6 +35,7 @@ export default function Dashboard() {
     graficas:      <VistaGraficas      finanzas={finanzas} />,
     categorias:    <VistaCategorias    />,
     presupuestos:  <VistaPresupuestos  budgets={budgets} />,
+    metas:         <VistaMetas         />,
     configuracion: <VistaConfiguracion />,
   };
 

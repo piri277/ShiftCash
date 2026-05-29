@@ -3,6 +3,7 @@ import {
   History, 
   BarChart3,
   Layers, 
+  Wallet2,
   Target, 
   User
 } from "lucide-react";
@@ -13,6 +14,7 @@ export default function BottomNavBar({ vistaActiva, onCambiarVista }) {
     { key: "historial",  etiqueta: "History",   icon: History },
     { key: "graficas",   etiqueta: "Charts",    icon: BarChart3 },
     { key: "categorias", etiqueta: "Categories", icon: Layers },
+    { key: "presupuestos", etiqueta: "Budgets", icon: Wallet2 },
     { key: "metas",      etiqueta: "Goals",     icon: Target },
     { key: "perfil",     etiqueta: "Profile",   icon: User },
   ];

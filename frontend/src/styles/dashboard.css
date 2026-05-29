@@ -470,9 +470,9 @@
   font-feature-settings: 'tnum';
   -moz-font-feature-settings: 'tnum';
   -webkit-font-feature-settings: 'tnum';
-  min-width: 120px;
-  display: inline-block;
-  text-align: right;
+  min-width: 0;
+  display: block;
+  text-align: left;
 }
 
 /* ===== GENERIC CARD ===== */

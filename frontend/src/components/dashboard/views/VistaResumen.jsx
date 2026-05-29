@@ -112,12 +112,13 @@ function construirDatos(transacciones, periodo) {
 }
 
 // ── Sub-componentes ───────────────────────────────────────────────────────────
-function AlertaPresupuesto({ totalGastado, totalAsignado }) {
+function AlertaPresupuesto({ totalGastado, totalAsignado, periodo }) {
+  const label = periodo === "mensualmente" ? "mensual" : periodo === "semanalmente" ? "semanal" : "diario";
   return (
     <div className="db-alert">
       <span>⚠️</span>
       <span>
-        ¡Has superado tu presupuesto! Gastaste{" "}
+        ¡Has superado tu presupuesto {label}! Gastaste{" "}
         <strong>{formatearPesos(totalGastado)}</strong> de{" "}
         <strong>{formatearPesos(totalAsignado)}</strong>.
       </span>
@@ -342,7 +343,7 @@ export default function VistaResumen({ finanzas, budgets: budgetsFromProps }) {
 
   // Usa el prop si viene del padre (Dashboard), sino usa el hook local
   const { budgets, loading: loadingBudgets, recargar: recargarBudgets } = budgetsFromProps || budgetsHook;
-  const [periodoBudget, setPeriodoBudget] = useState("anual");
+  const [periodoBudget, setPeriodoBudget] = useState("mensualmente");
 
   // Recargar presupuestos al entrar al resumen para que la barra de progreso sea exacta
   useEffect(() => {
@@ -413,7 +414,15 @@ export default function VistaResumen({ finanzas, budgets: budgetsFromProps }) {
   const presupuestosFiltrados = budgets.filter(b => presupuestoPerteneceAlPeriodo(b, periodoBudget));
   const totalAsignado = presupuestosFiltrados.reduce((sum, b) => sum + b.amount, 0);
   const totalGastadoBudgets = presupuestosFiltrados.reduce((sum, b) => sum + b.spent, 0);
-  const presupuestoSuperado = totalAsignado > 0 && (totalGastadoBudgets / totalAsignado) > 1;
+
+  // Lógica para detectar múltiples alertas (Mes y Semana)
+  const alertasVisibles = ["mensualmente", "semanalmente", "diariamente"].map(p => {
+    const filtrados = budgets.filter(b => presupuestoPerteneceAlPeriodo(b, p));
+    const asignado = filtrados.reduce((sum, b) => sum + b.amount, 0);
+    const gastado = filtrados.reduce((sum, b) => sum + b.spent, 0);
+    if (asignado > 0 && gastado > asignado) return { gastado, asignado, p };
+    return null;
+  }).filter(Boolean);
 
   // Meta activa para el resumen
   const metaActiva = metas && metas.length > 0 ? (metas[indiceMeta] || metas[0]) : null;
@@ -431,7 +440,14 @@ export default function VistaResumen({ finanzas, budgets: budgetsFromProps }) {
         Resumen del mes — <span>{new Date().toLocaleString("es-CO", { month: "long", year: "numeric" })}</span>
       </h2>
 
-      {presupuestoSuperado && <AlertaPresupuesto totalGastado={totalGastadoBudgets} totalAsignado={totalAsignado} />}
+      {alertasVisibles.map((alerta, i) => (
+        <AlertaPresupuesto 
+          key={i} 
+          totalGastado={alerta.gastado} 
+          totalAsignado={alerta.asignado} 
+          periodo={alerta.p} 
+        />
+      ))}
 
       <div className="db-stat-grid">
         {tarjetas.map(t => <TarjetaStat key={t.etiqueta} {...t} />)}

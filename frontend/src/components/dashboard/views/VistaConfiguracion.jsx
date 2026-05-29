@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { getMe, actualizarPerfil, cambiarPassword, actualizarMoneda, eliminarCuenta } from "../../../api/profile";
 import "../../../styles/config.css";
 import { useTheme } from "../../../hooks/useTheme";
+import { User, Lock, Palette, AlertTriangle } from "lucide-react";
 
 
 const MONEDAS = ["COP", "USD", "EUR", "MXN", "ARS", "BRL"];
@@ -100,25 +101,30 @@ export default function VistaConfiguracion() {
   if (loading) return <div className="db-empty"><span className="db-empty-icon">⚙️</span><p>Cargando...</p></div>;
 
   const SECCIONES = [
-    { key: "perfil",       label: "Perfil",        icon: "👤" },
-    { key: "seguridad",    label: "Seguridad",      icon: "🔒" },
-    { key: "preferencias", label: "Preferencias",   icon: "🎨" },
-    { key: "cuenta",       label: "Cuenta",         icon: "⚠️" },
+    { key: "perfil",       label: "Perfil",        icon: User },
+    { key: "seguridad",    label: "Seguridad",      icon: Lock },
+    { key: "preferencias", label: "Preferencias",   icon: Palette },
+    { key: "cuenta",       label: "Cuenta",         icon: AlertTriangle },
   ];
 
   return (
     <div className="config-layout">
       {/* Sidebar de secciones */}
       <nav className="config-nav">
-        {SECCIONES.map(s => (
-          <button
-            key={s.key}
-            className={`config-nav-item ${seccion === s.key ? "activo" : ""}`}
-            onClick={() => setSeccion(s.key)}
-          >
-            <span>{s.icon}</span> {s.label}
-          </button>
-        ))}
+        {SECCIONES.map(s => {
+          const Icon = s.icon;
+          return (
+            <button
+              key={s.key}
+              className={`config-nav-item ${seccion === s.key ? "activo" : ""}`}
+              onClick={() => setSeccion(s.key)}
+              title={s.label}
+            >
+              <Icon size={20} strokeWidth={seccion === s.key ? 2.5 : 1.8} />
+              <span className="config-nav-label">{s.label}</span>
+            </button>
+          );
+        })}
       </nav>
 
       {/* Contenido */}

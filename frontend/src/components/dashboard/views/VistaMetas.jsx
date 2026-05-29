@@ -4,6 +4,7 @@ import { createPortal } from 'react-dom';
 import { useMetas } from '../../../hooks/useMetas';
 import { formatearPesos, formatearAK } from '../../../utils/formatters';
 import MetaFormModal from '../modals/MetaFormModal';
+import { useMediaQuery } from '../../../hooks/useMediaQuery'; // Import useMediaQuery
 
 import "../../../styles/metas.css";
 import "../../../styles/modal.css";
@@ -202,6 +203,7 @@ export default function VistaMetas() {
 
 // Componente interno: PlantillaReto renderizado dinámicamente
 function PlantillaReto({ meta, onClose }) {
+  const isMobile = useMediaQuery('(max-width: 768px)'); // Detect mobile
   const { alternarDia } = useMetas();
   const [loading, setLoading] = useState(false);
   const [selectedDays, setSelectedDays] = useState(new Set(meta.completed_days || []));
@@ -213,6 +215,7 @@ function PlantillaReto({ meta, onClose }) {
 
   const calcularDiasParaRevelar = () => {
     const totalDias = calcularNumDias();
+    if (isMobile) return 3; // Mostrar 3 columnas en móvil
     if (totalDias <= 20) return 4;
     if (totalDias <= 50) return 6;
     return 8;
@@ -316,6 +319,7 @@ function PlantillaReto({ meta, onClose }) {
             className="plantilla-grid"
             style={{
               gridTemplateColumns: `repeat(${columnasReveal}, 1fr)`,
+              overflowX: isMobile ? 'auto' : 'unset', // Habilitar scroll horizontal en móvil
             }}
           >
             {Array.from({ length: numDias }, (_, i) => {

@@ -82,3 +82,35 @@
 .config-msg { font-size: 0.85rem; padding: 0.5rem 0.75rem; border-radius: 6px; }
 .config-msg.ok    { background: #1a3a2a; color: #4caf82; }
 .config-msg.error { background: #3a1a1a; color: #ff6b6b; }
+
+/* ===== RESPONSIVE CONFIG ===== */
+@media (max-width: 768px) {
+  .config-layout {
+    grid-template-columns: 64px 1fr;
+    margin: 0;
+    border-radius: 12px;
+  }
+
+  .config-nav {
+    padding: 1.5rem 0.5rem;
+  }
+
+  .config-nav-item {
+    padding: 0.8rem;
+    justify-content: center;
+    gap: 0;
+  }
+
+  .config-nav-label {
+    display: none;
+  }
+
+  .config-card {
+    padding: 1.5rem 1rem;
+    gap: 1.25rem;
+  }
+
+  .config-titulo {
+    font-size: 1.1rem;
+  }
+}

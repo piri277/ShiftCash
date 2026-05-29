@@ -259,3 +259,139 @@
   from { opacity: 0; transform: scale(0.96); }
   to   { opacity: 1; transform: scale(1); }
 }
+
+/* ===== MOBILE RESPONSIVE (MAX-WIDTH: 768PX) ===== */
+@media (max-width: 768px) {
+  /* TOPBAR */
+  .hist-topbar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .hist-topbar h2 {
+    font-size: 1.1rem;
+    margin: 0;
+  }
+
+  .hist-filtrar-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* SEARCH */
+  .hist-search-wrap {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .hist-search {
+    font-size: 0.8rem;
+    padding: 8px 32px 8px 32px;
+  }
+
+  /* PANEL DE FILTROS */
+  .hist-panel {
+    padding: 1rem;
+    gap: 12px;
+    margin-bottom: 1rem;
+  }
+
+  .hist-panel-label {
+    font-size: 0.7rem;
+  }
+
+  .hist-chips {
+    gap: 4px;
+  }
+
+  .hist-chip {
+    padding: 5px 10px;
+    font-size: 0.75rem;
+  }
+
+  .hist-chip-sm {
+    padding: 3px 8px;
+    font-size: 0.7rem;
+  }
+
+  .hist-fechas {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .hist-fecha-input {
+    width: 100%;
+    padding: 6px 8px;
+    font-size: 0.75rem;
+  }
+
+  .hist-fecha-sep {
+    display: none;
+  }
+
+  .hist-limpiar {
+    width: 100%;
+  }
+
+  /* FILAS */
+  .hist-fila {
+    gap: 10px;
+    padding: 10px 0;
+  }
+
+  .hist-icono {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
+
+  .hist-categoria {
+    font-size: 0.85rem;
+  }
+
+  .hist-descripcion {
+    font-size: 0.7rem;
+  }
+
+  .hist-monto {
+    font-size: 0.9rem;
+    min-width: 70px;
+    text-align: right;
+  }
+
+  .hist-btn-eliminar {
+    padding: 4px 6px;
+    font-size: 0.9rem;
+  }
+
+  /* GRUPOS */
+  .hist-grupo {
+    margin-bottom: 1rem;
+  }
+
+  .hist-grupo-header {
+    padding: 0 2px 6px;
+  }
+
+  .hist-grupo-fecha {
+    font-size: 0.7rem;
+  }
+
+  .hist-grupo-total {
+    font-size: 0.7rem;
+  }
+
+  /* GRÁFICAS DOBLE */
+  .graf-doble {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .graf-doble-item {
+    padding: 1rem;
+    border-radius: 12px;
+  }
+}

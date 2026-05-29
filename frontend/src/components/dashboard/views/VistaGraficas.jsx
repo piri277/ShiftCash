@@ -5,6 +5,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid,
   AreaChart, Area,
 } from "recharts";
+import { useMediaQuery } from "../../../hooks/useMediaQuery";
 import { formatearPesos, formatearEjeY } from "../../../utils/formatters";
 
 const COLORES = ["#5b6ef5","#9b59f5","#34d399","#fbbf24","#f87171","#38bdf8","#fb923c"];
@@ -93,7 +94,7 @@ function construirDatosPeriodo(transacciones, periodo) {
 }
 
 // Gráficas 
-function GraficaCategoriasBase({ transacciones, tipo }) {
+function GraficaCategoriasBase({ transacciones, tipo, isMobile }) {
   const datos = Object.values(
     transacciones
       .filter(t => t.type === tipo)
@@ -111,33 +112,34 @@ function GraficaCategoriasBase({ transacciones, tipo }) {
     </div>
   );
 
+  const chartHeight = isMobile ? 180 : 220;
+
   return (
-    <ResponsiveContainer width="100%" height={220}>
+    <ResponsiveContainer width="100%" height={chartHeight}>
       <PieChart>
         <Pie data={datos} dataKey="value" nameKey="name"
-          cx="50%" cy="50%" innerRadius={50} outerRadius={85} paddingAngle={3}>
+          cx="50%" cy="50%" innerRadius={isMobile ? 35 : 50} outerRadius={isMobile ? 70 : 85} paddingAngle={3}>
           {datos.map((_, i) => <Cell key={i} fill={COLORES[i % COLORES.length]} />)}
         </Pie>
         <Tooltip contentStyle={TOOLTIP_STYLE} formatter={v => formatearPesos(v)} />
-        <Legend wrapperStyle={{ fontSize: "0.75rem", color: "#9ba3c7" }} />
+        <Legend wrapperStyle={{ fontSize: isMobile ? "0.7rem" : "0.75rem", color: "#9ba3c7" }} />
       </PieChart>
     </ResponsiveContainer>
   );
 }
 
-function GraficaBarras({ datos }) {
-
+function GraficaBarras({ datos, isMobile }) {
   const tickFormatterY = formatearEjeY;
+  const chartHeight = isMobile ? 200 : 240;
 
-  
   return (
-    <ResponsiveContainer width="100%" height={240}>
+    <ResponsiveContainer width="100%" height={chartHeight}>
       <BarChart data={datos} margin={{ top: 4, right: 8, bottom: 0, left: 0 }}>
         <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" opacity={0.5} />
-        <XAxis dataKey="label" stroke="var(--text-faint)" tick={{ fontSize: 12 }} />
-        <YAxis stroke="var(--text-faint)" tick={{ fontSize: 12 }} tickFormatter={tickFormatterY} />
+        <XAxis dataKey="label" stroke="var(--text-faint)" tick={{ fontSize: isMobile ? 10 : 12 }} />
+        <YAxis stroke="var(--text-faint)" tick={{ fontSize: isMobile ? 10 : 12 }} tickFormatter={tickFormatterY} />
         <Tooltip contentStyle={TOOLTIP_STYLE} formatter={v => formatearPesos(v)} />
-        <Legend wrapperStyle={{ fontSize: "0.8rem", color: "#9ba3c7" }} />
+        <Legend wrapperStyle={{ fontSize: isMobile ? "0.7rem" : "0.8rem", color: "#9ba3c7" }} />
         <Bar dataKey="ingresos" fill="#34d399" radius={[4,4,0,0]} name="Ingresos" />
         <Bar dataKey="gastos"   fill="#f87171" radius={[4,4,0,0]} name="Gastos"   />
       </BarChart>
@@ -145,12 +147,12 @@ function GraficaBarras({ datos }) {
   );
 }
 
-function GraficaAhorro({ datos }) {
-
+function GraficaAhorro({ datos, isMobile }) {
   const tickFormatterY = formatearEjeY;
+  const chartHeight = isMobile ? 180 : 220;
 
   return (
-    <ResponsiveContainer width="100%" height={220}>
+    <ResponsiveContainer width="100%" height={chartHeight}>
       <AreaChart data={datos} margin={{ top: 4, right: 8, bottom: 0, left: 0 }}>
         <defs>
           <linearGradient id="gradAhorroVista" x1="0" y1="0" x2="0" y2="1">
@@ -159,8 +161,8 @@ function GraficaAhorro({ datos }) {
           </linearGradient>
         </defs>
         <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" opacity={0.5} />
-        <XAxis dataKey="label" stroke="var(--text-faint)" tick={{ fontSize: 12 }} />
-        <YAxis stroke="var(--text-faint)" tick={{ fontSize: 12 }} tickFormatter={tickFormatterY} />
+        <XAxis dataKey="label" stroke="var(--text-faint)" tick={{ fontSize: isMobile ? 10 : 12 }} />
+        <YAxis stroke="var(--text-faint)" tick={{ fontSize: isMobile ? 10 : 12 }} tickFormatter={tickFormatterY} />
         <Tooltip contentStyle={TOOLTIP_STYLE} formatter={v => formatearPesos(v)} />
         <Area type="monotone" dataKey="ahorros" stroke="#5b6ef5"
           fill="url(#gradAhorroVista)" strokeWidth={2} name="Ahorros" />
@@ -182,6 +184,7 @@ function Chip({ activo, onClick, children, small }) {
 // Vista principal 
 export default function VistaGraficas({ finanzas }) {
   const { transacciones, loading, error } = finanzas;
+  const isMobile = useMediaQuery('(max-width: 768px)');
 
   const [panelAbierto,    setPanelAbierto]    = useState(false);
   const [periodo,         setPeriodo]         = useState("anual");
@@ -292,25 +295,25 @@ export default function VistaGraficas({ finanzas }) {
         {filtroTipo !== "income" && (
          <div className="graf-doble-item">
            <h3 className="db-card-title">Gastos por categoría</h3>
-           <GraficaCategoriasBase transacciones={txFiltradas} tipo="expense" />
+           <GraficaCategoriasBase transacciones={txFiltradas} tipo="expense" isMobile={isMobile} />
          </div>
        )}
         {filtroTipo !== "expense" && (
          <div className="graf-doble-item">
            <h3 className="db-card-title">Ingresos por categoría</h3>
-            <GraficaCategoriasBase transacciones={txFiltradas} tipo="income" />
+            <GraficaCategoriasBase transacciones={txFiltradas} tipo="income" isMobile={isMobile} />
          </div>
         )}
       </div>
 
       <div className="db-card">
         <h3 className="db-card-title">Ingresos vs Gastos</h3>
-        <GraficaBarras datos={datosPeriodo} />
+        <GraficaBarras datos={datosPeriodo} isMobile={isMobile} />
       </div>
 
       <div className="db-card">
         <h3 className="db-card-title">Evolución del ahorro</h3>
-        <GraficaAhorro datos={datosPeriodo} />
+        <GraficaAhorro datos={datosPeriodo} isMobile={isMobile} />
       </div>
     </div>
   );

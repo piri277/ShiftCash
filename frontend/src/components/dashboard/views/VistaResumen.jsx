@@ -8,6 +8,7 @@ import {
 
 import { useBudgets } from "../../../hooks/useBudgets";
 import { useMetas } from "../../../hooks/useMetas";
+import { useMediaQuery } from "../../../hooks/useMediaQuery";
 import { formatearPesos, formatearEjeY } from "../../../utils/formatters";
 
 import "../../../styles/modal.css";
@@ -206,9 +207,11 @@ const OPCIONES_GRAFICAS = [
 function GraficaCarousel({ transacciones }) {
   const [indice,  setIndice]  = useState(0);
   const [periodo, setPeriodo] = useState("mensualmente");
+  const isMobile = useMediaQuery('(max-width: 768px)');
 
   const grafica  = GRAFICAS[indice];
   const datos    = construirDatos(transacciones, periodo);
+  const chartHeight = isMobile ? 160 : 240;
   const etiqueta = periodo === "semanalmente" ? "esta semana"
                  : periodo === "mensualmente"    ? MESES[new Date().getMonth()]
                  : periodo === "diariamente" ? "hoy"
@@ -290,7 +293,7 @@ function GraficaCarousel({ transacciones }) {
 
       {/* Gráfica activa */}
       {grafica === "tendencia" && (
-        <ResponsiveContainer width="100%" height={240}>
+        <ResponsiveContainer width="100%" height={chartHeight}>
           <AreaChart data={datos} margin={{ top: 4, right: 8, bottom: 0, left: 0 }}>
             <defs>
               {[["gradIngresos","#34d399"],["gradGastos","#f87171"],["gradAhorros","#5b6ef5"]].map(([id, color]) => (
@@ -301,10 +304,10 @@ function GraficaCarousel({ transacciones }) {
               ))}
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" opacity={0.5} />
-            <XAxis dataKey="label" stroke="var(--text-faint)" tick={{ fontSize: 12 }} />
-            <YAxis stroke="var(--text-faint)" tick={{ fontSize: 12 }} tickFormatter={formatearEjeY} />
+            <XAxis dataKey="label" stroke="var(--text-faint)" tick={{ fontSize: isMobile ? 10 : 12 }} />
+            <YAxis stroke="var(--text-faint)" tick={{ fontSize: isMobile ? 10 : 12 }} tickFormatter={formatearEjeY} />
             <Tooltip contentStyle={TOOLTIP_STYLE} formatter={v => formatearPesos(v)} />
-            <Legend wrapperStyle={{ fontSize: "0.8rem", color: "#9ba3c7" }} />
+            <Legend wrapperStyle={{ fontSize: isMobile ? "0.7rem" : "0.8rem", color: "#9ba3c7" }} />
             <Area type="monotone" dataKey="ingresos" stroke="#34d399" fill="url(#gradIngresos)" strokeWidth={2} name="Ingresos" />
             <Area type="monotone" dataKey="gastos"   stroke="#f87171" fill="url(#gradGastos)"   strokeWidth={2} name="Gastos"   />
             <Area type="monotone" dataKey="ahorros"  stroke="#5b6ef5" fill="url(#gradAhorros)"  strokeWidth={2} name="Ahorros"  />
@@ -313,13 +316,13 @@ function GraficaCarousel({ transacciones }) {
       )}
 
       {grafica === "barras" && (
-        <ResponsiveContainer width="100%" height={240}>
+        <ResponsiveContainer width="100%" height={chartHeight}>
           <BarChart data={datos} margin={{ top: 4, right: 8, bottom: 0, left: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" opacity={0.5} />
-            <XAxis dataKey="label" stroke="var(--text-faint)" tick={{ fontSize: 12 }} />
-            <YAxis stroke="var(--text-faint)" tick={{ fontSize: 12 }} tickFormatter={formatearEjeY} />
+            <XAxis dataKey="label" stroke="var(--text-faint)" tick={{ fontSize: isMobile ? 10 : 12 }} />
+            <YAxis stroke="var(--text-faint)" tick={{ fontSize: isMobile ? 10 : 12 }} tickFormatter={formatearEjeY} />
             <Tooltip contentStyle={TOOLTIP_STYLE} formatter={v => formatearPesos(v)} />
-            <Legend wrapperStyle={{ fontSize: "0.8rem", color: "#9ba3c7" }} />
+            <Legend wrapperStyle={{ fontSize: isMobile ? "0.7rem" : "0.8rem", color: "#9ba3c7" }} />
             <Bar dataKey="ingresos" fill="#34d399" radius={[4,4,0,0]} name="Ingresos" />
             <Bar dataKey="gastos"   fill="#f87171" radius={[4,4,0,0]} name="Gastos"   />
           </BarChart>

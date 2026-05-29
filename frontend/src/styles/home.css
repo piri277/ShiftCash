@@ -75,6 +75,45 @@ body {
   background: rgba(91, 110, 245, 0.12);
 }
 
+/* ===== THEME TOGGLE HOME ===== */
+.theme-toggle-home {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+}
+
+.theme-toggle-home button {
+  width: 48px;
+  height: 26px;
+  border-radius: 99px;
+  border: 1px solid rgba(91, 110, 245, 0.2);
+  background: rgba(91, 110, 245, 0.1);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  padding: 0 4px;
+}
+
+.theme-toggle-home .toggle-circle {
+  width: 18px;
+  height: 18px;
+  background: #8b93bc;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s;
+}
+
+.theme-toggle-home button.light .toggle-circle {
+  transform: translateX(20px);
+  background: #fff;
+}
+
 .btn-navbar-enter {
   background: var(--gradient-accent) !important;
   color: #fff !important;
@@ -132,9 +171,9 @@ body {
   min-height: 100vh;
   /* Añadimos capas de partículas usando gradientes radiales repetitivos */
   background: 
-    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.1) 1.5px, transparent 1.5px),
     radial-gradient(circle at 70% 60%, rgba(255, 255, 255, 0.08) 1.5px, transparent 1.5px),
-    radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.12) 1px, transparent 1px),
+    radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.12) 1.5px, transparent 1.5px),
     var(--gradient-hero);
   background-size: 150px 150px, 200px 200px, 250px 250px, 100% 100%;
   display: flex;

@@ -1,10 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTheme } from '../hooks/useTheme';
 import logoImg from '../assets/Logo-sinFondo1.png';
 import graficaImg from '../assets/Grafica.png';
 import '../styles/home.css';
 
 function Home() {
+  useTheme();
+
   return (
     <main>
       {/* Hero Section */}

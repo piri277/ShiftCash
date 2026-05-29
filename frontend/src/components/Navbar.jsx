@@ -1,7 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTheme } from '../hooks/useTheme';
 
 function Navbar() {
+  const { theme, toggleTheme } = useTheme();
+
   return (
     <nav className="navbar navbar-expand-lg">
       <div className="container">
@@ -22,6 +25,17 @@ function Navbar() {
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
+            <li className="nav-item d-flex align-items-center">
+              <div className="theme-toggle-home">
+                <button 
+                  className={theme === 'light' ? 'light' : ''} 
+                  onClick={toggleTheme}
+                  aria-label="Cambiar tema"
+                >
+                  <div className="toggle-circle">{theme === 'dark' ? '🌙' : '☀️'}</div>
+                </button>
+              </div>
+            </li>
             <li className="nav-item"><Link className="nav-link" to="/">Inicio</Link></li>
             <li className="nav-item"><Link className="nav-link btn-navbar-enter" to="/auth">Entrar</Link></li>
           </ul>

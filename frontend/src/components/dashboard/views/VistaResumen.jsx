@@ -10,6 +10,8 @@ import { useBudgets } from "../../../hooks/useBudgets";
 import { useMetas } from "../../../hooks/useMetas";
 import { formatearPesos, formatearEjeY } from "../../../utils/formatters";
 
+import "../../../styles/modal.css";
+
 const TOOLTIP_STYLE = {
   background: "var(--surface, #21253a)",
   border: "1px solid var(--border, rgba(91,110,245,0.18))",
@@ -333,6 +335,7 @@ export default function VistaResumen({ finanzas, budgets: budgetsFromProps }) {
   const budgetsHook = useBudgets();
   const { metas, cargarMetas, loading: loadingMetas } = useMetas();
   const [indiceMeta, setIndiceMeta] = useState(0);
+  const [dropdownAbierto, setDropdownAbierto] = useState(false);
 
   // Usa el prop si viene del padre (Dashboard), sino usa el hook local
   const { budgets, loading: loadingBudgets, recargar: recargarBudgets } = budgetsFromProps || budgetsHook;
@@ -410,8 +413,7 @@ export default function VistaResumen({ finanzas, budgets: budgetsFromProps }) {
   const presupuestoSuperado = totalAsignado > 0 && (totalGastadoBudgets / totalAsignado) > 1;
 
   // Meta activa para el resumen
-  const metaActiva = metas && metas.length > 0 ? metas[indiceMeta % metas.length] : null;
-  const handleCambiarMeta = () => setIndiceMeta(prev => prev + 1);
+  const metaActiva = metas && metas.length > 0 ? (metas[indiceMeta] || metas[0]) : null;
 
   const tarjetas = [
     { etiqueta: "Total Gastado", valor: formatearPesos(totalGastado), color: "#f87171", icono: "💸" },
@@ -436,25 +438,35 @@ export default function VistaResumen({ finanzas, budgets: budgetsFromProps }) {
 
       {metaActiva && (
         <div className="db-card" style={{ marginBottom: "1.5rem" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem", gap: "12px", flexWrap: "wrap" }}>
             <h3 className="db-card-title" style={{ margin: 0 }}>Seguimiento de Meta: {metaActiva.name}</h3>
             {metas.length > 1 && (
-              <button 
-                onClick={handleCambiarMeta}
-                style={{
-                  padding: "4px 12px",
-                  borderRadius: 99,
-                  border: "1px solid rgba(91,110,245,0.2)",
-                  background: "rgba(91,110,245,0.15)",
-                  color: "#a0aaff",
-                  fontSize: "0.75rem",
-                  fontWeight: 600,
-                  cursor: "pointer",
-                  transition: "all 0.15s",
-                }}
-              >
-                Cambiar Meta 🔄
-              </button>
+              <div className="custom-select-wrapper" style={{ minWidth: "260px" }}>
+                <div 
+                  className="db-meta-selector custom-select-trigger"
+                  onClick={() => setDropdownAbierto(!dropdownAbierto)}
+                >
+                  <span>{metaActiva.name}</span>
+                  <span className="custom-select-arrow">{dropdownAbierto ? '▲' : '▼'}</span>
+                </div>
+
+                {dropdownAbierto && (
+                  <div className="custom-select-dropdown">
+                    {metas.map((m, idx) => (
+                      <div 
+                        key={m.goal_id}
+                        className={`custom-select-option ${indiceMeta === idx ? 'selected' : ''}`}
+                        onClick={() => {
+                          setIndiceMeta(idx);
+                          setDropdownAbierto(false);
+                        }}
+                      >
+                        {m.name}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             )}
           </div>
 

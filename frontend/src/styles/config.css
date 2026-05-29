@@ -1,65 +1,75 @@
 .config-layout {
   display: grid;
-  grid-template-columns: 200px 1fr;
-  gap: 2rem;
-  padding: 1.5rem;
-  max-width: 860px;
+  grid-template-columns: 240px 1fr;
+  gap: 0;
+  max-width: 900px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  margin: 1rem 0;
 }
 
 .config-nav {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  padding: 2.5rem 1.25rem;
+  background: rgba(0, 0, 0, 0.12);
+  border-right: 1px solid var(--border);
 }
 
 .config-nav-item {
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  padding: 0.65rem 1rem;
+  padding: 0.8rem 1.2rem;
   border-radius: 10px;
   border: none;
   background: transparent;
-  color: var(--text-secondary, #aaa);
+  color: var(--text-muted);
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   text-align: left;
   transition: background 0.2s, color 0.2s;
 }
 
-.config-nav-item:hover { background: var(--bg-hover, #ffffff10); color: var(--text, #fff); }
-.config-nav-item.activo { background: var(--bg-active, #ffffff18); color: var(--text, #fff); font-weight: 600; }
+.config-nav-item:hover { background: var(--glow-primary); color: var(--text-primary); }
+.config-nav-item.activo { background: var(--primary); color: #fff !important; font-weight: 600; }
 
 .config-card {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1.5rem;
+  padding: 2.5rem 3.5rem;
+  background: transparent;
 }
 
 .config-titulo { font-size: 1.2rem; font-weight: 700; margin: 0; }
 .config-titulo.danger { color: #ff6b6b; }
-.config-subtitulo { font-size: 0.85rem; color: var(--text-secondary, #aaa); margin: 0 0 0.5rem; }
+.config-subtitulo { font-size: 0.85rem; color: var(--text-muted); margin: 0 0 0.5rem; }
 
-.config-label { font-size: 0.85rem; color: var(--text-secondary, #aaa); }
+.config-label { font-size: 0.85rem; color: var(--text-muted); }
 
 .config-input {
   padding: 0.6rem 0.9rem;
   border-radius: 8px;
-  border: 1px solid var(--border, #ffffff20);
-  background: var(--bg-input, #ffffff0d);
-  color: var(--text, #fff);
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text-primary);
   font-size: 0.95rem;
   outline: none;
   transition: border 0.2s;
 }
-.config-input:focus { border-color: var(--accent, #7c6af7); }
+.config-input:focus { border-color: var(--primary); }
 
 .config-btn {
   margin-top: 0.5rem;
   padding: 0.65rem 1.4rem;
   border-radius: 8px;
   border: none;
-  background: var(--accent, #7c6af7);
+  background: var(--primary);
   color: #fff;
   font-weight: 600;
   cursor: pointer;

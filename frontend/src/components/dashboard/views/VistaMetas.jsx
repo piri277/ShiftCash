@@ -8,6 +8,24 @@ import MetaFormModal from '../modals/MetaFormModal';
 import "../../../styles/metas.css";
 import "../../../styles/modal.css";
 
+// Función para obtener el color dinámico (gradual) basado en el progreso
+const getProgresoColor = (pct) => {
+  if (pct >= 100) return "#059669"; // Verde (Completado)
+  if (pct >= 75)  return "#5b6ef5"; // Azul (Muy avanzado)
+  if (pct >= 50)  return "#9b59f5"; // Violeta (Progreso medio)
+  if (pct >= 25)  return "#fb923c"; // Naranja (Iniciando)
+  return "#f87171";                // Rojo (Bajo)
+};
+
+// Función para obtener el degradado dinámico para la barra de metas
+const getProgresoGradient = (pct) => {
+  if (pct >= 100) return "linear-gradient(90deg, #34d399, #059669)";
+  if (pct >= 75)  return "linear-gradient(90deg, #7c8df7, #5b6ef5)";
+  if (pct >= 50)  return "linear-gradient(90deg, #fb923c, #9b59f5)";
+  if (pct >= 25)  return "linear-gradient(90deg, #f87171, #fb923c)";
+  return "linear-gradient(90deg, #ef4444, #f87171)";
+};
+
 export default function VistaMetas() {
   const { metas, loading, error, cargarMetas, eliminarMeta } = useMetas();
   const [modalAbierto, setModalAbierto] = useState(false);
@@ -125,10 +143,10 @@ export default function VistaMetas() {
                         <span className="dias-completados">
                           {meta.completed_days?.length || 0} días
                         </span>
-                        <span className="porcentaje">{Math.round(progreso)}%</span>
+                        <span className="porcentaje" style={{ color: getProgresoColor(progreso) }}>{Math.round(progreso)}%</span>
                       </div>
                       <div className="progress-bar">
-                        <div className="progress-fill" style={{ width: `${progreso}%` }}></div>
+                        <div className="progress-fill" style={{ width: `${progreso}%`, background: getProgresoGradient(progreso) }}></div>
                       </div>
                     </div>
                   </div>
@@ -288,9 +306,9 @@ function PlantillaReto({ meta, onClose }) {
           {/* Barra de progreso */}
           <div className="plantilla-progress">
             <div className="progress-bar-container">
-              <div className="progress-bar-fill" style={{ width: `${progreso}%` }}></div>
+              <div className="progress-bar-fill" style={{ width: `${progreso}%`, background: getProgresoGradient(progreso) }}></div>
             </div>
-            <p className="progress-percentage">{Math.round(progreso)}% completado</p>
+            <p className="progress-percentage" style={{ color: getProgresoColor(progreso) }}>{Math.round(progreso)}% completado</p>
           </div>
 
           {/* Grid de días */}

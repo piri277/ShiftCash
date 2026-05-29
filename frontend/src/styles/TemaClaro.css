@@ -50,7 +50,7 @@
 [data-theme="light"] .plantilla-header,
 [data-theme="light"] .cat-card,
 [data-theme="light"] .hist-panel,
-[data-theme="light"] .config-card,
+[data-theme="light"] .config-layout,
 [data-theme="light"] .detalle-body,
 [data-theme="light"] .custom-select-dropdown,
 [data-theme="light"] .presupuestos-modal,
@@ -248,7 +248,8 @@
 [data-theme="light"] .input-box input,
 [data-theme="light"] .custom-select-trigger,
 [data-theme="light"] .hist-search,
-[data-theme="light"] .config-input {
+[data-theme="light"] .config-input,
+[data-theme="light"] .hist-fecha-input {
   background: var(--surface-2) !important;
   color: var(--text-primary) !important;
   border-color: var(--border) !important;
@@ -352,6 +353,63 @@
   color: var(--text-muted) !important;
 }
 
+/* Botones y Sombras (Efecto de luz café) */
+[data-theme="light"] .btn-primary,
+[data-theme="light"] .btn-nueva-meta,
+[data-theme="light"] .btn-crear-primera-meta,
+[data-theme="light"] .presupuestos-btn-add,
+[data-theme="light"] .cat-btn-nueva,
+[data-theme="light"] .modal-submit,
+[data-theme="light"] .presupuestos-modal-btn-submit,
+[data-theme="light"] .btn-guardar-plantilla,
+[data-theme="light"] .modal-btn-submit {
+  background: var(--gradient-accent) !important;
+  color: #fff !important;
+  box-shadow: 0 6px 20px rgba(123, 92, 66, 0.25) !important;
+}
+
+[data-theme="light"] .btn-primary:hover,
+[data-theme="light"] .btn-nueva-meta:hover,
+[data-theme="light"] .presupuestos-btn-add:hover,
+[data-theme="light"] .cat-btn-nueva:hover,
+[data-theme="light"] .modal-submit:hover,
+[data-theme="light"] .presupuestos-modal-btn-submit:hover,
+[data-theme="light"] .btn-guardar-plantilla:hover,
+[data-theme="light"] .modal-btn-submit:hover {
+  box-shadow: 0 10px 28px rgba(123, 92, 66, 0.4) !important;
+}
+
+/* Metas: Seguimiento y Resumen */
+[data-theme="light"] .dias-completados {
+  color: var(--primary) !important;
+}
+
+/* Permitimos que el color dinámico de las metas se aplique correctamente */
+[data-theme="light"] .porcentaje,
+[data-theme="light"] .progress-percentage {
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .meta-amount {
+  background: var(--surface-2) !important;
+}
+
+[data-theme="light"] .meta-amount .label,
+[data-theme="light"] .info-label,
+[data-theme="light"] .day-amount {
+  color: var(--text-muted) !important;
+}
+
+[data-theme="light"] .config-nav {
+  background: var(--surface-2) !important;
+}
+
+[data-theme="light"] .config-card {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
 [data-theme="light"] .presupuestos-modal-btn-cancel {
   background: var(--surface-2) !important;
   color: var(--text-muted) !important;
@@ -360,4 +418,78 @@
 
 [data-theme="light"] .modal-submit {
   box-shadow: 0 4px 12px rgba(123, 92, 66, 0.20);
+}
+
+/* Enfoque y Selección (Inputs y Chips) */
+[data-theme="light"] .modal-field input:focus,
+[data-theme="light"] .modal-field select:focus,
+[data-theme="light"] .presupuestos-form-input:focus,
+[data-theme="light"] .presupuestos-form-select:focus,
+[data-theme="light"] .input-box input:focus,
+[data-theme="light"] .config-input:focus,
+[data-theme="light"] .hist-search:focus,
+[data-theme="light"] .hist-fecha-input:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px rgba(123, 92, 66, 0.15) !important;
+}
+
+[data-theme="light"] .presupuestos-periodo-chip.active,
+[data-theme="light"] .hist-chip.activo,
+[data-theme="light"] .hist-filtrar-btn.activo {
+  background: rgba(123, 92, 66, 0.10) !important;
+  border-color: var(--primary) !important;
+  color: var(--primary) !important;
+  font-weight: 600 !important;
+}
+
+/* Vista Resumen: Corrección de textos de Meta y botones de Gráficas */
+
+/* Texto de estado de la meta (que estaba en #f0f2ff) */
+[data-theme="light"] .db-card span[style*="color: #f0f2ff"],
+[data-theme="light"] .db-card span[style*="color: rgb(240, 242, 255)"] {
+  color: var(--text-primary) !important;
+}
+
+/* Porcentaje de la meta (que estaba en #9b59f5) */
+[data-theme="light"] .db-card span[style*="color: #9b59f5"],
+[data-theme="light"] .db-card span[style*="color: rgb(155, 89, 245)"] {
+  color: var(--primary) !important;
+}
+
+/* Botones de periodo en Resumen y Botón Cambiar Meta */
+[data-theme="light"] .db-card button[style*="border-color: #5b6ef5"],
+[data-theme="light"] .db-card button[style*="border-color: rgb(91, 110, 245)"],
+[data-theme="light"] .db-card button[style*="color: #a0aaff"],
+[data-theme="light"] .db-card button[style*="color: rgb(160, 170, 255)"] {
+  border-color: var(--primary) !important;
+  background: rgba(123, 92, 66, 0.12) !important;
+  color: var(--primary) !important;
+}
+
+[data-theme="light"] .db-meta-selector {
+  background: var(--surface-2) !important;
+  border-color: var(--border) !important;
+  color: var(--text-primary) !important;
+}
+
+[data-theme="light"] .db-card button[style*="color: #555e82"],
+[data-theme="light"] .db-card button[style*="color: rgb(85, 94, 130)"] {
+  color: var(--text-muted) !important;
+  border-color: var(--border) !important;
+}
+
+/* Flechas de navegación y puntos indicadores en gráficas */
+[data-theme="light"] .db-card button[style*="background: rgba(91, 110, 245, 0.07)"] {
+  background: var(--surface-2) !important;
+  border-color: var(--border) !important;
+  color: var(--text-muted) !important;
+}
+
+[data-theme="light"] .db-card div[style*="background: #5b6ef5"],
+[data-theme="light"] .db-card div[style*="background: rgb(91, 110, 245)"] {
+  background: var(--primary) !important;
+}
+
+[data-theme="light"] .recharts-legend-item-text {
+  color: var(--text-muted) !important;
 }

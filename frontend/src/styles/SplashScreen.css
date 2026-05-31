@@ -1,0 +1,96 @@
+/* SplashScreen.css - Estilos únicos para la pantalla de inicio */
+
+.splash-overlay {
+  position: fixed;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.18) 1.5px, transparent 1.5px),
+    radial-gradient(circle at 70% 60%, rgba(255, 255, 255, 0.14) 1.5px, transparent 1.5px),
+    radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.2) 1.5px, transparent 1.5px),
+    var(--dark);
+  background-size: 150px 150px, 200px 200px, 250px 250px, 100% 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  transition: opacity 0.5s ease, visibility 0.5s;
+  animation: particlesMove 100s linear infinite;
+}
+
+.splash-overlay.fade-out {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.splash-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+.splash-logo {
+  font-size: 3.5rem !important;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.splash-logo .cash-part {
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: inline-block;
+}
+
+.splash-loader-bg {
+  width: 200px;
+  height: 3px;
+  background: var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+.splash-loader-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: var(--gradient-accent);
+  width: 0%;
+  animation: splashProgress 3.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes splashProgress {
+  0% { width: 0%; }
+  50% { width: 70%; }
+  100% { width: 100%; }
+}
+
+@keyframes particlesMove {
+  from { background-position: 0 0, 0 0, 0 0, 0 0; }
+  to { background-position: 500px 1000px, -400px 800px, 300px 600px, 0 0; }
+}
+
+/* Adaptación para Modo Claro (Partículas café/tierra) */
+[data-theme="light"] .splash-overlay {
+  background:
+    radial-gradient(circle at 20% 30%, rgba(123, 92, 66, 0.45) 1.5px, transparent 1.5px),
+    radial-gradient(circle at 70% 60%, rgba(123, 92, 66, 0.35) 1.5px, transparent 1.5px),
+    radial-gradient(circle at 40% 80%, rgba(123, 92, 66, 0.5) 1.5px, transparent 1.5px),
+    var(--dark);
+  background-size: 150px 150px, 200px 200px, 250px 250px, 100% 100%;
+  animation: particlesMove 80s linear infinite; /* Un poco más rápido para notar el flujo en claro */
+}
+
+/* Copiamos la animación de rebote para que sea independiente */
+@keyframes bounce-logo-splash {
+  0%, 12%, 100% { transform: translateY(0); }
+  6% { transform: translateY(-10px); }
+}
+
+.splash-content .bounce-letter {
+  animation: bounce-logo-splash 4s infinite ease-in-out;
+}

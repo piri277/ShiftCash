@@ -30,6 +30,9 @@ export default function VistaConfiguracion() {
   // Preferencias
   const [moneda, setMoneda]       = useState("COP");
   const [msgMoneda, setMsgMoneda] = useState(null);
+  const [notifThreshold, setNotifThreshold] = useState(() => {
+    return localStorage.getItem("budget_threshold") || "80";
+  });
 
   // Eliminar cuenta
   const [confirmDelete, setConfirmDelete] = useState("");
@@ -76,6 +79,7 @@ export default function VistaConfiguracion() {
     setMsgMoneda(null);
     try {
       const updated = await actualizarMoneda(moneda);
+      localStorage.setItem("budget_threshold", notifThreshold);
       setUsuario(updated);
       setMsgMoneda({ tipo: "ok", texto: "Moneda actualizada correctamente" });
     } catch {
@@ -230,6 +234,20 @@ export default function VistaConfiguracion() {
                 <option key={m} value={m}>{m}</option>
               ))}
             </select>
+
+            <div className="config-range-group">
+              <div className="config-range-header">
+                <label className="config-label">Umbral de alerta de presupuesto</label>
+                <span className="config-range-value">{notifThreshold}%</span>
+              </div>
+              <input 
+                type="range" className="config-range" 
+                min="50" max="100" step="5"
+                value={notifThreshold} 
+                onChange={e => setNotifThreshold(e.target.value)} 
+              />
+              <p className="config-subtitulo" style={{ marginTop: 0 }}>Se te avisará cuando tus gastos alcancen este porcentaje del presupuesto.</p>
+            </div>
 
             {msgMoneda && <p className={`config-msg ${msgMoneda.tipo}`}>{msgMoneda.texto}</p>}
             <button className="config-btn" onClick={guardarMoneda}>Guardar preferencias</button>

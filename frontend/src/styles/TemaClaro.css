@@ -546,6 +546,19 @@
   color: var(--text-muted) !important;
 }
 
+/* Alertas en modo claro - Ajuste de contraste para fondo crema */
+[data-theme="light"] .db-alert.warning {
+  background: rgba(183, 121, 31, 0.12) !important;
+  border-color: rgba(183, 121, 31, 0.3) !important;
+  color: #8a5d15 !important; /* Un tono café dorado para que se lea sobre el crema */
+}
+
+[data-theme="light"] .db-alert.danger {
+  background: rgba(192, 57, 43, 0.1) !important;
+  border-color: rgba(192, 57, 43, 0.25) !important;
+  color: #c0392b !important;
+}
+
 /* Bottom Navigation Bar en Modo Claro */
 [data-theme="light"] .db-bottom-nav {
   background: var(--surface) !important;

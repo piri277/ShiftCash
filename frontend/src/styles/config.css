@@ -128,3 +128,28 @@
     font-size: 1.1rem;
   }
 }
+
+/* Estilos para el Umbral de Alerta */
+.config-range-group {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.config-range-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.config-range-value {
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.config-range {
+  width: 100%;
+  accent-color: var(--primary);
+  cursor: pointer;
+}

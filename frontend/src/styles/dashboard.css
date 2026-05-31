@@ -399,8 +399,6 @@
 
 /* ===== ALERT ===== */
 .db-alert {
-  background: rgba(251,191,36,0.07);
-  border: 1px solid rgba(251,191,36,0.25);
   border-radius: var(--radius-md);
   padding: 0.85rem 1.1rem;
   display: flex;
@@ -408,7 +406,18 @@
   gap: 10px;
   font-size: 0.875rem;
   margin-bottom: 1.5rem;
-  color: #d4a017;
+}
+
+.db-alert.warning {
+  background: rgba(251, 191, 36, 0.08);
+  border: 1px solid rgba(251, 191, 36, 0.25);
+  color: #fbbf24;
+}
+
+.db-alert.danger {
+  background: rgba(248, 113, 113, 0.08);
+  border: 1px solid rgba(248, 113, 113, 0.25);
+  color: #f87171;
 }
 
 /* ===== STAT CARDS ===== */

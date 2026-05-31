@@ -17,8 +17,7 @@ import { useBudgets }     from "../../hooks/useBudgets";
 import { useMediaQuery }  from "../../hooks/useMediaQuery";
 import { useTheme }       from "../../hooks/useTheme";
 import { MENU_ITEMS }     from "../../constants";
-
-
+import SplashScreen       from "./SplashScreen";
 
 import "../../styles/dashboard.css";
 import "../../styles/TemaClaro.css";
@@ -30,6 +29,7 @@ export default function Dashboard() {
 
   const [vistaActiva, setVistaActiva] = useState("resumen");
   const [modalAbierto, setModalAbierto] = useState(false);
+  const [loading, setLoading] = useState(true);
   const finanzas = useFinanzas();
   const budgets = useBudgets();
   const isMobile = useMediaQuery('(max-width: 768px)');
@@ -45,6 +45,10 @@ export default function Dashboard() {
     metas:         <VistaMetas         />,
     configuracion: <VistaConfiguracion />,
   };
+
+  if (loading) {
+    return <SplashScreen onFinish={() => setLoading(false)} />;
+  }
 
   return (
     <div className="db-app">

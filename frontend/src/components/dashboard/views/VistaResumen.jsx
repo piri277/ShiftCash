@@ -112,14 +112,19 @@ function construirDatos(transacciones, periodo) {
 }
 
 // ── Sub-componentes ───────────────────────────────────────────────────────────
-function AlertaPresupuesto({ totalGastado, totalAsignado, periodo }) {
+function AlertaPresupuesto({ totalGastado, totalAsignado, periodo, porcentaje }) {
   const label = periodo === "mensualmente" ? "mensual" : periodo === "semanalmente" ? "semanal" : "diario";
+  const esSuperado = porcentaje >= 100;
+
   return (
-    <div className="db-alert">
-      <span>⚠️</span>
+    <div className={`db-alert ${esSuperado ? 'danger' : 'warning'}`}>
+      <span>{esSuperado ? '🚨' : '⚠️'}</span>
       <span>
-        ¡Has superado tu presupuesto {label}! Gastaste{" "}
-        <strong>{formatearPesos(totalGastado)}</strong> de{" "}
+        {esSuperado 
+          ? `¡Has superado tu presupuesto ${label}!` 
+          : `¡Atención! Estás cerca de alcanzar tu límite ${label} (${porcentaje.toFixed(0)}%).`}
+        {" "}
+        Gastaste <strong>{formatearPesos(totalGastado)}</strong> de{" "}
         <strong>{formatearPesos(totalAsignado)}</strong>.
       </span>
     </div>
@@ -413,12 +418,17 @@ export default function VistaResumen({ finanzas, budgets: budgetsFromProps }) {
 
   const presupuestosFiltrados = budgets.filter(b => presupuestoPerteneceAlPeriodo(b, periodoBudget));
 
+  // Obtener umbral de preferencias
+  const threshold = parseInt(localStorage.getItem("budget_threshold") || "80");
+
   // Lógica para detectar múltiples alertas (Mes y Semana)
   const alertasVisibles = ["mensualmente", "semanalmente", "diariamente"].map(p => {
     const filtrados = budgets.filter(b => presupuestoPerteneceAlPeriodo(b, p));
     const asignado = filtrados.reduce((sum, b) => sum + b.amount, 0);
     const gastado = filtrados.reduce((sum, b) => sum + b.spent, 0);
-    if (asignado > 0 && gastado > asignado) return { gastado, asignado, p };
+    const porcentaje = asignado > 0 ? (gastado / asignado) * 100 : 0;
+
+    if (asignado > 0 && porcentaje >= threshold) return { gastado, asignado, p, porcentaje };
     return null;
   }).filter(Boolean);
 
@@ -443,7 +453,8 @@ export default function VistaResumen({ finanzas, budgets: budgetsFromProps }) {
           key={i} 
           totalGastado={alerta.gastado} 
           totalAsignado={alerta.asignado} 
-          periodo={alerta.p} 
+          periodo={alerta.p}
+          porcentaje={alerta.porcentaje}
         />
       ))}
 

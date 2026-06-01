@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../hooks/useTheme';
+import api from '../api/axios';
 import logoImg from '../assets/Logo-sinFondo1.png';
 import graficaImg from '../assets/Grafica.png';
 import '../styles/home.css';
@@ -18,6 +19,18 @@ function Home() {
     }, 100);
 
     return () => clearTimeout(timer);
+  }, []);
+
+  // Wake up backend silenciosamente (para evitar que se duerma en Render)
+  useEffect(() => {
+    const wakeUpBackend = async () => {
+      try {
+        await api.get('/');
+      } catch {
+        // Silencio: no hacer nada si hay error, es solo un ping de mantenimiento
+      }
+    };
+    wakeUpBackend();
   }, []);
 
   return (

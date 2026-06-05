@@ -5,50 +5,51 @@ import {
 } from "../../../api/profile";
 import "../../../styles/config.css";
 import { useTheme } from "../../../hooks/useTheme";
+import { useAuth } from "../../../hooks/useAuth";
 import { User, Lock, Palette, AlertTriangle, LogOut, Camera, Trash2 } from "lucide-react";
 
 const MONEDAS = ["COP", "USD", "EUR", "MXN", "ARS", "BRL"];
 
 export default function VistaConfiguracion() {
   const { theme, toggleTheme } = useTheme();
+  const { updateUser } = useAuth();
+
   const [usuario, setUsuario] = useState(null);
   const [loading, setLoading] = useState(true);
   const [seccion, setSeccion] = useState("perfil");
 
-  // Perfil
   const [username, setUsername] = useState("");
   const [email, setEmail]       = useState("");
   const [msgPerfil, setMsgPerfil] = useState(null);
 
-  // Foto
   const [fotoPreview, setFotoPreview] = useState(null);
   const [loadingFoto, setLoadingFoto] = useState(false);
   const fileInputRef = useRef(null);
 
-  // Contraseña
   const [passActual, setPassActual]   = useState("");
   const [passNueva, setPassNueva]     = useState("");
   const [passConfirm, setPassConfirm] = useState("");
   const [msgPass, setMsgPass]         = useState(null);
 
-  // Preferencias
   const [moneda, setMoneda]       = useState("COP");
   const [msgMoneda, setMsgMoneda] = useState(null);
   const [notifThreshold, setNotifThreshold] = useState(() =>
     localStorage.getItem("budget_threshold") || "80"
   );
 
-  // Eliminar cuenta
   const [confirmDelete, setConfirmDelete] = useState("");
   const [msgDelete, setMsgDelete]         = useState(null);
 
+  // Carga datos frescos del servidor y sincroniza el contexto
   useEffect(() => {
     getMe().then(data => {
       setUsuario(data);
-      setUsername(data.username);
-      setEmail(data.email);
-      setMoneda(data.currency);
-      setFotoPreview(data.profile_pic || null);
+      setUsername(data.username ?? "");
+      setEmail(data.email ?? "");
+      setMoneda(data.currency ?? "COP");
+      // Cache-bust la foto al cargar para evitar imagen antigua cacheada
+      setFotoPreview(data.profile_pic ? `${data.profile_pic}?t=${Date.now()}` : null);
+      updateUser(data);
     }).finally(() => setLoading(false));
   }, []);
 
@@ -56,20 +57,26 @@ export default function VistaConfiguracion() {
   async function handleSeleccionarFoto(e) {
     const file = e.target.files[0];
     if (!file) return;
-    // Preview inmediato
-    setFotoPreview(URL.createObjectURL(file));
+    // Muestra preview local inmediato mientras sube
+    const localPreview = URL.createObjectURL(file);
+    setFotoPreview(localPreview);
     setLoadingFoto(true);
     setMsgPerfil(null);
     try {
       const updated = await subirFotoPerfil(file);
-      setUsuario(updated);
-      setFotoPreview(updated.profile_pic);
+      // Cache-bust para que el browser no sirva la imagen vieja
+      const urlFinal = updated.profile_pic
+        ? `${updated.profile_pic}?t=${Date.now()}`
+        : null;
+      const updatedConUrl = { ...updated, profile_pic: urlFinal };
+      setUsuario(updatedConUrl);
+      setFotoPreview(urlFinal);
+      updateUser(updatedConUrl); // actualiza contexto → sidebar se re-renderiza
       setMsgPerfil({ tipo: "ok", texto: "Foto actualizada correctamente" });
-      // Notifica al resto de la app
-      window.dispatchEvent(new CustomEvent("perfil-actualizado", { detail: updated }));
     } catch {
       setMsgPerfil({ tipo: "error", texto: "Error al subir la foto" });
-      setFotoPreview(usuario?.profile_pic || null);
+      // Restaura la foto anterior (la que tenía el usuario antes de intentar)
+      setFotoPreview(usuario?.profile_pic ?? null);
     } finally {
       setLoadingFoto(false);
       e.target.value = "";
@@ -82,10 +89,11 @@ export default function VistaConfiguracion() {
     setMsgPerfil(null);
     try {
       const updated = await eliminarFotoPerfil();
-      setUsuario(updated);
+      const updatedSinFoto = { ...updated, profile_pic: null };
+      setUsuario(updatedSinFoto);
       setFotoPreview(null);
+      updateUser(updatedSinFoto); // actualiza contexto → sidebar vuelve a iniciales
       setMsgPerfil({ tipo: "ok", texto: "Foto eliminada" });
-      window.dispatchEvent(new CustomEvent("perfil-actualizado", { detail: updated }));
     } catch {
       setMsgPerfil({ tipo: "error", texto: "Error al eliminar la foto" });
     } finally {
@@ -98,9 +106,11 @@ export default function VistaConfiguracion() {
     setMsgPerfil(null);
     try {
       const updated = await actualizarPerfil({ username, email });
-      setUsuario(updated);
+      // Preserva la URL de foto con cache-bust que ya teníamos en el estado local
+      const updatedConFoto = { ...updated, profile_pic: usuario?.profile_pic ?? updated.profile_pic };
+      setUsuario(updatedConFoto);
+      updateUser(updatedConFoto);
       setMsgPerfil({ tipo: "ok", texto: "Perfil actualizado correctamente" });
-      window.dispatchEvent(new CustomEvent("perfil-actualizado", { detail: updated }));
     } catch (e) {
       setMsgPerfil({ tipo: "error", texto: e.response?.data?.detail || "Error al actualizar" });
     }
@@ -129,6 +139,7 @@ export default function VistaConfiguracion() {
       const updated = await actualizarMoneda(moneda);
       localStorage.setItem("budget_threshold", notifThreshold);
       setUsuario(updated);
+      updateUser(updated);
       setMsgMoneda({ tipo: "ok", texto: "Preferencias guardadas correctamente" });
     } catch {
       setMsgMoneda({ tipo: "error", texto: "Error al actualizar moneda" });
@@ -145,6 +156,7 @@ export default function VistaConfiguracion() {
     try {
       await eliminarCuenta();
       localStorage.removeItem("token");
+      localStorage.removeItem("user");
       window.location.href = "/";
     } catch {
       setMsgDelete({ tipo: "error", texto: "Error al eliminar la cuenta" });
@@ -153,6 +165,7 @@ export default function VistaConfiguracion() {
 
   function handleLogout() {
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
     window.location.href = "/";
   }
 
@@ -171,7 +184,6 @@ export default function VistaConfiguracion() {
     { key: "logout",       label: "Cerrar sesión", icon: LogOut },
   ];
 
-  // Iniciales para el avatar fallback
   const iniciales = usuario?.username
     ? usuario.username.slice(0, 2).toUpperCase()
     : "??";
@@ -198,13 +210,11 @@ export default function VistaConfiguracion() {
 
       <div className="config-content">
 
-        {/* ── PERFIL ── */}
         {seccion === "perfil" && (
           <div className="config-card">
             <h2 className="config-titulo">Perfil</h2>
             <p className="config-subtitulo">Actualiza tu foto, nombre y correo electrónico</p>
 
-            {/* Avatar */}
             <div className="config-avatar-wrapper">
               <div className="config-avatar">
                 {fotoPreview
@@ -271,7 +281,6 @@ export default function VistaConfiguracion() {
           </div>
         )}
 
-        {/* ── SEGURIDAD ── */}
         {seccion === "seguridad" && (
           <div className="config-card">
             <h2 className="config-titulo">Seguridad</h2>
@@ -291,7 +300,6 @@ export default function VistaConfiguracion() {
           </div>
         )}
 
-        {/* ── PREFERENCIAS ── */}
         {seccion === "preferencias" && (
           <div className="config-card">
             <h3 className="config-titulo">Preferencias</h3>
@@ -355,7 +363,6 @@ export default function VistaConfiguracion() {
           </div>
         )}
 
-        {/* ── CUENTA ── */}
         {seccion === "cuenta" && (
           <div className="config-card">
             <h2 className="config-titulo danger">Eliminar cuenta</h2>

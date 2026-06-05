@@ -24,6 +24,7 @@ class UserOut(BaseModel):
     username: str
     email: str
     currency: str
+    profile_pic: str | None = None  
 
     class Config:
         from_attributes = True

@@ -26,10 +26,11 @@ export function AuthProvider({ children }) {
     setUser(userData);
   };
 
-  // Escucha actualizaciones de perfil disparadas desde VistaConfiguracion
   useEffect(() => {
     function onPerfilActualizado(e) {
-      updateUser(e.detail);
+      const detail = e.detail;
+      localStorage.setItem('user', JSON.stringify(detail));
+      setUser(detail);
     }
     window.addEventListener('perfil-actualizado', onPerfilActualizado);
     return () => window.removeEventListener('perfil-actualizado', onPerfilActualizado);

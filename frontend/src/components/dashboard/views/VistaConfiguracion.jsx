@@ -1,25 +1,29 @@
-import { useState, useEffect } from "react";
-import { getMe, actualizarPerfil, cambiarPassword, actualizarMoneda, eliminarCuenta } from "../../../api/profile";
+import { useState, useEffect, useRef } from "react";
+import {
+  getMe, actualizarPerfil, cambiarPassword, actualizarMoneda,
+  eliminarCuenta, subirFotoPerfil, eliminarFotoPerfil
+} from "../../../api/profile";
 import "../../../styles/config.css";
 import { useTheme } from "../../../hooks/useTheme";
-import { User, Lock, Palette, AlertTriangle, LogOut } from "lucide-react";
-
+import { User, Lock, Palette, AlertTriangle, LogOut, Camera, Trash2 } from "lucide-react";
 
 const MONEDAS = ["COP", "USD", "EUR", "MXN", "ARS", "BRL"];
-
 
 export default function VistaConfiguracion() {
   const { theme, toggleTheme } = useTheme();
   const [usuario, setUsuario] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  // Secciones
   const [seccion, setSeccion] = useState("perfil");
 
   // Perfil
   const [username, setUsername] = useState("");
   const [email, setEmail]       = useState("");
   const [msgPerfil, setMsgPerfil] = useState(null);
+
+  // Foto
+  const [fotoPreview, setFotoPreview] = useState(null);
+  const [loadingFoto, setLoadingFoto] = useState(false);
+  const fileInputRef = useRef(null);
 
   // Contraseña
   const [passActual, setPassActual]   = useState("");
@@ -30,9 +34,9 @@ export default function VistaConfiguracion() {
   // Preferencias
   const [moneda, setMoneda]       = useState("COP");
   const [msgMoneda, setMsgMoneda] = useState(null);
-  const [notifThreshold, setNotifThreshold] = useState(() => {
-    return localStorage.getItem("budget_threshold") || "80";
-  });
+  const [notifThreshold, setNotifThreshold] = useState(() =>
+    localStorage.getItem("budget_threshold") || "80"
+  );
 
   // Eliminar cuenta
   const [confirmDelete, setConfirmDelete] = useState("");
@@ -44,21 +48,65 @@ export default function VistaConfiguracion() {
       setUsername(data.username);
       setEmail(data.email);
       setMoneda(data.currency);
+      setFotoPreview(data.profile_pic || null);
     }).finally(() => setLoading(false));
   }, []);
 
+  // ── Foto ──────────────────────────────────────────────
+  async function handleSeleccionarFoto(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    // Preview inmediato
+    setFotoPreview(URL.createObjectURL(file));
+    setLoadingFoto(true);
+    setMsgPerfil(null);
+    try {
+      const updated = await subirFotoPerfil(file);
+      setUsuario(updated);
+      setFotoPreview(updated.profile_pic);
+      setMsgPerfil({ tipo: "ok", texto: "Foto actualizada correctamente" });
+      // Notifica al resto de la app
+      window.dispatchEvent(new CustomEvent("perfil-actualizado", { detail: updated }));
+    } catch {
+      setMsgPerfil({ tipo: "error", texto: "Error al subir la foto" });
+      setFotoPreview(usuario?.profile_pic || null);
+    } finally {
+      setLoadingFoto(false);
+      e.target.value = "";
+    }
+  }
+
+  async function handleEliminarFoto() {
+    if (!usuario?.profile_pic) return;
+    setLoadingFoto(true);
+    setMsgPerfil(null);
+    try {
+      const updated = await eliminarFotoPerfil();
+      setUsuario(updated);
+      setFotoPreview(null);
+      setMsgPerfil({ tipo: "ok", texto: "Foto eliminada" });
+      window.dispatchEvent(new CustomEvent("perfil-actualizado", { detail: updated }));
+    } catch {
+      setMsgPerfil({ tipo: "error", texto: "Error al eliminar la foto" });
+    } finally {
+      setLoadingFoto(false);
+    }
+  }
+
+  // ── Perfil ────────────────────────────────────────────
   async function guardarPerfil() {
     setMsgPerfil(null);
     try {
       const updated = await actualizarPerfil({ username, email });
       setUsuario(updated);
       setMsgPerfil({ tipo: "ok", texto: "Perfil actualizado correctamente" });
+      window.dispatchEvent(new CustomEvent("perfil-actualizado", { detail: updated }));
     } catch (e) {
-      const detail = e.response?.data?.detail || "Error al actualizar";
-      setMsgPerfil({ tipo: "error", texto: detail });
+      setMsgPerfil({ tipo: "error", texto: e.response?.data?.detail || "Error al actualizar" });
     }
   }
 
+  // ── Contraseña ────────────────────────────────────────
   async function guardarPassword() {
     setMsgPass(null);
     if (passNueva !== passConfirm) {
@@ -70,23 +118,24 @@ export default function VistaConfiguracion() {
       setMsgPass({ tipo: "ok", texto: "Contraseña actualizada correctamente" });
       setPassActual(""); setPassNueva(""); setPassConfirm("");
     } catch (e) {
-      const detail = e.response?.data?.detail || "Error al cambiar contraseña";
-      setMsgPass({ tipo: "error", texto: detail });
+      setMsgPass({ tipo: "error", texto: e.response?.data?.detail || "Error al cambiar contraseña" });
     }
   }
 
+  // ── Preferencias ──────────────────────────────────────
   async function guardarMoneda() {
     setMsgMoneda(null);
     try {
       const updated = await actualizarMoneda(moneda);
       localStorage.setItem("budget_threshold", notifThreshold);
       setUsuario(updated);
-      setMsgMoneda({ tipo: "ok", texto: "Moneda actualizada correctamente" });
+      setMsgMoneda({ tipo: "ok", texto: "Preferencias guardadas correctamente" });
     } catch {
       setMsgMoneda({ tipo: "error", texto: "Error al actualizar moneda" });
     }
   }
 
+  // ── Eliminar cuenta ───────────────────────────────────
   async function handleEliminar() {
     setMsgDelete(null);
     if (confirmDelete !== usuario?.username) {
@@ -104,22 +153,31 @@ export default function VistaConfiguracion() {
 
   function handleLogout() {
     localStorage.removeItem("token");
-    window.location.href = "/"; // Redirige a la página de inicio
+    window.location.href = "/";
   }
 
-  if (loading) return <div className="db-empty"><span className="db-empty-icon">⚙️</span><p>Cargando...</p></div>;
+  if (loading) return (
+    <div className="db-empty">
+      <span className="db-empty-icon">⚙️</span>
+      <p>Cargando...</p>
+    </div>
+  );
 
   const SECCIONES = [
-    { key: "perfil",       label: "Perfil",        icon: User },
-    { key: "seguridad",    label: "Seguridad",      icon: Lock },
-    { key: "preferencias", label: "Preferencias",   icon: Palette },
-    { key: "cuenta",       label: "Cuenta",         icon: AlertTriangle },
-    { key: "logout",       label: "Cerrar sesión",  icon: LogOut },
+    { key: "perfil",       label: "Perfil",       icon: User },
+    { key: "seguridad",    label: "Seguridad",     icon: Lock },
+    { key: "preferencias", label: "Preferencias",  icon: Palette },
+    { key: "cuenta",       label: "Cuenta",        icon: AlertTriangle },
+    { key: "logout",       label: "Cerrar sesión", icon: LogOut },
   ];
+
+  // Iniciales para el avatar fallback
+  const iniciales = usuario?.username
+    ? usuario.username.slice(0, 2).toUpperCase()
+    : "??";
 
   return (
     <div className="config-layout">
-      {/* Sidebar de secciones */}
       <nav className="config-nav">
         {SECCIONES.map(s => {
           const Icon = s.icon;
@@ -138,25 +196,82 @@ export default function VistaConfiguracion() {
         })}
       </nav>
 
-      {/* Contenido */}
       <div className="config-content">
 
+        {/* ── PERFIL ── */}
         {seccion === "perfil" && (
           <div className="config-card">
             <h2 className="config-titulo">Perfil</h2>
-            <p className="config-subtitulo">Actualiza tu nombre y correo electrónico</p>
+            <p className="config-subtitulo">Actualiza tu foto, nombre y correo electrónico</p>
+
+            {/* Avatar */}
+            <div className="config-avatar-wrapper">
+              <div className="config-avatar">
+                {fotoPreview
+                  ? <img src={fotoPreview} alt="Foto de perfil" className="config-avatar-img" />
+                  : <span className="config-avatar-initials">{iniciales}</span>
+                }
+                {loadingFoto && <div className="config-avatar-overlay"><span>⏳</span></div>}
+              </div>
+
+              <div className="config-avatar-actions">
+                <button
+                  className="config-btn-icon"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={loadingFoto}
+                  title="Cambiar foto"
+                >
+                  <Camera size={16} />
+                  <span>{fotoPreview ? "Cambiar foto" : "Subir foto"}</span>
+                </button>
+
+                {fotoPreview && (
+                  <button
+                    className="config-btn-icon danger"
+                    onClick={handleEliminarFoto}
+                    disabled={loadingFoto}
+                    title="Eliminar foto"
+                  >
+                    <Trash2 size={16} />
+                    <span>Eliminar foto</span>
+                  </button>
+                )}
+              </div>
+
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                style={{ display: "none" }}
+                onChange={handleSeleccionarFoto}
+              />
+            </div>
 
             <label className="config-label">Nombre de usuario</label>
-            <input className="config-input" value={username} onChange={e => setUsername(e.target.value)} />
+            <input
+              className="config-input"
+              value={username}
+              onChange={e => setUsername(e.target.value)}
+            />
 
             <label className="config-label">Correo electrónico</label>
-            <input className="config-input" type="email" value={email} onChange={e => setEmail(e.target.value)} />
+            <input
+              className="config-input"
+              type="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+            />
 
-            {msgPerfil && <p className={`config-msg ${msgPerfil.tipo}`}>{msgPerfil.texto}</p>}
-            <button className="config-btn" onClick={guardarPerfil}>Guardar cambios</button>
+            {msgPerfil && (
+              <p className={`config-msg ${msgPerfil.tipo}`}>{msgPerfil.texto}</p>
+            )}
+            <button className="config-btn" onClick={guardarPerfil}>
+              Guardar cambios
+            </button>
           </div>
         )}
 
+        {/* ── SEGURIDAD ── */}
         {seccion === "seguridad" && (
           <div className="config-card">
             <h2 className="config-titulo">Seguridad</h2>
@@ -176,63 +291,47 @@ export default function VistaConfiguracion() {
           </div>
         )}
 
+        {/* ── PREFERENCIAS ── */}
         {seccion === "preferencias" && (
           <div className="config-card">
             <h3 className="config-titulo">Preferencias</h3>
-           <p className="config-subtitulo">Apariencia y moneda predeterminada</p>
- 
-           {/* — Toggle de tema — */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+            <p className="config-subtitulo">Apariencia y moneda predeterminada</p>
+
+            <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"1rem" }}>
               <div>
-               <div className="config-label" style={{ marginBottom: 2 }}>
-                 {theme === 'dark' ? '🌙 Tema oscuro' : '☀️ Tema claro'}
+                <div className="config-label" style={{ marginBottom:2 }}>
+                  {theme === "dark" ? "🌙 Tema oscuro" : "☀️ Tema claro"}
                 </div>
-               <div style={{ fontSize: '0.78rem', color: 'var(--text-faint, #555e82)' }}>
-                 {theme === 'dark' ? 'Cambia al tema claro' : 'Cambia al tema oscuro'}
-               </div>
-             </div>
- 
-             <button
-               onClick={toggleTheme}
-               aria-label="Cambiar tema"
+                <div style={{ fontSize:"0.78rem", color:"var(--text-faint, #555e82)" }}>
+                  {theme === "dark" ? "Cambia al tema claro" : "Cambia al tema oscuro"}
+                </div>
+              </div>
+              <button
+                onClick={toggleTheme}
+                aria-label="Cambiar tema"
                 style={{
-                  width: 48,
-                 height: 26,
-                borderRadius: 99,
-                border: 'none',
-                cursor: 'pointer',
-                position: 'relative',
-                background: theme === 'dark'
-                  ? 'rgba(91,110,245,0.25)'
-                  : 'rgba(91,110,245,0.55)',
-                transition: 'background 0.25s',
-                flexShrink: 0,
-              }}
-            >
-              <span style={{
-                position: 'absolute',
-                top: 4,
-                left: theme === 'dark' ? 4 : 22,
-                width: 18,
-                height: 18,
-                borderRadius: '50%',
-                background: theme === 'dark' ? '#8b93bc' : '#fff',
-                transition: 'left 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.25s',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: 10,
-              }}>
-                {theme === 'dark' ? '🌙' : '☀️'}
-              </span>
-            </button>
-          </div>
- 
-          <label className="config-label">Moneda</label>
+                  width:48, height:26, borderRadius:99, border:"none",
+                  cursor:"pointer", position:"relative",
+                  background: theme === "dark" ? "rgba(91,110,245,0.25)" : "rgba(91,110,245,0.55)",
+                  transition:"background 0.25s", flexShrink:0,
+                }}
+              >
+                <span style={{
+                  position:"absolute", top:4,
+                  left: theme === "dark" ? 4 : 22,
+                  width:18, height:18, borderRadius:"50%",
+                  background: theme === "dark" ? "#8b93bc" : "#fff",
+                  transition:"left 0.25s cubic-bezier(0.34,1.56,0.64,1), background 0.25s",
+                  display:"flex", alignItems:"center", justifyContent:"center", fontSize:10,
+                }}>
+                  {theme === "dark" ? "🌙" : "☀️"}
+                </span>
+              </button>
+            </div>
+
+            <label className="config-label">Moneda</label>
             <select className="config-input" value={moneda} onChange={e => setMoneda(e.target.value)}>
-              {MONEDAS.map(m => (
-                <option key={m} value={m}>{m}</option>
-              ))}
+              {MONEDAS.map(m => <option key={m} value={m}>{m}</option>)}
             </select>
 
             <div className="config-range-group">
@@ -240,25 +339,23 @@ export default function VistaConfiguracion() {
                 <label className="config-label">Umbral de alerta de presupuesto</label>
                 <span className="config-range-value">{notifThreshold}%</span>
               </div>
-              <input 
-                type="range" className="config-range" 
+              <input
+                type="range" className="config-range"
                 min="50" max="100" step="5"
-                value={notifThreshold} 
-                onChange={e => setNotifThreshold(e.target.value)} 
+                value={notifThreshold}
+                onChange={e => setNotifThreshold(e.target.value)}
               />
-              <p className="config-subtitulo" style={{ marginTop: 0 }}>Se te avisará cuando tus gastos alcancen este porcentaje del presupuesto.</p>
+              <p className="config-subtitulo" style={{ marginTop:0 }}>
+                Se te avisará cuando tus gastos alcancen este porcentaje del presupuesto.
+              </p>
             </div>
 
             {msgMoneda && <p className={`config-msg ${msgMoneda.tipo}`}>{msgMoneda.texto}</p>}
             <button className="config-btn" onClick={guardarMoneda}>Guardar preferencias</button>
-        </div>
-
-          
-
-
-
+          </div>
         )}
 
+        {/* ── CUENTA ── */}
         {seccion === "cuenta" && (
           <div className="config-card">
             <h2 className="config-titulo danger">Eliminar cuenta</h2>

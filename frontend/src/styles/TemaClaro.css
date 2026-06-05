@@ -634,3 +634,44 @@
   background: var(--primary) !important;
   color: #fff !important;
 }
+
+
+/* ── Foto de perfil: avatar en config y sidebar (Modo Claro) ── */
+[data-theme="light"] .config-avatar {
+  background: var(--accent) !important;
+}
+
+[data-theme="light"] .config-avatar-wrapper {
+  background: var(--surface-2) !important;
+  border-color: var(--border) !important;
+}
+
+[data-theme="light"] .config-btn-icon {
+  color: var(--text-muted) !important;
+  border-color: var(--border) !important;
+}
+
+[data-theme="light"] .config-btn-icon:hover:not(:disabled) {
+  background: var(--surface-3) !important;
+  border-color: var(--primary) !important;
+  color: var(--text-primary) !important;
+}
+
+[data-theme="light"] .config-btn-icon.danger {
+  color: var(--danger) !important;
+  border-color: rgba(192, 57, 43, 0.25) !important;
+}
+
+[data-theme="light"] .config-btn-icon.danger:hover:not(:disabled) {
+  background: rgba(192, 57, 43, 0.08) !important;
+  border-color: var(--danger) !important;
+}
+
+[data-theme="light"] .bottom-nav-avatar {
+  background: var(--accent) !important;
+}
+
+[data-theme="light"] .bottom-nav-avatar.active {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 2px var(--dark) !important;
+}

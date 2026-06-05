@@ -14,3 +14,27 @@ export const actualizarMoneda = (currency) =>
 
 export const eliminarCuenta = () =>
   api.delete('/users/me');
+
+
+export async function subirFotoPerfil(file) {
+  const formData = new FormData();
+  formData.append("file", file);
+  const token = localStorage.getItem("token");
+  const res = await fetch("/api/profile/picture", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+    body: formData,
+  });
+  if (!res.ok) throw await res.json();
+  return res.json();
+}
+
+export async function eliminarFotoPerfil() {
+  const token = localStorage.getItem("token");
+  const res = await fetch("/api/profile/picture", {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) throw await res.json();
+  return res.json();
+}

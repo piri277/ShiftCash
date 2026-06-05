@@ -2,44 +2,33 @@ import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../hooks/useAuth";
 import { 
-  LayoutDashboard, 
-  History, 
-  PieChart, 
-  Layers, 
-  Wallet2, 
-  Target, 
-  Settings, 
-  LogOut, 
-  ChevronUp, 
-  User,
-  PanelLeftClose,
-  PanelLeftOpen
+  LayoutDashboard, History, PieChart, Layers, Wallet2, 
+  Target, Settings, LogOut, ChevronUp, PanelLeftClose, PanelLeftOpen
 } from "lucide-react";
 
 export default function Sidebar({ vistaActiva, onCambiarVista }) {
   const navigate = useNavigate();
-  const { logout, user } = useAuth(); 
+  const { logout, user } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(true); // Inicia colapsado por defecto
+  const [isCollapsed, setIsCollapsed] = useState(true);
 
-  // Definimos los items aquí para mapear los iconos de Lucide
   const menuItems = useMemo(() => [
-    { key: "resumen",       etiqueta: "Resumen",         icon: LayoutDashboard },
-    { key: "historial",     etiqueta: "Historial",       icon: History },
-    { key: "graficas",      etiqueta: "Gráficas",        icon: PieChart },
-    { key: "categorias",    etiqueta: "Categorías",      icon: Layers },
-    { key: "presupuestos",  etiqueta: "Presupuestos",    icon: Wallet2 },
-    { key: "metas",         etiqueta: "Metas de Ahorro", icon: Target },
+    { key: "resumen",      etiqueta: "Resumen",         icon: LayoutDashboard },
+    { key: "historial",    etiqueta: "Historial",       icon: History },
+    { key: "graficas",     etiqueta: "Gráficas",        icon: PieChart },
+    { key: "categorias",   etiqueta: "Categorías",      icon: Layers },
+    { key: "presupuestos", etiqueta: "Presupuestos",    icon: Wallet2 },
+    { key: "metas",        etiqueta: "Metas de Ahorro", icon: Target },
   ], []);
 
-  const handleLogout = () => {
-    logout();
-    navigate("/");
-  };
+  const handleLogout = () => { logout(); navigate("/"); };
+
+  const iniciales = user?.username?.slice(0, 2).toUpperCase() ?? "??";
 
   return (
     <aside className={`db-sidebar ${isCollapsed ? "collapsed" : ""}`}>
-      {/* Brand sin borde inferior, más limpio */}
+
+      {/* Brand */}
       <div className="db-brand">
         <div className="brand-logo brand-bounce">
           {"Shift".split("").map((l, i) => (
@@ -49,8 +38,8 @@ export default function Sidebar({ vistaActiva, onCambiarVista }) {
             <span key={i} className="bounce-letter logo-accent" style={{ animationDelay: `${(i + 5) * 0.1}s` }}>{l}</span>
           ))}
         </div>
-        <button 
-          className="btn-sidebar-toggle" 
+        <button
+          className="btn-sidebar-toggle"
           onClick={() => setIsCollapsed(!isCollapsed)}
           title={isCollapsed ? "Expandir" : "Contraer"}
         >
@@ -58,7 +47,7 @@ export default function Sidebar({ vistaActiva, onCambiarVista }) {
         </button>
       </div>
 
-      {/* Navegación Principal */}
+      {/* Nav */}
       <nav className="db-nav">
         {menuItems.map((item) => {
           const Icon = item.icon;
@@ -77,7 +66,7 @@ export default function Sidebar({ vistaActiva, onCambiarVista }) {
         })}
       </nav>
 
-      {/* Perfil Inferior con Dropdown Moderno */}
+      {/* Perfil inferior */}
       <div className="db-user-section">
         {dropdownOpen && (
           <div className="db-profile-dropdown glass-effect">
@@ -85,7 +74,10 @@ export default function Sidebar({ vistaActiva, onCambiarVista }) {
               <p className="user-name">{user?.username}</p>
               <p className="user-email">{user?.email}</p>
             </div>
-            <button className="dropdown-item" onClick={() => { onCambiarVista('configuracion'); setDropdownOpen(false); }}>
+            <button
+              className="dropdown-item"
+              onClick={() => { onCambiarVista("configuracion"); setDropdownOpen(false); }}
+            >
               <Settings size={16} />
               <span>Configuración</span>
             </button>
@@ -96,22 +88,27 @@ export default function Sidebar({ vistaActiva, onCambiarVista }) {
           </div>
         )}
 
-        <div 
-          className={`db-compact-profile ${dropdownOpen ? 'active' : ''}`}
+        <div
+          className={`db-compact-profile ${dropdownOpen ? "active" : ""}`}
           onClick={() => setDropdownOpen(!dropdownOpen)}
         >
+          {/* Avatar con foto o iniciales */}
           <div className="profile-avatar">
-            <User size={18} />
+            {user?.profile_pic
+              ? <img src={user.profile_pic} alt="avatar" className="profile-avatar-img" />
+              : <span className="profile-avatar-initials">{iniciales}</span>
+            }
           </div>
           <div className="profile-details">
             <span className="profile-name">{user?.username}</span>
           </div>
-          <ChevronUp 
-            size={16} 
-            className={`chevron-icon ${dropdownOpen ? 'rotated' : ''}`} 
+          <ChevronUp
+            size={16}
+            className={`chevron-icon ${dropdownOpen ? "rotated" : ""}`}
           />
         </div>
       </div>
+
     </aside>
   );
 }

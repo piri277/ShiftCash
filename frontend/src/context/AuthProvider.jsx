@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AuthContext } from './AuthContext';
 
 export function AuthProvider({ children }) {
@@ -21,8 +21,22 @@ export function AuthProvider({ children }) {
     setUser(null);
   };
 
+  const updateUser = (userData) => {
+    localStorage.setItem('user', JSON.stringify(userData));
+    setUser(userData);
+  };
+
+  // Escucha actualizaciones de perfil disparadas desde VistaConfiguracion
+  useEffect(() => {
+    function onPerfilActualizado(e) {
+      updateUser(e.detail);
+    }
+    window.addEventListener('perfil-actualizado', onPerfilActualizado);
+    return () => window.removeEventListener('perfil-actualizado', onPerfilActualizado);
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ token, user, login, logout, isAuthenticated: !!token }}>
+    <AuthContext.Provider value={{ token, user, login, logout, updateUser, isAuthenticated: !!token }}>
       {children}
     </AuthContext.Provider>
   );

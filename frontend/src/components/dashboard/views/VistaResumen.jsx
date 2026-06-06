@@ -10,6 +10,7 @@ import { useBudgets } from "../../../hooks/useBudgets";
 import { useMetas } from "../../../hooks/useMetas";
 import { useMediaQuery } from "../../../hooks/useMediaQuery";
 import { formatearPesos, formatearEjeY } from "../../../utils/formatters";
+import { parsearFechaLocal, fechaAString } from "../../../utils/dates"; // ✅ fix
 
 import "../../../styles/modal.css";
 
@@ -25,11 +26,11 @@ const DIAS  = ["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"];
 
 // Función auxiliar para obtener el color de la barra según el progreso
 const getBarColor = (pct) => {
-  if (pct >= 100) return "linear-gradient(90deg, #f87171, #ef4444)"; // Rojo (Superado)
-  if (pct >= 85)  return "linear-gradient(90deg, #fb923c, #f87171)"; // Naranja Rojizo (Crítico)
-  if (pct >= 60)  return "linear-gradient(90deg, #9b59f5, #fb923c)"; // Violeta Naranja (Advertencia)
-  if (pct >= 35)  return "linear-gradient(90deg, #7c8df7, #9b59f5)"; // Azul Violáceo (Moderado)
-  return "linear-gradient(90deg, #5b6ef5, #7c8df7)";                // Azul (Saludable)
+  if (pct >= 100) return "linear-gradient(90deg, #f87171, #ef4444)";
+  if (pct >= 85)  return "linear-gradient(90deg, #fb923c, #f87171)";
+  if (pct >= 60)  return "linear-gradient(90deg, #9b59f5, #fb923c)";
+  if (pct >= 35)  return "linear-gradient(90deg, #7c8df7, #9b59f5)";
+  return "linear-gradient(90deg, #5b6ef5, #7c8df7)";
 };
 
 // Helpers de filtrado 
@@ -40,30 +41,28 @@ function filtrarPorPeriodo(transacciones, periodo) {
     const lunes = new Date(hoy);
     lunes.setDate(hoy.getDate() - ((hoy.getDay() + 6) % 7));
     lunes.setHours(0, 0, 0, 0);
-    return transacciones.filter(t => new Date(t.trans_date) >= lunes);
+    return transacciones.filter(t => parsearFechaLocal(t.trans_date) >= lunes); 
   }
 
   if (periodo === "mensualmente") {
     return transacciones.filter(t => {
-      const d = new Date(t.trans_date);
+      const d = parsearFechaLocal(t.trans_date); 
       return d.getMonth() === hoy.getMonth() && d.getFullYear() === hoy.getFullYear();
     });
   }
 
   if (periodo === "diariamente") {
     return transacciones.filter(t => {
-      const d = new Date(t.trans_date);
+      const d = parsearFechaLocal(t.trans_date); 
       return d.toDateString() === hoy.toDateString();
     });
   }
 
-  return transacciones; // único o por defecto
+  return transacciones;
 }
 
-
 function construirDatos(transacciones, periodo) {
-
- const txFiltradas = filtrarPorPeriodo(transacciones, periodo);
+  const txFiltradas = filtrarPorPeriodo(transacciones, periodo);
 
   if (periodo === "diariamente") {
     return [{
@@ -75,13 +74,13 @@ function construirDatos(transacciones, periodo) {
   }
 
   if (periodo === "semanalmente") {
-     const hoy   = new Date();
-     const lunes = new Date(hoy);
-     lunes.setDate(hoy.getDate() - ((hoy.getDay() + 6) % 7));
-     return DIAS.map((dia, i) => {
+    const hoy   = new Date();
+    const lunes = new Date(hoy);
+    lunes.setDate(hoy.getDate() - ((hoy.getDay() + 6) % 7));
+    return DIAS.map((dia, i) => {
       const fecha    = new Date(lunes);
       fecha.setDate(lunes.getDate() + i);
-      const str      = fecha.toISOString().slice(0, 10);
+      const str      = fechaAString(fecha); 
       const delDia   = txFiltradas.filter(t => t.trans_date.slice(0, 10) === str);
       const ingresos = delDia.filter(t => t.type === "income").reduce((s, t) => s + t.amount, 0);
       const gastos   = delDia.filter(t => t.type === "expense").reduce((s, t) => s + t.amount, 0);
@@ -104,7 +103,7 @@ function construirDatos(transacciones, periodo) {
 
   // único o por defecto - anual
   return MESES.map((mes, i) => {
-    const delMes   = transacciones.filter(t => new Date(t.trans_date).getMonth() === i);
+    const delMes   = transacciones.filter(t => parsearFechaLocal(t.trans_date).getMonth() === i); // ✅ fix
     const ingresos = delMes.filter(t => t.type === "income").reduce((s, t) => s + t.amount, 0);
     const gastos   = delMes.filter(t => t.type === "expense").reduce((s, t) => s + t.amount, 0);
     return { label: mes, ingresos, gastos, ahorros: ingresos - gastos };
@@ -142,7 +141,6 @@ function TarjetaStat({ etiqueta, valor, color, icono }) {
 }
 
 function BarraPresupuesto({ presupuestosDelPeriodo, periodo, setPeriodo }) {
-  // Calcular totales dinámicamente
   const totalAsignado = presupuestosDelPeriodo.reduce((sum, b) => sum + b.amount, 0);
   const totalGastado = presupuestosDelPeriodo.reduce((sum, b) => sum + b.spent, 0);
   const porcentaje = totalAsignado > 0 ? (totalGastado / totalAsignado) * 100 : 0;
@@ -219,22 +217,18 @@ function GraficaCarousel({ transacciones }) {
   const datos    = construirDatos(transacciones, periodo);
   const chartHeight = isMobile ? 160 : 240;
   const etiqueta = periodo === "semanalmente" ? "esta semana"
-                 : periodo === "mensualmente"    ? MESES[new Date().getMonth()]
-                 : periodo === "diariamente" ? "hoy"
+                 : periodo === "mensualmente"  ? MESES[new Date().getMonth()]
+                 : periodo === "diariamente"   ? "hoy"
                  : "período único";
 
   return (
     <div className="db-card">
-      {/* Header con el título*/}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1rem", gap: 8, flexWrap: "wrap" }}>
-
-        {/* Título y etiqueta periodo */}
         <div>
           <h3 className="db-card-title" style={{ margin: 0 }}>{LABELS[grafica]}</h3>
           <span style={{ fontSize: "0.75rem", color: "#555e82" }}>{etiqueta}</span>
         </div>
 
-        {/* Chips de periodo */}
         <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
           {OPCIONES_GRAFICAS.map(p => (
             <button key={p.value} onClick={() => setPeriodo(p.value)}
@@ -246,16 +240,15 @@ function GraficaCarousel({ transacciones }) {
                 fontWeight: 600,
                 cursor: "pointer",
                 transition: "all 0.15s",
-                borderColor:    periodo === p.value ? "#5b6ef5" : "rgba(91,110,245,0.2)",
-                background:     periodo === p.value ? "rgba(91,110,245,0.15)" : "transparent",
-                color:          periodo === p.value ? "#a0aaff" : "#555e82",
+                borderColor: periodo === p.value ? "#5b6ef5" : "rgba(91,110,245,0.2)",
+                background:  periodo === p.value ? "rgba(91,110,245,0.15)" : "transparent",
+                color:       periodo === p.value ? "#a0aaff" : "#555e82",
               }}
             >
               {p.label}
             </button>
           ))}
 
-          {/* Flechas */}
           <div style={{ display: "flex", gap: 4, marginLeft: 8 }}>
             {["←", "→"].map((flecha, fi) => (
               <button key={flecha}
@@ -279,7 +272,6 @@ function GraficaCarousel({ transacciones }) {
             ))}
           </div>
 
-          {/* Indicador de puntos */}
           <div style={{ display: "flex", gap: 4 }}>
             {GRAFICAS.map((_, i) => (
               <div key={i} onClick={() => setIndice(i)}
@@ -297,7 +289,6 @@ function GraficaCarousel({ transacciones }) {
         </div>
       </div>
 
-      {/* Gráfica activa */}
       {grafica === "tendencia" && (
         <ResponsiveContainer width="100%" height={chartHeight}>
           <AreaChart data={datos} margin={{ top: 4, right: 8, bottom: 0, left: 0 }}>
@@ -346,11 +337,9 @@ export default function VistaResumen({ finanzas, budgets: budgetsFromProps }) {
   const [indiceMeta, setIndiceMeta] = useState(0);
   const [dropdownAbierto, setDropdownAbierto] = useState(false);
 
-  // Usa el prop si viene del padre (Dashboard), sino usa el hook local
   const { budgets, loading: loadingBudgets, recargar: recargarBudgets } = budgetsFromProps || budgetsHook;
   const [periodoBudget, setPeriodoBudget] = useState("mensualmente");
 
-  // Recargar presupuestos al entrar al resumen para que la barra de progreso sea exacta
   useEffect(() => {
     if (recargarBudgets) recargarBudgets();
     cargarMetas();
@@ -362,53 +351,39 @@ export default function VistaResumen({ finanzas, budgets: budgetsFromProps }) {
 
   const { totalGastado, totalGanado, totalAhorrado, cantidadTransacciones } = resumen;
 
-  // Filtrar presupuestos por período
   function presupuestoPerteneceAlPeriodo(budget, periodo) {
     const hoy = new Date();
-    // Usar fecha local para evitar desfases de zona horaria (UTC vs Local)
-    const hoyString = new Date().toLocaleDateString('en-CA'); 
+    const hoyString = fechaAString(hoy); 
 
-    // DIARIAMENTE: solo mostrar presupuestos de tipo "daily"
     if (periodo === "diariamente") {
       if (budget.period_type !== "daily") return false;
-      // Si es permanente, siempre se muestra (es para hoy)
-      // Si no es permanente, verifica que start_date sea hoy
       if (budget.is_permanent) return true;
-      // Comparar como strings para evitar problemas de zona horaria
       return budget.start_date === hoyString;
     }
 
-    // SEMANALMENTE: solo mostrar presupuestos de tipo "weekly"
     if (periodo === "semanalmente") {
       if (budget.period_type !== "weekly") return false;
       const lunes = new Date(hoy);
       lunes.setDate(hoy.getDate() - ((hoy.getDay() + 6) % 7));
       const domingo = new Date(lunes);
       domingo.setDate(lunes.getDate() + 6);
-      // Si es permanente, siempre se muestra (es para esta semana)
-      // Si no es permanente, verifica que start_date esté en esta semana
       if (budget.is_permanent) return true;
-      // Comparar como strings para evitar problemas de zona horaria
       const budgetDateStr = budget.start_date;
-      const lunesStr = lunes.toISOString().split("T")[0];
-      const domingoStr = domingo.toISOString().split("T")[0];
+      const lunesStr   = fechaAString(lunes);   
+      const domingoStr = fechaAString(domingo); 
       return budgetDateStr >= lunesStr && budgetDateStr <= domingoStr;
     }
 
-    // MENSUALMENTE: solo mostrar presupuestos de tipo "monthly"
     if (periodo === "mensualmente") {
       if (budget.period_type !== "monthly") return false;
       const hoyMonth = hoy.getMonth() + 1;
-      const hoyYear = hoy.getFullYear();
-      // Si es permanente, siempre se muestra (es para este mes)
-      // Si no es permanente, verifica que month/year coincidan con el mes actual
+      const hoyYear  = hoy.getFullYear();
       if (budget.is_permanent) return true;
       const budgetMonth = budget.month || hoyMonth;
-      const budgetYear = budget.year || hoyYear;
+      const budgetYear  = budget.year  || hoyYear;
       return budgetMonth === hoyMonth && budgetYear === hoyYear;
     }
 
-    // ÚNICO: solo mostrar presupuestos de tipo "unique"
     if (periodo === "único") {
       return budget.period_type === "unique";
     }
@@ -418,28 +393,24 @@ export default function VistaResumen({ finanzas, budgets: budgetsFromProps }) {
 
   const presupuestosFiltrados = budgets.filter(b => presupuestoPerteneceAlPeriodo(b, periodoBudget));
 
-  // Obtener umbral de preferencias
   const threshold = parseInt(localStorage.getItem("budget_threshold") || "80");
 
-  // Lógica para detectar múltiples alertas (Mes y Semana)
   const alertasVisibles = ["mensualmente", "semanalmente", "diariamente"].map(p => {
-    const filtrados = budgets.filter(b => presupuestoPerteneceAlPeriodo(b, p));
-    const asignado = filtrados.reduce((sum, b) => sum + b.amount, 0);
-    const gastado = filtrados.reduce((sum, b) => sum + b.spent, 0);
+    const filtrados  = budgets.filter(b => presupuestoPerteneceAlPeriodo(b, p));
+    const asignado   = filtrados.reduce((sum, b) => sum + b.amount, 0);
+    const gastado    = filtrados.reduce((sum, b) => sum + b.spent, 0);
     const porcentaje = asignado > 0 ? (gastado / asignado) * 100 : 0;
-
     if (asignado > 0 && porcentaje >= threshold) return { gastado, asignado, p, porcentaje };
     return null;
   }).filter(Boolean);
 
-  // Meta activa para el resumen
   const metaActiva = metas && metas.length > 0 ? (metas[indiceMeta] || metas[0]) : null;
 
   const tarjetas = [
-    { etiqueta: "Total Gastado", valor: formatearPesos(totalGastado), color: "#f87171", icono: "💸" },
-    { etiqueta: "Total Ganado", valor: formatearPesos(totalGanado), color: "#34d399", icono: "💰" },
-    { etiqueta: "Ahorrado", valor: formatearPesos(totalAhorrado), color: "#5b6ef5", icono: "🏦" },
-    { etiqueta: "Transacciones", valor: cantidadTransacciones, color: "#9b59f5", icono: "🔄" },
+    { etiqueta: "Total Gastado",   valor: formatearPesos(totalGastado),  color: "#f87171", icono: "💸" },
+    { etiqueta: "Total Ganado",    valor: formatearPesos(totalGanado),   color: "#34d399", icono: "💰" },
+    { etiqueta: "Ahorrado",        valor: formatearPesos(totalAhorrado), color: "#5b6ef5", icono: "🏦" },
+    { etiqueta: "Transacciones",   valor: cantidadTransacciones,         color: "#9b59f5", icono: "🔄" },
   ];
 
   return (
@@ -504,8 +475,7 @@ export default function VistaResumen({ finanzas, budgets: budgetsFromProps }) {
                 {(() => {
                   const hoy = new Date();
                   hoy.setHours(0, 0, 0, 0);
-                  const inicio = new Date(metaActiva.start_date);
-                  inicio.setHours(0, 0, 0, 0);
+                  const inicio = parsearFechaLocal(metaActiva.start_date); // ✅ fix
                   const diffTime = hoy - inicio;
                   const numDiaActual = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
                   const totalDiasReto = Object.keys(metaActiva.daily_amounts || {}).length;

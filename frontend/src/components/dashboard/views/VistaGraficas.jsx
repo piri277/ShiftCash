@@ -7,6 +7,7 @@ import {
 } from "recharts";
 import { useMediaQuery } from "../../../hooks/useMediaQuery";
 import { formatearPesos, formatearEjeY } from "../../../utils/formatters";
+import { parsearFechaLocal, fechaAString } from "../../../utils/dates"; 
 
 const COLORES = ["#5b6ef5","#9b59f5","#34d399","#fbbf24","#f87171","#38bdf8","#fb923c"];
 const MESES   = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
@@ -39,14 +40,14 @@ function aplicarFiltros(transacciones, { periodo, tipo, categorias, soloRecurren
     const lunes = new Date(hoy);
     lunes.setDate(hoy.getDate() - ((hoy.getDay() + 6) % 7));
     lunes.setHours(0, 0, 0, 0);
-    resultado = resultado.filter(t => new Date(t.trans_date) >= lunes);
+    resultado = resultado.filter(t => parsearFechaLocal(t.trans_date) >= lunes); 
   } else if (periodo === "mes") {
     resultado = resultado.filter(t => {
-      const d = new Date(t.trans_date);
+      const d = parsearFechaLocal(t.trans_date); 
       return d.getMonth() === hoy.getMonth() && d.getFullYear() === hoy.getFullYear();
     });
   } else {
-    resultado = resultado.filter(t => new Date(t.trans_date).getFullYear() === hoy.getFullYear());
+    resultado = resultado.filter(t => parsearFechaLocal(t.trans_date).getFullYear() === hoy.getFullYear()); 
   }
 
   if (tipo)               resultado = resultado.filter(t => t.type === tipo);
@@ -65,7 +66,7 @@ function construirDatosPeriodo(transacciones, periodo) {
     return ["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"].map((dia, i) => {
       const fecha    = new Date(lunes);
       fecha.setDate(lunes.getDate() + i);
-      const str      = fecha.toISOString().slice(0, 10);
+      const str      = fechaAString(fecha); 
       const delDia   = transacciones.filter(t => t.trans_date.slice(0, 10) === str);
       const ingresos = delDia.filter(t => t.type === "income").reduce((s, t) => s + t.amount, 0);
       const gastos   = delDia.filter(t => t.type === "expense").reduce((s, t) => s + t.amount, 0);
@@ -86,7 +87,7 @@ function construirDatosPeriodo(transacciones, periodo) {
   }
 
   return MESES.map((mes, i) => {
-    const delMes   = transacciones.filter(t => new Date(t.trans_date).getMonth() === i);
+    const delMes   = transacciones.filter(t => parsearFechaLocal(t.trans_date).getMonth() === i); 
     const ingresos = delMes.filter(t => t.type === "income").reduce((s, t) => s + t.amount, 0);
     const gastos   = delMes.filter(t => t.type === "expense").reduce((s, t) => s + t.amount, 0);
     return { label: mes, ingresos, gastos, ahorros: ingresos - gastos };

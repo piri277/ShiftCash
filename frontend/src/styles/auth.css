@@ -234,29 +234,39 @@ form {
     gap: 15px;
 }
 
-.social-icons a {
+.social-icons a,
+.social-icons button {
     display: inline-flex;
     padding: 10px;
     border: 1.5px solid rgba(91, 110, 245, 0.3);
     border-radius: 8px;
     font-size: 17px;
-    
     color: #f0f2ff;
     text-decoration: none;
+    background: transparent;
+    cursor: pointer;
     transition: all 0.3s ease;
 }
 
-.social-icons a:hover {
+.social-icons a:hover,
+.social-icons button:hover:not(:disabled) {
     transform: scale(1.1);
 }
 
-.social-icons a.google:hover {
+.social-icons button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.social-icons a.google:hover,
+.social-icons button.google:hover:not(:disabled) {
     background: #db4437;
     color: #fff;
     border-color: #db4437;
 }
 
-.social-icons a.facebook:hover {
+.social-icons a.facebook:hover,
+.social-icons button.facebook:hover:not(:disabled) {
     background: #1877f2;
     color: #fff;
     border-color: #1877f2;
@@ -410,7 +420,8 @@ form {
         gap: 12px;
     }
 
-    .social-icons a {
+    .social-icons a,
+    .social-icons button {
         padding: 9px 12px;
         font-size: 20px;
     }

@@ -1,4 +1,4 @@
-c# Logs
+# Logs
 logs
 *.log
 npm-debug.log*
@@ -7,15 +7,14 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# Build output
+dist/
+dist-ssr/
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
-.idea
+.idea/
 .DS_Store
 *.suo
 *.ntvs*
@@ -23,16 +22,24 @@ dist-ssr
 *.sln
 *.sw?
 
+# Claude Code local session data
+.claude/
+
 # Cache de Python
 **/__pycache__/
 *.pyc
+*.pyo
+.pytest_cache/
 
 # Entorno virtual
 venv/
 backend/venv/
+.venv/
 
 # Variables de entorno (¡Seguridad!)
 .env
+.env.local
+.env.*.local
 backend/.env
 
 # Node

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { loginUser, registerUser } from '../api/auth';
+import { useGoogleLogin } from '@react-oauth/google';
+import { loginUser, registerUser, googleAuthUser } from '../api/auth';
 import { useAuth } from '../hooks/useAuth';
 import '../styles/auth.css';
 
@@ -27,6 +28,27 @@ function AuthPage() {
   const [registerError, setRegisterError] = useState('');
   const [registerLoading, setRegisterLoading] = useState(false);
   const [passwordError, setPasswordError] = useState('');
+
+  // Google OAuth
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [googleError, setGoogleError] = useState('');
+
+  const triggerGoogleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      setGoogleLoading(true);
+      setGoogleError('');
+      try {
+        const data = await googleAuthUser(tokenResponse.access_token);
+        login(data.access_token, data.user);
+        navigate('/dashboard');
+      } catch {
+        setGoogleError('Error al iniciar sesión con Google');
+      } finally {
+        setGoogleLoading(false);
+      }
+    },
+    onError: () => setGoogleError('Error al iniciar sesión con Google'),
+  });
 
   // En desktop bloquea el scroll del body para que no aparezca scrollbar innecesario.
   // En móvil (<=650px) lo deja libre para que el formulario sea scrolleable.
@@ -147,8 +169,17 @@ function AuthPage() {
             </button>
 
             <p>Inicia sesión con</p>
+            {googleError && <div className="alert alert-error">{googleError}</div>}
             <div className="social-icons">
-              <a href="#" className="google"><i className="bi bi-google"></i></a>
+              <button
+                type="button"
+                className="google"
+                onClick={() => triggerGoogleLogin()}
+                disabled={googleLoading}
+                title="Iniciar sesión con Google"
+              >
+                <i className="bi bi-google"></i>
+              </button>
               <a href="#" className="facebook"><i className="bi bi-facebook"></i></a>
             </div>
           </form>
@@ -229,8 +260,17 @@ function AuthPage() {
             </button>
 
             <p>Regístrate con</p>
+            {googleError && <div className="alert alert-error">{googleError}</div>}
             <div className="social-icons">
-              <a href="#" className="google"><i className="bi bi-google"></i></a>
+              <button
+                type="button"
+                className="google"
+                onClick={() => triggerGoogleLogin()}
+                disabled={googleLoading}
+                title="Registrarse con Google"
+              >
+                <i className="bi bi-google"></i>
+              </button>
               <a href="#" className="facebook"><i className="bi bi-facebook"></i></a>
             </div>
           </form>

@@ -38,6 +38,9 @@ class TokenWithUser(BaseModel):
     token_type: str
     user: UserOut
 
+class GoogleAuthRequest(BaseModel):
+    access_token: str
+
 # Configuración de usuario
 class UserUpdate(BaseModel):
     username: str
